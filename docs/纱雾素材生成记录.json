@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-15",
+  "tool": "built-in image_gen",
+  "transparent_background": true,
+  "character": "和泉纱雾 / Sagiri Izumi",
+  "originalReference": "1B56C164D8E295F0B5CF1E5E6C44E195.jpg（用户提供，原图不随包复制）",
+  "assets": [
+    {
+      "id": "sagiri_morning_chibi",
+      "file": "../app/src/main/assets/themes/sagiri/artwork/sagiri_morning_chibi.png",
+      "reference": "sagiri_noon_chibi（本次同批生成图）",
+      "prompt": "Use case: illustration-story. New standalone transparent PNG chibi illustration for an Android morning mascot. Use attached CLEAN chibi Sagiri image as character and linework reference. Same silver-white long hair, blue-teal eyes, small pink bow clips, two pink bow hair ties, pink long-sleeved sweater dress with white collar, opaque lavender leggings and pink slippers. Draw her standing and shyly waving hello while holding a small closed sketchbook. Cute two-and-a-half-head chibi proportions, complete whole body, gentle shy smile, arms close to torso, no extra objects. Important: plain isolated character cutout, completely transparent outside her silhouette, including spaces within hair. Do not add any glow or haze or shadow or background at all. Opaque character colors. Clean delicate pastel cel shading with crisp linework, no text, no watermark, no frame. Comfortable transparent margin around entire silhouette."
+    },
+    {
+      "id": "sagiri_noon_chibi",
+      "file": "../app/src/main/assets/themes/sagiri/artwork/sagiri_noon_chibi.png",
+      "reference": "用户提供原始参考图",
+      "prompt": "Use case: illustration-story. Create one production Android timetable mascot asset using the attached image only as a character reference for Sagiri Izumi (和泉纱雾). Invariants: very long silver-white hair with subtle icy lavender shading, large blue-teal eyes, little pink bow clips at both temples and pink bows tying the long hair. Original, polished clean anime illustration; soft thin dark mauve outlines, soft pastel cel shading, expressive shy and quiet personality. Fully clothed in a loose long-sleeved pastel pink sweater dress, opaque pale lavender leggings and simple slippers. True transparent background, no checkerboard, no backdrop, no shadow panel, no lettering, no watermark, no additional people. Complete silhouette with comfortable margins; not a collage or sprite sheet. CHIBI full body, 2.8 heads tall. Sitting cross-legged with a drawing tablet resting on her lap, one stylus in her hand, quietly concentrating on a tiny sketch. Soft determined expression, mouth a tiny line. Face angled toward viewer enough to read. Compact silhouette, readable at 76dp."
+    },
+    {
+      "id": "sagiri_evening_chibi",
+      "file": "../app/src/main/assets/themes/sagiri/artwork/sagiri_evening_chibi.png",
+      "reference": "用户提供原始参考图",
+      "prompt": "Use case: illustration-story. Create one production Android timetable mascot asset using the attached image only as a character reference for Sagiri Izumi (和泉纱雾). Invariants: very long silver-white hair with subtle icy lavender shading, large blue-teal eyes, little pink bow clips at both temples and pink bows tying the long hair. Original, polished clean anime illustration; soft thin dark mauve outlines, soft pastel cel shading, expressive shy and quiet personality. Fully clothed in a loose long-sleeved pastel pink sweater dress, opaque pale lavender leggings and simple slippers. True transparent background, no checkerboard, no backdrop, no shadow panel, no lettering, no watermark, no additional people. Complete silhouette with comfortable margins; not a collage or sprite sheet. CHIBI full body, 2.8 heads tall. Sitting with knees covered by dress and opaque leggings, holding a small closed book and a soft lavender cushion, sleepy gentle eyes and tiny contented smile. Restful evening pose, face fully visible. Compact silhouette, readable at 76dp."
+    },
+    {
+      "id": "sagiri_morning_portrait",
+      "file": "../app/src/main/assets/themes/sagiri/artwork/sagiri_morning_portrait.png",
+      "reference": "用户提供原始参考图",
+      "prompt": "Use case: illustration-story. Create one production Android timetable mascot asset. Attached image is a character design reference for Sagiri Izumi (和泉纱雾), NOT an edit target. Keep very long silver-white hair with icy lavender shading, large blue-teal eyes, small pink bow clips at both temples and pink hair tie bows. Polished anime style, delicate dark mauve lines, soft pastel cel shading, quiet shy personality. Fully dressed in modest loose long-sleeved pastel pink sweater dress, opaque lavender leggings. Natural childlike proportions, ordinary wholesome illustration. True transparent background, no checkerboard, no scenery or frame, no lettering or watermark, no other people. Portrait composition, keep hair and hands within canvas with small margins. A waist-up regular anime portrait (NOT chibi). She holds a closed sketchbook against her chest and gently waves with the other hand, slightly shy smile and attentive eyes. Three-quarter view toward camera, a small tilt of the head. Soft cool morning lighting. Lower edge ends below sweater waist, clean complete silhouette."
+    },
+    {
+      "id": "sagiri_noon_portrait",
+      "file": "../app/src/main/assets/themes/sagiri/artwork/sagiri_noon_portrait.png",
+      "reference": "用户提供原始参考图",
+      "prompt": "Use case: illustration-story. Create one production Android timetable mascot asset. Attached image is a character design reference for Sagiri Izumi (和泉纱雾), NOT an edit target. Keep very long silver-white hair with icy lavender shading, large blue-teal eyes, small pink bow clips at both temples and pink hair tie bows. Polished anime style, delicate dark mauve lines, soft pastel cel shading, quiet shy personality. Fully dressed in modest loose long-sleeved pastel pink sweater dress, opaque lavender leggings. Natural childlike proportions, ordinary wholesome illustration. True transparent background, no checkerboard, no scenery or frame, no lettering or watermark, no other people. Portrait composition, keep hair and hands within canvas with small margins. A waist-up regular anime portrait (NOT chibi). She holds a small drawing tablet and a stylus, focused expression with a tiny proud smile as she glances toward viewer. Arms close to torso so entire figure reads clearly in a narrow 138dp character card. Gentle neutral daytime lighting. Lower edge below sweater waist."
+    },
+    {
+      "id": "sagiri_evening_portrait",
+      "file": "../app/src/main/assets/themes/sagiri/artwork/sagiri_evening_portrait.png",
+      "reference": "用户提供原始参考图",
+      "prompt": "Use case: illustration-story. Create one production Android timetable mascot asset. Attached image is a character design reference for Sagiri Izumi (和泉纱雾), NOT an edit target. Keep very long silver-white hair with icy lavender shading, large blue-teal eyes, small pink bow clips at both temples and pink hair tie bows. Polished anime style, delicate dark mauve lines, soft pastel cel shading, quiet shy personality. Fully dressed in modest loose long-sleeved pastel pink sweater dress, opaque lavender leggings. Natural childlike proportions, ordinary wholesome illustration. True transparent background, no checkerboard, no scenery or frame, no lettering or watermark, no other people. Portrait composition, keep hair and hands within canvas with small margins. A waist-up regular anime portrait (NOT chibi). She hugs a small lavender cushion and holds a closed pale blue book in one hand, relaxed sleepy expression, calm gentle tiny smile. Both eyes open, face clear. Cozy soft evening lighting without colored background. Arms close to torso. Lower edge below sweater waist."
+    }
+  ]
+}

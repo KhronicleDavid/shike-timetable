@@ -19,6 +19,7 @@ enum class DayPart(val key: String, val label: String) {
 data class ThemeArtwork(
     val id: String, val label: String, val file: String, val crop: Boolean,
     val periods: Set<DayPart>, val scenes: Set<String>,
+    val compactFile: String? = null,
 )
 data class ThemePalette(val colors: Map<String, Long>, val courseAccents: List<Long>) {
     fun color(key: String): Long = colors.getValue(key)
@@ -38,7 +39,7 @@ data class ThemePack(
     val light: ThemePalette, val dark: ThemePalette, val companion: ThemeCompanion?,
 ) {
     fun palette(darkMode: Boolean) = if (darkMode) dark else light
-    fun asset(artwork: ThemeArtwork) = "themes/$id/${artwork.file}"
+    fun asset(artwork: ThemeArtwork, compact: Boolean = false) = "themes/$id/${if (compact) artwork.compactFile ?: artwork.file else artwork.file}"
 }
 data class CompanionMoment(val part: DayPart, val artwork: String, val line: String)
 
@@ -63,14 +64,13 @@ object ThemePackParser {
             val artworks = content.getJSONArray("artworks").let { array -> (0 until array.length()).map { index ->
                 val art = array.getJSONObject(index)
                 val artId = art.text("id").also { require(identifier.matches(it)) { "插画 id 不合法" } }
-                val file = art.text("file")
-                require(file.matches(Regex("(?:[a-zA-Z0-9_-]+/)*[a-zA-Z0-9_.-]+\\.(png|webp|jpg|jpeg)")) &&
-                    file.split('/').none { it == "." || it == ".." }) { "插画路径必须是主题目录内的相对图片路径" }
+                val file = imagePath(art.text("file"))
+                val compactFile = if (art.has("compactFile")) imagePath(art.text("compactFile")) else null
                 val periodKeys = art.strings("periods")
                 require(periodKeys.all { key -> DayPart.entries.any { it.key == key } }) { "未知的插画时段" }
                 ThemeArtwork(artId, art.text("label"), file, art.optString("framing", "fit").also {
                     require(it in setOf("fit", "crop")) { "framing 只能为 fit 或 crop" }
-                } == "crop", DayPart.entries.filter { it.key in periodKeys }.toSet(), art.strings("scenes").toSet())
+                } == "crop", DayPart.entries.filter { it.key in periodKeys }.toSet(), art.strings("scenes").toSet(), compactFile)
             } }
             require(artworks.isNotEmpty() && artworks.map { it.id }.distinct().size == artworks.size) { "插画不能为空或有重复 id" }
             val pools = content.getJSONObject("quotes")
@@ -90,6 +90,11 @@ object ThemePackParser {
             palette(palettes.getJSONObject("light")), palette(palettes.getJSONObject("dark")), companion)
     }
 
+    private fun imagePath(file: String): String {
+        require(file.matches(Regex("(?:[a-zA-Z0-9_-]+/)*[a-zA-Z0-9_.-]+\\.(png|webp|jpg|jpeg)")) &&
+            file.split('/').none { it == "." || it == ".." }) { "插画路径必须是主题目录内的相对图片路径" }
+        return file
+    }
     private fun palette(json: JSONObject): ThemePalette {
         val colors = requiredColors.associateWith { key -> parseColor(json.text(key)) }
         val accents = json.strings("courseAccents").map(::parseColor)

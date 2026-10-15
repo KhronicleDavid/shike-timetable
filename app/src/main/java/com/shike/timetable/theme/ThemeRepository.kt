@@ -40,8 +40,8 @@ object ThemeImages {
     private val cache = object : LruCache<String, Bitmap>(20 * 1024 * 1024) {
         override fun sizeOf(key: String, value: Bitmap) = value.byteCount
     }
-    @Synchronized fun load(context: Context, theme: ThemePack, artwork: ThemeArtwork, maxEdge: Int = 1024): Bitmap? {
-        val path = theme.asset(artwork)
+    @Synchronized fun load(context: Context, theme: ThemePack, artwork: ThemeArtwork, maxEdge: Int = 1024, compact: Boolean = false): Bitmap? {
+        val path = theme.asset(artwork, compact)
         val key = "${theme.version}:$path:$maxEdge"
         cache.get(key)?.let { return it }
         return runCatching {

@@ -86,7 +86,7 @@ import java.time.LocalDate
         Column(Modifier.fillMaxWidth().padding(vertical = 30.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (companion != null) ThemeFlower(Modifier.size(18.dp))
-                Text("拾课  1.5.0", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(start = 7.dp))
+                Text("拾课  1.6.0", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(start = 7.dp))
             }
             Text("本机保存 · 无广告", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .8f), fontSize = 10.sp, modifier = Modifier.padding(top = 5.dp))
         }

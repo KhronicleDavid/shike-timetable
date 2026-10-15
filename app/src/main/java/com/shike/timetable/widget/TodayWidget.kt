@@ -113,7 +113,7 @@ internal object TodayWidgetViews {
             setTextViewText(R.id.widget_title, if (readError) "课表需要检查" else "今日课表")
             setTextViewText(R.id.widget_date, "${today.monthValue}月${today.dayOfMonth}日 · 星期${"一二三四五六日"[today.dayOfWeek.value - 1]}")
             setTextViewText(R.id.widget_quote, if (showMascot) "$name：${companion?.line.orEmpty()}" else "")
-            setImageViewBitmap(R.id.widget_portrait, theme.companion?.artwork(companion?.artwork.orEmpty())?.let { ThemeImages.load(context, theme, it, 256) })
+            setImageViewBitmap(R.id.widget_portrait, theme.companion?.artwork(companion?.artwork.orEmpty())?.let { ThemeImages.load(context, theme, it, 256, compact = true) })
             setViewVisibility(R.id.widget_portrait, if (showMascot) View.VISIBLE else View.GONE)
             setViewVisibility(R.id.widget_portrait_companion, if (showMascot) View.VISIBLE else View.GONE)
             setViewVisibility(R.id.widget_companion, if (showMascot) View.VISIBLE else View.GONE)

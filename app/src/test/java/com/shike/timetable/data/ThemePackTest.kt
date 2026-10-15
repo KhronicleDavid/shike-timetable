@@ -18,7 +18,26 @@ class ThemePackTest {
         repository.themes.forEach { theme ->
             assertEquals(6, theme.light.courseAccents.size)
             assertEquals(6, theme.dark.courseAccents.size)
-            theme.companion?.artworks?.forEach { assertTrue("缺少素材 ${theme.id}/${it.file}", File(assets, theme.asset(it)).isFile) }
+            theme.companion?.artworks?.forEach {
+                assertTrue("缺少素材 ${theme.id}/${it.file}", File(assets, theme.asset(it)).isFile)
+                assertTrue("缺少紧凑素材 ${theme.id}/${it.compactFile}", File(assets, theme.asset(it, compact = true)).isFile)
+            }
+        }
+    }
+
+    @Test fun compactArtworkIsOptionalAndUsesTheSamePathRestrictions() {
+        val initial = ThemePackParser.parse(json().toString())
+        val original = initial.companion!!.artworks.first()
+        assertEquals(initial.asset(original), initial.asset(original, compact = true))
+        val config = json()
+        val artwork = config.getJSONObject("companion").getJSONArray("artworks").getJSONObject(0)
+        artwork.put("compactFile", "artwork/small.png")
+        val changed = ThemePackParser.parse(config.toString())
+        assertEquals("themes/himari/artwork/small.png", changed.asset(changed.companion!!.artworks.first(), compact = true))
+        assertEquals(initial.asset(original), changed.asset(changed.companion.artworks.first()))
+        listOf("../secret.png", "/absolute.png", "artwork/../../secret.png", "", "https://example.com/image.png").forEach { path ->
+            artwork.put("compactFile", path)
+            assertThrows(IllegalArgumentException::class.java) { ThemePackParser.parse(config.toString()) }
         }
     }
 

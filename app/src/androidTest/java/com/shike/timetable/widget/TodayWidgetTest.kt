@@ -184,6 +184,28 @@ class TodayWidgetTest {
                 }
                 main { widget.updateAppWidget(TodayWidgetViews.build(context, id, darkData, date.atTime(21, 0))) }
                 snapshot("小组件-夜晚")
+                AppearanceStore(context).themeId = "sagiri"
+                TodayWidgetUpdates.request(context)
+                val sagiri = ThemeRepository.get(context).find("sagiri")
+                waitFor("纱雾主题应刷新小组件语录和樱粉配色") {
+                    widget.findViewById<TextView>(R.id.widget_quote).text.startsWith("纱雾：") &&
+                        widget.findViewById<TextView>(R.id.widget_quote).currentTextColor == sagiri.dark.color("primary").toInt()
+                }
+                listOf(8 to "早晨", 13 to "午间", 21 to "夜晚").forEach { (hour, label) ->
+                    val moment = date.atTime(hour, 0)
+                    val choice = CompanionInteractionStore(context).current(sagiri, moment)!!
+                    val art = sagiri.companion!!.artwork(choice.artwork)!!
+                    val expected = ThemeImages.load(context, sagiri, art, 256, compact = true)!!
+                    main { widget.updateAppWidget(TodayWidgetViews.build(context, id, darkData, moment)) }
+                    waitFor("纱雾小组件应展示对应时段与紧凑图") {
+                        widget.findViewById<TextView>(R.id.widget_quote).text.toString() == "纱雾：${choice.line}" &&
+                            (widget.findViewById<android.widget.ImageView>(R.id.widget_portrait).drawable as? android.graphics.drawable.BitmapDrawable)
+                                ?.bitmap?.sameAs(expected) == true
+                    }
+                    snapshot("小组件-纱雾-$label")
+                }
+                assertEquals("切换纱雾主题不能更改课程", darkData, ScheduleStore(context).read())
+                assertFalse("新增主题不能重现换句提示", CompanionInteractionStore(context).showShuffleHint())
                 AppearanceStore(context).themeId = "minimal"
                 TodayWidgetUpdates.request(context)
                 waitFor("切换简约主题应隐藏角色与语录") {
