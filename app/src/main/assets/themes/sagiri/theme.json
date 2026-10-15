@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "sagiri",
-  "version": 1,
+  "version": 2,
   "name": "纱雾主题",
   "description": "雾白、樱粉与冰蓝，和泉纱雾的安静画室",
   "palettes": {
@@ -283,6 +283,69 @@
         "id": "sagiri_evening_chibi",
         "label": "夜晚·Q版",
         "file": "artwork/sagiri_evening_chibi.png",
+        "periods": [
+          "evening"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "sagiri_morning_cup_portrait",
+        "label": "早晨·温杯",
+        "file": "artwork/sagiri_morning_cup_portrait.png",
+        "periods": [
+          "morning"
+        ],
+        "scenes": [],
+        "framing": "fit",
+        "compactFile": "artwork/sagiri_morning_cup_chibi.png"
+      },
+      {
+        "id": "sagiri_morning_cup_chibi",
+        "label": "早晨·温杯Q版",
+        "file": "artwork/sagiri_morning_cup_chibi.png",
+        "periods": [
+          "morning"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "sagiri_noon_stretch_portrait",
+        "label": "午间·伸懒腰",
+        "file": "artwork/sagiri_noon_stretch_portrait.png",
+        "periods": [
+          "noon"
+        ],
+        "scenes": [],
+        "framing": "fit",
+        "compactFile": "artwork/sagiri_noon_stretch_chibi.png"
+      },
+      {
+        "id": "sagiri_noon_stretch_chibi",
+        "label": "午间·伸展Q版",
+        "file": "artwork/sagiri_noon_stretch_chibi.png",
+        "periods": [
+          "noon"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "sagiri_evening_yawn_portrait",
+        "label": "夜晚·小哈欠",
+        "file": "artwork/sagiri_evening_yawn_portrait.png",
+        "periods": [
+          "evening"
+        ],
+        "scenes": [],
+        "framing": "fit",
+        "compactFile": "artwork/sagiri_evening_yawn_chibi.png"
+      },
+      {
+        "id": "sagiri_evening_yawn_chibi",
+        "label": "夜晚·困困Q版",
+        "file": "artwork/sagiri_evening_yawn_chibi.png",
         "periods": [
           "evening"
         ],
