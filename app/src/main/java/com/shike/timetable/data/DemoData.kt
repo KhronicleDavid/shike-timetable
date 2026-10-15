@@ -1,0 +1,105 @@
+package com.shike.timetable.data
+
+/** 首次启动的可编辑示例；固定 ID 方便编辑、删除以及重复导入。 */
+object DemoData {
+    val settings: TermSettings = TermSettings()
+
+    val courses: List<Course> = listOf(
+        Course(
+            id = "ef9f82a6-5a14-4422-bd7b-9a95ef1ba001",
+            name = "高等数学",
+            teacher = "陈老师",
+            room = "博学楼 A201",
+            day = 1,
+            startPeriod = 1,
+            endPeriod = 2,
+            colorIndex = 0,
+            note = "带好笔记本，课前预习。",
+        ),
+        Course(
+            id = "ef9f82a6-5a14-4422-bd7b-9a95ef1ba002",
+            name = "大学英语",
+            teacher = "林老师",
+            room = "致远楼 B305",
+            day = 1,
+            startPeriod = 5,
+            endPeriod = 6,
+            colorIndex = 1,
+        ),
+        Course(
+            id = "ef9f82a6-5a14-4422-bd7b-9a95ef1ba003",
+            name = "程序设计",
+            teacher = "周老师",
+            room = "实验楼 402",
+            day = 2,
+            startPeriod = 3,
+            endPeriod = 4,
+            colorIndex = 2,
+            note = "实验课请携带电脑。",
+        ),
+        Course(
+            id = "ef9f82a6-5a14-4422-bd7b-9a95ef1ba004",
+            name = "视觉表达",
+            teacher = "许老师",
+            room = "艺术楼 208",
+            day = 2,
+            startPeriod = 7,
+            endPeriod = 8,
+            weekPattern = "odd",
+            colorIndex = 3,
+        ),
+        Course(
+            id = "ef9f82a6-5a14-4422-bd7b-9a95ef1ba005",
+            name = "高等数学",
+            teacher = "陈老师",
+            room = "博学楼 A201",
+            day = 3,
+            startPeriod = 1,
+            endPeriod = 2,
+            colorIndex = 0,
+        ),
+        Course(
+            id = "ef9f82a6-5a14-4422-bd7b-9a95ef1ba006",
+            name = "体育 · 羽毛球",
+            teacher = "王老师",
+            room = "体育馆 2 号场",
+            day = 3,
+            startPeriod = 5,
+            endPeriod = 6,
+            endWeek = 18,
+            colorIndex = 4,
+        ),
+        Course(
+            id = "ef9f82a6-5a14-4422-bd7b-9a95ef1ba007",
+            name = "大学英语",
+            teacher = "林老师",
+            room = "致远楼 B305",
+            day = 4,
+            startPeriod = 3,
+            endPeriod = 4,
+            colorIndex = 1,
+        ),
+        Course(
+            id = "ef9f82a6-5a14-4422-bd7b-9a95ef1ba008",
+            name = "人工智能导论",
+            teacher = "赵老师",
+            room = "博学楼 C102",
+            day = 4,
+            startPeriod = 7,
+            endPeriod = 8,
+            colorIndex = 5,
+        ),
+        Course(
+            id = "ef9f82a6-5a14-4422-bd7b-9a95ef1ba009",
+            name = "中国近现代史",
+            teacher = "李老师",
+            room = "致远楼 B201",
+            day = 5,
+            startPeriod = 3,
+            endPeriod = 4,
+            colorIndex = 3,
+        ),
+    )
+
+    val schedule: ScheduleData get() = ScheduleData(courses.toList(), settings)
+}

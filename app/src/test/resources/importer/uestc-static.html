@@ -1,0 +1,15 @@
+<!doctype html>
+<!-- 合成静态课表：教师名称来自 actTeachers；每天 11 节；第 0 位不占用。 -->
+<html><body><script>
+var unitCount = 11;
+var table0 = new CourseTable(2026, unitCount * 7);
+var actTeachers = [{id:1, name:'示例教师甲', lab:false}, {id:2, name:'示例教师乙', lab:false}];
+var actTeacherName = [];
+for (var i=0; i<actTeachers.length; i++) { actTeacherName.push(actTeachers[i].name); }
+activity = new TaskActivity('', actTeacherName.join(','), 'C01', '离散数学(DEMO-1)', 'R01', '品学楼 A-101', '01010101010000000000000000000000000000000000000000000', '', '');
+index = 1 * unitCount + 2;
+table0.activities[index][table0.activities[index].length] = activity;
+index = 1 * unitCount + 3;
+table0.activities[index][table0.activities[index].length] = activity;
+table0.marshalTable(2, 1, 20);
+</script></body></html>

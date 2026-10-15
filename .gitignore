@@ -1,0 +1,25 @@
+.gradle/
+.kotlin/
+.idea/
+*.iml
+local.properties
+**/build/
+captures/
+*.hprof
+.DS_Store
+
+# 本机产物与临时记录
+/dist/
+/work/
+*.apk
+*.aab
+*.log
+
+# 本机凭据及签名文件
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+keystore.properties
+signing.properties

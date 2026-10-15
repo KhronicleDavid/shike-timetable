@@ -1,0 +1,13 @@
+<resources>
+    <string name="widget_title">今日课表</string>
+    <string name="widget_description">阳茉莉陪伴的今日课程：课程、教室、上下滑动查看，可调整大小。</string>
+    <string name="widget_mascot">皆原阳茉莉，点击换一句陪伴语</string>
+    <string name="widget_shuffle_hint">点我换句话</string>
+    <string name="widget_shuffle_description">随机切换阳茉莉的陪伴语和插画</string>
+    <string name="widget_preview_date">10月15日 · 星期四</string>
+    <string name="widget_preview_quote">早、早上好……今天的课表，我陪你一起看看吧。</string>
+    <string name="widget_preview_summary">课程多时可上下滑动</string>
+    <string name="widget_empty">今天没有课，自由安排时间。</string>
+    <string name="widget_refresh">刷新</string>
+    <string name="widget_refresh_description">刷新今日课表</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Shike" parent="Theme.Shike.Base">
+        <item name="android:windowSplashScreenBackground">#FAF8F3</item>
+    </style>
+</resources>

@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "settings": {
+    "name": "2026 · 秋季学期",
+    "startDate": "2026-09-07",
+    "totalWeeks": 20,
+    "showWeekend": false,
+    "darkMode": "system",
+    "periods": [
+      {
+        "start": "08:00",
+        "end": "08:45"
+      },
+      {
+        "start": "08:55",
+        "end": "09:40"
+      },
+      {
+        "start": "10:00",
+        "end": "10:45"
+      },
+      {
+        "start": "10:55",
+        "end": "11:40"
+      },
+      {
+        "start": "14:00",
+        "end": "14:45"
+      },
+      {
+        "start": "14:55",
+        "end": "15:40"
+      },
+      {
+        "start": "16:00",
+        "end": "16:45"
+      },
+      {
+        "start": "16:55",
+        "end": "17:40"
+      },
+      {
+        "start": "19:00",
+        "end": "19:45"
+      },
+      {
+        "start": "19:55",
+        "end": "20:40"
+      },
+      {
+        "start": "20:50",
+        "end": "21:35"
+      },
+      {
+        "start": "21:45",
+        "end": "22:30"
+      }
+    ]
+  },
+  "courses": [
+    {
+      "id": "ef9f82a6-5a14-4422-bd7b-9a95ef1ba001",
+      "name": "高等数学",
+      "teacher": "陈老师",
+      "room": "博学楼 A201",
+      "day": 1,
+      "startPeriod": 1,
+      "endPeriod": 2,
+      "startWeek": 1,
+      "endWeek": 20,
+      "weekPattern": "all",
+      "colorIndex": 0,
+      "note": "带好笔记本，课前预习。"
+    },
+    {
+      "id": "ef9f82a6-5a14-4422-bd7b-9a95ef1ba002",
+      "name": "大学英语",
+      "teacher": "林老师",
+      "room": "致远楼 B305",
+      "day": 1,
+      "startPeriod": 5,
+      "endPeriod": 6,
+      "startWeek": 1,
+      "endWeek": 20,
+      "weekPattern": "all",
+      "colorIndex": 1,
+      "note": ""
+    },
+    {
+      "id": "ef9f82a6-5a14-4422-bd7b-9a95ef1ba003",
+      "name": "程序设计",
+      "teacher": "周老师",
+      "room": "实验楼 402",
+      "day": 2,
+      "startPeriod": 3,
+      "endPeriod": 4,
+      "startWeek": 1,
+      "endWeek": 20,
+      "weekPattern": "all",
+      "colorIndex": 2,
+      "note": "实验课请携带电脑。"
+    },
+    {
+      "id": "ef9f82a6-5a14-4422-bd7b-9a95ef1ba004",
+      "name": "视觉表达",
+      "teacher": "许老师",
+      "room": "艺术楼 208",
+      "day": 2,
+      "startPeriod": 7,
+      "endPeriod": 8,
+      "startWeek": 1,
+      "endWeek": 20,
+      "weekPattern": "odd",
+      "colorIndex": 3,
+      "note": ""
+    },
+    {
+      "id": "ef9f82a6-5a14-4422-bd7b-9a95ef1ba005",
+      "name": "高等数学",
+      "teacher": "陈老师",
+      "room": "博学楼 A201",
+      "day": 3,
+      "startPeriod": 1,
+      "endPeriod": 2,
+      "startWeek": 1,
+      "endWeek": 20,
+      "weekPattern": "all",
+      "colorIndex": 0,
+      "note": ""
+    },
+    {
+      "id": "ef9f82a6-5a14-4422-bd7b-9a95ef1ba006",
+      "name": "体育 · 羽毛球",
+      "teacher": "王老师",
+      "room": "体育馆 2 号场",
+      "day": 3,
+      "startPeriod": 5,
+      "endPeriod": 6,
+      "startWeek": 1,
+      "endWeek": 18,
+      "weekPattern": "all",
+      "colorIndex": 4,
+      "note": ""
+    },
+    {
+      "id": "ef9f82a6-5a14-4422-bd7b-9a95ef1ba007",
+      "name": "大学英语",
+      "teacher": "林老师",
+      "room": "致远楼 B305",
+      "day": 4,
+      "startPeriod": 3,
+      "endPeriod": 4,
+      "startWeek": 1,
+      "endWeek": 20,
+      "weekPattern": "all",
+      "colorIndex": 1,
+      "note": ""
+    },
+    {
+      "id": "ef9f82a6-5a14-4422-bd7b-9a95ef1ba008",
+      "name": "人工智能导论",
+      "teacher": "赵老师",
+      "room": "博学楼 C102",
+      "day": 4,
+      "startPeriod": 7,
+      "endPeriod": 8,
+      "startWeek": 1,
+      "endWeek": 20,
+      "weekPattern": "all",
+      "colorIndex": 5,
+      "note": ""
+    },
+    {
+      "id": "ef9f82a6-5a14-4422-bd7b-9a95ef1ba009",
+      "name": "中国近现代史",
+      "teacher": "李老师",
+      "room": "致远楼 B201",
+      "day": 5,
+      "startPeriod": 3,
+      "endPeriod": 4,
+      "startWeek": 1,
+      "endWeek": 20,
+      "weekPattern": "all",
+      "colorIndex": 3,
+      "note": ""
+    }
+  ]
+}

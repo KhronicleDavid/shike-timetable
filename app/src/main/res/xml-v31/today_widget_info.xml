@@ -1,0 +1,6 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialLayout="@layout/widget_today" android:previewLayout="@layout/widget_today"
+    android:previewImage="@drawable/ic_shike" android:description="@string/widget_description"
+    android:minWidth="280dp" android:minHeight="240dp" android:minResizeWidth="200dp" android:minResizeHeight="220dp"
+    android:maxResizeHeight="520dp" android:targetCellWidth="4" android:targetCellHeight="3"
+    android:resizeMode="horizontal|vertical" android:widgetCategory="home_screen" android:updatePeriodMillis="1800000" />
