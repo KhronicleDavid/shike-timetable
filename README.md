@@ -17,6 +17,8 @@ cd shike-timetable
 
 主题入口为 `app/src/main/assets/themes/catalog.json`，每个主题有独立的 `theme.json` 和图片目录。立绘、分时语录、画册与配色从配置读取，方便增删内容；开发步骤和可复制模板见 [主题与角色素材维护](docs/主题与角色素材维护.md)。
 
+下一角色主题「和泉纱雾」的 [126 条原创分时段陪伴语](docs/和泉纱雾陪伴语.md) 已整理为 [文案草稿包](docs/theme-drafts/sagiri/README.md)，等待用户提供图片后接入，当前安装包尚不包含此主题。
+
 ![阳茉莉主题周课表](screenshots/阳茉莉-课表-浅色.png)
 
 ## 功能
