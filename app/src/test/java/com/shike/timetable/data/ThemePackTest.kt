@@ -90,4 +90,35 @@ class ThemePackTest {
             assertTrue(choice.artwork in theme.companion.pictures(DayPart.Morning).map { art -> art.id })
         }
     }
+
+    @Test fun voiceFilesCoverAllHimariTimePoolsAndOtherThemesRemainOptional() {
+        val repository = ThemeRepository.read { File(assets, it).readText() }
+        val content = repository.find("himari").companion!!
+        assertEquals(114, content.voices.size)
+        content.quotes.values.flatten().forEach { line ->
+            val clip = content.voices.getValue(line)
+            assertEquals("JA", clip.language)
+            val file = File(assets, "themes/himari/${clip.file}")
+            assertTrue(file.isFile)
+            assertEquals("OggS", file.inputStream().use { String(it.readNBytes(4), Charsets.US_ASCII) })
+        }
+        assertTrue(repository.find("sagiri").companion!!.voices.isEmpty())
+        val old = json().apply { getJSONObject("companion").remove("voices") }
+        assertTrue(ThemePackParser.parse(old.toString()).companion!!.voices.isEmpty())
+    }
+
+    @Test fun unsafeAndDuplicateVoiceMappingsAreRejected() {
+        val config = json()
+        val content = config.getJSONObject("companion")
+        val voices = org.json.JSONArray().put(JSONObject().put("line", content.getJSONObject("quotes").getJSONArray("morning").getString(0))
+            .put("file", "voice/test.ogg").put("text", "おはよう").put("language", "JA"))
+        content.put("voices", voices)
+        listOf("../private.ogg", "/voice.ogg", "https://example.com/test.mp3", "voice/../../private.wav", "voice/file.png").forEach { path ->
+            voices.getJSONObject(0).put("file", path)
+            assertThrows(IllegalArgumentException::class.java) { ThemePackParser.parse(config.toString()) }
+        }
+        voices.getJSONObject(0).put("file", "voice/test.ogg")
+        voices.put(voices.getJSONObject(0))
+        assertThrows(IllegalArgumentException::class.java) { ThemePackParser.parse(config.toString()) }
+    }
 }

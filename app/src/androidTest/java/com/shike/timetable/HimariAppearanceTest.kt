@@ -169,6 +169,7 @@ class HimariAppearanceTest {
     private fun reset() {
         context().getSharedPreferences("shike_schedule", Context.MODE_PRIVATE).edit().clear().commit()
         context().getSharedPreferences("shike_appearance", Context.MODE_PRIVATE).edit().clear().commit()
+        AppearanceStore(context()).voiceEnabled = false
         context().getSharedPreferences(CompanionInteractionStore.PREFERENCES, Context.MODE_PRIVATE).edit().clear().commit()
     }
     private fun context() = InstrumentationRegistry.getInstrumentation().targetContext

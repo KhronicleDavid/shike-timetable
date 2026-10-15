@@ -25,7 +25,8 @@ import java.time.LocalDate
 @Composable fun SettingsScreen(data: ScheduleData, onSettings: (TermSettings) -> Unit, onExport: () -> Unit,
     onImport: () -> Unit, onSchoolImport: () -> Unit, onClear: () -> Unit,
     themes: List<ThemePack>, onTheme: (ThemePack) -> Unit,
-    modifier: Modifier = Modifier, showMascot: Boolean = true, onMascot: (Boolean) -> Unit = {}) {
+    modifier: Modifier = Modifier, showMascot: Boolean = true, onMascot: (Boolean) -> Unit = {},
+    voiceEnabled: Boolean = true, onVoice: (Boolean) -> Unit = {}) {
     var dialog by rememberSaveable { mutableStateOf("") }
     val theme = LocalAppTheme.current
     val companion = theme.companion
@@ -73,6 +74,16 @@ import java.time.LocalDate
                     modifier = Modifier.semantics { contentDescription = if (companion != null) "${companion.shortName}陪伴" else "角色陪伴" })
             }
         }
+        if (!companion?.voices.isNullOrEmpty()) SettingsCard {
+            Row(Modifier.fillMaxWidth().padding(17.dp), verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text("${companion?.shortName}语音", fontWeight = FontWeight.Medium)
+                    Text("点击换句时播放日语 · 播完才能切换\n应用与小组件共用 · 离线播放", color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 11.sp, modifier = Modifier.padding(top = 4.dp))
+                }
+                Switch(voiceEnabled, onVoice, modifier = Modifier.semantics { contentDescription = "角色语音" })
+            }
+        }
         SectionLabel("课表数据")
         SettingsCard {
             SettingRow("从教务导入", "电子科技大学 · 登录后读取课表", onSchoolImport)
@@ -86,7 +97,7 @@ import java.time.LocalDate
         Column(Modifier.fillMaxWidth().padding(vertical = 30.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (companion != null) ThemeFlower(Modifier.size(18.dp))
-                Text("拾课  1.6.1", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(start = 7.dp))
+                Text("拾课  1.7.0", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(start = 7.dp))
             }
             Text("本机保存 · 无广告", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .8f), fontSize = 10.sp, modifier = Modifier.padding(top = 5.dp))
         }

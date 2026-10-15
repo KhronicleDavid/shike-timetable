@@ -168,6 +168,12 @@ class BackupViewModel : ViewModel() {
     val companionStore = remember { CompanionInteractionStore(context) }
     var companion by remember(theme.id) { mutableStateOf(companionStore.current(theme, clockTime)) }
     var showShuffleHint by remember { mutableStateOf(companionStore.showShuffleHint()) }
+    val voiceSession by CompanionVoicePlayback.sessions.collectAsState()
+    var voiceEnabled by remember { mutableStateOf(appearance.voiceEnabled) }
+    LaunchedEffect(voiceSession) {
+        companion = companionStore.current(theme, LocalDateTime.now())
+        showShuffleHint = companionStore.showShuffleHint()
+    }
     val today = clockTime.toLocalDate()
     val currentWeek = ScheduleRules.currentWeek(data.settings, today)
     var selectedWeek by rememberSaveable { mutableIntStateOf(currentWeek.coerceIn(1, data.settings.totalWeeks)) }
@@ -201,12 +207,14 @@ class BackupViewModel : ViewModel() {
         val interactionPreferences = context.getSharedPreferences(CompanionInteractionStore.PREFERENCES, Context.MODE_PRIVATE)
         val hintObserver = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             if (key == CompanionInteractionStore.HINT_DISMISSED) showShuffleHint = companionStore.showShuffleHint()
+            if (key == "choice_${theme.id}") companion = companionStore.current(theme, LocalDateTime.now())
         }
         interactionPreferences.registerOnSharedPreferenceChangeListener(hintObserver)
         val observer = LifecycleEventObserver { _, event -> if (event == Lifecycle.Event.ON_RESUME) {
             clockTime = LocalDateTime.now()
             themeId = appearance.themeId
             showMascot = appearance.showCompanion
+            voiceEnabled = appearance.voiceEnabled
             companion = companionStore.current(themes.find(appearance.themeId), clockTime)
             showShuffleHint = companionStore.showShuffleHint()
         } }
@@ -238,9 +246,11 @@ class BackupViewModel : ViewModel() {
         }
     }
     ShikeTheme(data.settings.darkMode, theme, showMascot, companion = companion, showShuffleHint = showShuffleHint,
+        voicePhase = voiceSession?.phase,
         onCompanionShuffle = {
             clockTime = LocalDateTime.now()
-            companion = companionStore.shuffle(theme, clockTime)
+            CompanionVoicePlayback.shuffle(context)
+            companion = companionStore.current(theme, clockTime)
             showShuffleHint = companionStore.showShuffleHint()
             TodayWidgetUpdates.request(context)
         }) {
@@ -283,11 +293,19 @@ class BackupViewModel : ViewModel() {
                             onSchoolImport = { schoolImport = true },
                             onClear = { save(data.copy(courses = emptyList())) },
                             themes = themes.themes, onTheme = { selected ->
+                                CompanionVoicePlayback.cancel(context)
                                 appearance.themeId = selected.id; themeId = selected.id
                                 clockTime = LocalDateTime.now(); companion = companionStore.current(selected, clockTime)
                                 showShuffleHint = companionStore.showShuffleHint(); TodayWidgetUpdates.request(context)
                             },
-                            showMascot = showMascot, onMascot = { showMascot = it; appearance.showCompanion = it; TodayWidgetUpdates.request(context) },
+                            showMascot = showMascot, onMascot = {
+                                if (!it) CompanionVoicePlayback.cancel(context)
+                                showMascot = it; appearance.showCompanion = it; TodayWidgetUpdates.request(context)
+                            },
+                            voiceEnabled = voiceEnabled, onVoice = {
+                                if (!it) CompanionVoicePlayback.cancel(context)
+                                voiceEnabled = it; appearance.voiceEnabled = it
+                            },
                             modifier = Modifier.padding(padding))
                     }
                 }

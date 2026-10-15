@@ -64,4 +64,7 @@ class AppearanceStore internal constructor(private val preferences: SharedPrefer
     var showCompanion: Boolean
         get() = preferences.all["show_companion"] as? Boolean ?: preferences.all["show_himari"] as? Boolean ?: true
         set(value) { preferences.edit().putBoolean("show_companion", value).apply() }
+    var voiceEnabled: Boolean
+        get() = preferences.all["voice_enabled"] as? Boolean ?: true
+        set(value) { preferences.edit().putBoolean("voice_enabled", value).apply() }
 }

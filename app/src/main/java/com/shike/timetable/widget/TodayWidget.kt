@@ -65,13 +65,12 @@ object TodayWidgetUpdates {
 }
 
 class TodayWidgetProvider : AppWidgetProvider() {
-    private fun refresh(context: Context, shuffleCompanion: Boolean = false) {
+    private fun refresh(context: Context) {
         val result = goAsync()
         TodayWidgetUpdates.executor.execute {
             try {
                 val appContext = context.applicationContext
                 val moment = LocalDateTime.now()
-                if (shuffleCompanion) CompanionInteractionStore(appContext).shuffle(ThemeRepository.get(appContext).find(AppearanceStore(appContext).themeId), moment)
                 TodayWidgetUpdates.refreshNow(appContext, moment)
             } finally { result.finish() }
         }
@@ -81,12 +80,17 @@ class TodayWidgetProvider : AppWidgetProvider() {
     override fun onAppWidgetOptionsChanged(context: Context, manager: AppWidgetManager, id: Int, options: Bundle) = refresh(context)
     override fun onDisabled(context: Context) = TodayWidgetUpdates.cancelBoundary(context)
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == SHUFFLE_ACTION) {
-            refresh(context, shuffleCompanion = true)
-        } else if (intent.action in setOf(REFRESH_ACTION, Intent.ACTION_DATE_CHANGED, Intent.ACTION_TIME_CHANGED,
+        if (intent.action in setOf(REFRESH_ACTION, Intent.ACTION_DATE_CHANGED, Intent.ACTION_TIME_CHANGED,
                 Intent.ACTION_TIMEZONE_CHANGED, Intent.ACTION_BOOT_COMPLETED, Intent.ACTION_MY_PACKAGE_REPLACED)) {
             refresh(context)
         } else super.onReceive(context, intent)
+    }
+}
+
+/** 播放入口不导出，只有应用创建的 PendingIntent 能触发桌面语音。 */
+class CompanionWidgetReceiver : android.content.BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        if (intent.action == SHUFFLE_ACTION) CompanionVoicePlayback.shuffle(context)
     }
 }
 
@@ -108,6 +112,7 @@ internal object TodayWidgetViews {
         val secondary = palette.color("onSurfaceVariant").toInt()
         val showMascot = appearance.showCompanion && theme.companion != null && companion != null
         val name = theme.companion?.shortName.orEmpty()
+        val voice = CompanionVoicePlayback.sessions.value
         return RemoteViews(context.packageName, R.layout.widget_today).apply {
             setInt(R.id.widget_background, "setColorFilter", palette.color("cardStart").toInt())
             setTextViewText(R.id.widget_title, if (readError) "课表需要检查" else "今日课表")
@@ -117,8 +122,9 @@ internal object TodayWidgetViews {
             setViewVisibility(R.id.widget_portrait, if (showMascot) View.VISIBLE else View.GONE)
             setViewVisibility(R.id.widget_portrait_companion, if (showMascot) View.VISIBLE else View.GONE)
             setViewVisibility(R.id.widget_companion, if (showMascot) View.VISIBLE else View.GONE)
-            setViewVisibility(R.id.widget_shuffle_hint, if (showMascot && interaction.showShuffleHint()) View.VISIBLE else View.GONE)
-            setContentDescription(R.id.widget_quote, "$name：${companion?.line.orEmpty()}。点击换一句陪伴语")
+            setTextViewText(R.id.widget_shuffle_hint, voice?.phase?.label ?: "点点我 · 换句话")
+            setViewVisibility(R.id.widget_shuffle_hint, if (showMascot && (voice != null || interaction.showShuffleHint())) View.VISIBLE else View.GONE)
+            setContentDescription(R.id.widget_quote, "$name：${companion?.line.orEmpty()}。${voice?.phase?.label ?: "点击换一句陪伴语"}")
             setContentDescription(R.id.widget_portrait, "${theme.companion?.name.orEmpty()}，点击换一句陪伴语")
             setTextColor(R.id.widget_title, text)
             setTextColor(R.id.widget_date, secondary)
@@ -134,7 +140,7 @@ internal object TodayWidgetViews {
                 .setData(Uri.parse("shike://widget/$id/today")).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             setOnClickPendingIntent(R.id.widget_open_today, PendingIntent.getActivity(context, id, launch,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
-            val shuffle = Intent(context, TodayWidgetProvider::class.java).setAction(SHUFFLE_ACTION)
+            val shuffle = Intent(context, CompanionWidgetReceiver::class.java).setAction(SHUFFLE_ACTION)
                 .setData(Uri.parse("shike://widget/$id/companion"))
             val shufflePendingIntent = PendingIntent.getBroadcast(context, id, shuffle,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)

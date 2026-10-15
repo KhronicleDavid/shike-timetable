@@ -15,6 +15,7 @@ class CompanionInteractionStore internal constructor(private val preferences: Sh
         readCurrent(theme, moment)
     }
     fun shuffle(theme: ThemePack, moment: LocalDateTime = LocalDateTime.now()): CompanionMoment? = synchronized(lock) {
+        if (CompanionVoicePlayback.isBusy) return@synchronized readCurrent(theme, moment)
         val current = readCurrent(theme, moment) ?: return@synchronized null
         val recent = readRecent(theme)
         val next = CompanionEngine.randomNext(theme, moment, current, recent)!!
@@ -29,6 +30,7 @@ class CompanionInteractionStore internal constructor(private val preferences: Sh
     }.getOrDefault(JSONObject())
 
     private fun readCurrent(theme: ThemePack, moment: LocalDateTime): CompanionMoment? {
+        CompanionVoicePlayback.sessions.value?.takeIf { it.themeId == theme.id }?.let { return it.moment }
         val fallback = CompanionEngine.at(theme, moment) ?: return null
         val content = theme.companion!!
         var saved = choice(theme)

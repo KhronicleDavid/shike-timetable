@@ -104,6 +104,7 @@ class SagiriAppearanceTest {
         listOf("shike_schedule", "shike_appearance", CompanionInteractionStore.PREFERENCES).forEach {
             context().getSharedPreferences(it, Context.MODE_PRIVATE).edit().clear().commit()
         }
+        AppearanceStore(context()).voiceEnabled = false
     }
     private fun context() = InstrumentationRegistry.getInstrumentation().targetContext
 }

@@ -49,7 +49,7 @@ class TodayWidgetTest {
             day = date.dayOfWeek.value, startPeriod = number, endPeriod = number, startWeek = 1, endWeek = 20) }
         val data = ScheduleData(courses, settings)
         ScheduleStore(context).save(data)
-        context.getSharedPreferences("shike_appearance", Context.MODE_PRIVATE).edit().putBoolean("show_himari", true).commit()
+        context.getSharedPreferences("shike_appearance", Context.MODE_PRIVATE).edit().putBoolean("show_himari", true).putBoolean("voice_enabled", false).commit()
         context.getSharedPreferences("shike_companion_interaction", Context.MODE_PRIVATE).edit().clear().commit()
         val manager = AppWidgetManager.getInstance(context)
         lateinit var host: AppWidgetHost

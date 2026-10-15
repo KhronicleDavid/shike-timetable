@@ -28,12 +28,14 @@ data class ThemeCompanion(
     val name: String, val shortName: String, val tagline: String, val attribution: String,
     val artworks: List<ThemeArtwork>, val quotes: Map<DayPart, List<String>>,
     val contextLines: Map<String, String>,
+    val voices: Map<String, ThemeVoice> = emptyMap(),
 ) {
     fun pictures(part: DayPart) = artworks.filter { part in it.periods }
     fun scene(name: String) = artworks.firstOrNull { name in it.scenes } ?: artworks.first()
     fun artwork(id: String) = artworks.firstOrNull { it.id == id }
     val allLines get() = quotes.values.flatten() + contextLines.values
 }
+data class ThemeVoice(val file: String, val text: String, val language: String)
 data class ThemePack(
     val id: String, val version: Int, val name: String, val description: String,
     val light: ThemePalette, val dark: ThemePalette, val companion: ThemeCompanion?,
@@ -83,8 +85,19 @@ object ThemePackParser {
             val contexts = content.optJSONObject("contextLines")?.let { entries ->
                 entries.keys().asSequence().associateWith { entries.text(it) }
             }.orEmpty()
+            require(!content.has("voices") || content.opt("voices") is org.json.JSONArray) { "voices 必须是数组" }
+            val voiceArray = content.optJSONArray("voices") ?: org.json.JSONArray()
+            val voices = (0 until voiceArray.length()).map { index ->
+                val voice = voiceArray.getJSONObject(index)
+                val file = voice.text("file")
+                require(file.matches(Regex("(?:[a-zA-Z0-9_-]+/)*[a-zA-Z0-9_-]+\\.(ogg|wav|mp3|m4a)")) &&
+                    file.split('/').none { it == "." || it == ".." }) { "语音路径必须是主题目录内的相对音频路径" }
+                voice.text("line") to ThemeVoice(file, voice.text("text"), voice.text("language"))
+            }
+            require(voices.map { it.first }.distinct().size == voices.size) { "同一句语录不能重复配置语音" }
             ThemeCompanion(content.text("name"), content.text("shortName"), content.text("tagline"),
-                content.optString("attribution"), artworks, quotes, contexts)
+                content.optString("attribution"), artworks, quotes, contexts,
+                voices.filter { it.first in quotes.values.flatten() + contexts.values }.toMap())
         }
         return ThemePack(id, version, json.text("name"), json.text("description"),
             palette(palettes.getJSONObject("light")), palette(palettes.getJSONObject("dark")), companion)
