@@ -1,44 +1,44 @@
 {
   "version": "1.4.0",
   "tool": "内置 image_gen.imagegen",
-  "reference": "E:/课程表/app/src/main/res/drawable-nodpi/himari.png",
+  "reference": "E:/课程表/app/src/main/assets/themes/himari/artwork/himari.png",
   "transparent_background": true,
   "assets": [
     {
       "key": "himari_morning_coffee",
       "part": "早晨",
       "prompt": "Use case: illustration-story. Asset type: transparent PNG character artwork for a gentle Android timetable app. Image 1 is the character identity and drawing reference, not an edit target. Draw the SAME Minahara Himari: long pale honey-blonde hair with peach shading, teal eyes, ahoge, small braid and white flower clip, navy and white school uniform with yellow ribbon, warm kind shy personality. High quality Japanese visual novel cel shading, clean delicate outlines, elegant soft highlights, fully clothed age-appropriate everyday pose. GENUINELY TRANSPARENT background, no colored rectangle, no checkerboard pattern baked into pixels, no backdrop, no lettering, no watermark, no UI or frame. Entire hair and hands in frame with breathing space. Primary request: a new waist-up standing portrait, holding a small plain cream ceramic mug of warm milk tea in BOTH hands at chest level, she looks toward the viewer with a slightly bashful cheerful smile as if encouraging a calm morning before class. Face and mug should be readable when tiny, keep recognizable uniform and flower. Soft morning highlights ON THE CHARACTER only. Portrait composition.",
-      "file": "E:/课程表/app/src/main/res/drawable-nodpi/himari_morning_coffee.png"
+      "file": "E:/课程表/app/src/main/assets/themes/himari/artwork/himari_morning_coffee.png"
     },
     {
       "key": "himari_morning_stretch",
       "part": "早晨",
       "prompt": "Use case: illustration-story. Asset type: transparent PNG character artwork for a gentle Android timetable app. Image 1 is the character identity and drawing reference, not an edit target. Draw the SAME Minahara Himari: long pale honey-blonde hair with peach shading, teal eyes, ahoge, small braid and white flower clip, navy and white school uniform with yellow ribbon, warm kind shy personality. High quality Japanese visual novel cel shading, clean delicate outlines, elegant soft highlights, fully clothed age-appropriate everyday pose. GENUINELY TRANSPARENT background, no colored rectangle, no checkerboard pattern baked into pixels, no backdrop, no lettering, no watermark, no UI or frame. Entire hair and hands in frame with breathing space. Primary request: a new super-deformed chibi, whole body, standing on tiptoes and gently stretching BOTH arms above head, eyes softly closed, small happy morning smile, loosely flowing long hair, in her recognizable navy uniform. Cute but anatomically clear, no bed or furniture, minimal accessories. Compact sticker-like composition, clean silhouette suitable for small widget. Show all fingers naturally or soft mitten-style hands.",
-      "file": "E:/课程表/app/src/main/res/drawable-nodpi/himari_morning_stretch.png"
+      "file": "E:/课程表/app/src/main/assets/themes/himari/artwork/himari_morning_stretch.png"
     },
     {
       "key": "himari_noon_hamster",
       "part": "午间",
       "prompt": "Use case: illustration-story. Asset type: transparent PNG character artwork for a gentle Android timetable app. Image 1 is the character identity and drawing reference, not an edit target. Draw the SAME Minahara Himari: long pale honey-blonde hair with peach shading, teal eyes, ahoge, small braid and white flower clip, navy and white school uniform with yellow ribbon, warm kind shy personality. High quality Japanese visual novel cel shading, clean delicate outlines, elegant soft highlights, fully clothed age-appropriate everyday pose. GENUINELY TRANSPARENT background, no colored rectangle, no checkerboard pattern baked into pixels, no backdrop, no lettering, no watermark, no UI or frame. Entire hair and hands in frame with breathing space. Primary request: a new super-deformed chibi whole body, sitting politely with knees together in her uniform, carefully cupping ONE tiny golden hamster in both hands close to her chest. She looks down at it with sparkling teal eyes and a delighted shy smile. Character and hamster only, no surrounding environment, no scattered hearts or text. Compact sticker-like layout; preserve her long hair and white flower clip. Friendly lunch-break feeling.",
-      "file": "E:/课程表/app/src/main/res/drawable-nodpi/himari_noon_hamster.png"
+      "file": "E:/课程表/app/src/main/assets/themes/himari/artwork/himari_noon_hamster.png"
     },
     {
       "key": "himari_noon_library",
       "part": "午间",
       "prompt": "Use case: illustration-story. Asset type: transparent PNG character artwork for a gentle Android timetable app. Image 1 is the character identity and drawing reference, not an edit target. Draw the SAME Minahara Himari: long pale honey-blonde hair with peach shading, teal eyes, ahoge, small braid and white flower clip, navy and white school uniform with yellow ribbon, warm kind shy personality. High quality Japanese visual novel cel shading, clean delicate outlines, elegant soft highlights, fully clothed age-appropriate everyday pose. GENUINELY TRANSPARENT background, no colored rectangle, no checkerboard pattern baked into pixels, no backdrop, no lettering, no watermark, no UI or frame. Entire hair and hands in frame with breathing space. Primary request: a new waist-up portrait of her holding two closed plain hardcover novels against her chest in one arm, with the other hand touching the page corner of an open book held on top; she looks toward the viewer with a confident little gentle smile, sharing a good story during a break. Preserve the original school blouse and navy uniform. No bookshelves, no room or background. Clear upper-body silhouette suitable for a narrow companion card. No readable text on books.",
-      "file": "E:/课程表/app/src/main/res/drawable-nodpi/himari_noon_library.png"
+      "file": "E:/课程表/app/src/main/assets/themes/himari/artwork/himari_noon_library.png"
     },
     {
       "key": "himari_evening_stars",
       "part": "夜晚",
       "prompt": "Use case: illustration-story. Asset type: transparent PNG character artwork for a gentle Android timetable app. Image 1 is the character identity and drawing reference, not an edit target. Draw the SAME Minahara Himari: long pale honey-blonde hair with peach shading, teal eyes, ahoge, small braid and white flower clip, navy and white school uniform with yellow ribbon, warm kind shy personality. High quality Japanese visual novel cel shading, clean delicate outlines, elegant soft highlights, fully clothed age-appropriate everyday pose. GENUINELY TRANSPARENT background, no colored rectangle, no checkerboard pattern baked into pixels, no backdrop, no lettering, no watermark, no UI or frame. Entire hair and hands in frame with breathing space. Primary request: a new full-body chibi in a relaxed upright sitting pose, hands resting together on knees, glancing upward with bright curious teal eyes and a small thoughtful smile, long hair fanning gently around her, navy school uniform and a simple matching cardigan. Just THREE tiny delicate pale gold star-shaped sparkles close beside her head, isolated along with her on real transparency; no sky, moon, scene, gradient, glow disk or dark square. Compact sticker-like layout for a widget.",
-      "file": "E:/课程表/app/src/main/res/drawable-nodpi/himari_evening_stars.png"
+      "file": "E:/课程表/app/src/main/assets/themes/himari/artwork/himari_evening_stars.png"
     },
     {
       "key": "himari_evening_goodnight",
       "part": "夜晚",
       "prompt": "Use case: illustration-story. Asset type: transparent PNG character artwork for a gentle Android timetable app. Image 1 is the character identity and drawing reference, not an edit target. Draw the SAME Minahara Himari: long pale honey-blonde hair with peach shading, teal eyes, ahoge, small braid and white flower clip, navy and white school uniform with yellow ribbon, warm kind shy personality. High quality Japanese visual novel cel shading, clean delicate outlines, elegant soft highlights, fully clothed age-appropriate everyday pose. GENUINELY TRANSPARENT background, no colored rectangle, no checkerboard pattern baked into pixels, no backdrop, no lettering, no watermark, no UI or frame. Entire hair and hands in frame with breathing space. Primary request: a new full-body chibi sitting politely, wearing her recognizable navy uniform plus a loose cream cardigan, hugging one small mint-green square cushion against her lap with one arm and making a shy tiny goodnight wave with the other hand; sleepy half-closed kind teal eyes, a gentle smile, long hair and white flower clip clearly preserved. Cozy quiet evening mood, character and cushion only on actual transparency. No bed, room, star field, written symbols or Z letters. Compact readable silhouette.",
-      "file": "E:/课程表/app/src/main/res/drawable-nodpi/himari_evening_goodnight.png"
+      "file": "E:/课程表/app/src/main/assets/themes/himari/artwork/himari_evening_goodnight.png"
     }
   ]
 }

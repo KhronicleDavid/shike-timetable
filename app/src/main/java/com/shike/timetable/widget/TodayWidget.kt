@@ -8,7 +8,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,7 +17,7 @@ import android.widget.RemoteViewsService
 import com.shike.timetable.MainActivity
 import com.shike.timetable.R
 import com.shike.timetable.data.*
-import com.shike.timetable.ui.himariArtworkResource
+import com.shike.timetable.theme.*
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.UUID
@@ -57,7 +56,7 @@ object TodayWidgetUpdates {
     private fun boundaryIntent(context: Context) = PendingIntent.getBroadcast(context, 701,
         Intent(context, TodayWidgetProvider::class.java).setAction(REFRESH_ACTION), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
     private fun scheduleBoundary(context: Context, moment: LocalDateTime) {
-        val next = HimariCompanion.nextBoundary(moment).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val next = CompanionEngine.nextBoundary(moment).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         context.getSystemService(AlarmManager::class.java).setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, next, boundaryIntent(context))
     }
     internal fun cancelBoundary(context: Context) {
@@ -72,7 +71,7 @@ class TodayWidgetProvider : AppWidgetProvider() {
             try {
                 val appContext = context.applicationContext
                 val moment = LocalDateTime.now()
-                if (shuffleCompanion) HimariInteractionStore(appContext).shuffle(moment)
+                if (shuffleCompanion) CompanionInteractionStore(appContext).shuffle(ThemeRepository.get(appContext).find(AppearanceStore(appContext).themeId), moment)
                 TodayWidgetUpdates.refreshNow(appContext, moment)
             } finally { result.finish() }
         }
@@ -98,22 +97,29 @@ internal object TodayWidgetViews {
     fun build(context: Context, id: Int, data: ScheduleData, moment: LocalDateTime = LocalDateTime.now(), readError: Boolean = false): RemoteViews {
         val today = moment.toLocalDate()
         val courses = TodayCourses.forDate(data, today)
-        val companion = HimariInteractionStore(context).current(moment)
+        val appearance = AppearanceStore(context)
+        val theme = ThemeRepository.get(context).find(appearance.themeId)
+        val interaction = CompanionInteractionStore(context)
+        val companion = interaction.current(theme, moment)
         val isDark = dark(context, data)
-        val primary = Color.parseColor(if (isDark) "#A3D4C6" else "#2C716C")
-        val text = Color.parseColor(if (isDark) "#E6EAE7" else "#293B50")
-        val secondary = Color.parseColor(if (isDark) "#C0CEC4" else "#607268")
-        val showMascot = context.getSharedPreferences("shike_appearance", Context.MODE_PRIVATE).getBoolean("show_himari", true)
+        val palette = theme.palette(isDark)
+        val primary = palette.color("primary").toInt()
+        val text = palette.color("onSurface").toInt()
+        val secondary = palette.color("onSurfaceVariant").toInt()
+        val showMascot = appearance.showCompanion && theme.companion != null && companion != null
+        val name = theme.companion?.shortName.orEmpty()
         return RemoteViews(context.packageName, R.layout.widget_today).apply {
-            setInt(R.id.widget_root, "setBackgroundResource", if (isDark) R.drawable.widget_background_dark else R.drawable.widget_background)
+            setInt(R.id.widget_background, "setColorFilter", palette.color("cardStart").toInt())
             setTextViewText(R.id.widget_title, if (readError) "课表需要检查" else "今日课表")
             setTextViewText(R.id.widget_date, "${today.monthValue}月${today.dayOfMonth}日 · 星期${"一二三四五六日"[today.dayOfWeek.value - 1]}")
-            setTextViewText(R.id.widget_quote, "阳茉莉：${companion.line}")
-            setImageViewResource(R.id.widget_himari, himariArtworkResource(companion.artwork))
-            setViewVisibility(R.id.widget_himari, if (showMascot) View.VISIBLE else View.GONE)
+            setTextViewText(R.id.widget_quote, if (showMascot) "$name：${companion?.line.orEmpty()}" else "")
+            setImageViewBitmap(R.id.widget_portrait, theme.companion?.artwork(companion?.artwork.orEmpty())?.let { ThemeImages.load(context, theme, it, 256) })
+            setViewVisibility(R.id.widget_portrait, if (showMascot) View.VISIBLE else View.GONE)
             setViewVisibility(R.id.widget_portrait_companion, if (showMascot) View.VISIBLE else View.GONE)
             setViewVisibility(R.id.widget_companion, if (showMascot) View.VISIBLE else View.GONE)
-            setContentDescription(R.id.widget_quote, "阳茉莉：${companion.line}。点击换一句陪伴语")
+            setViewVisibility(R.id.widget_shuffle_hint, if (showMascot && interaction.showShuffleHint()) View.VISIBLE else View.GONE)
+            setContentDescription(R.id.widget_quote, "$name：${companion?.line.orEmpty()}。点击换一句陪伴语")
+            setContentDescription(R.id.widget_portrait, "${theme.companion?.name.orEmpty()}，点击换一句陪伴语")
             setTextColor(R.id.widget_title, text)
             setTextColor(R.id.widget_date, secondary)
             setTextColor(R.id.widget_quote, primary)
@@ -132,7 +138,7 @@ internal object TodayWidgetViews {
                 .setData(Uri.parse("shike://widget/$id/companion"))
             val shufflePendingIntent = PendingIntent.getBroadcast(context, id, shuffle,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-            setOnClickPendingIntent(R.id.widget_himari, shufflePendingIntent)
+            setOnClickPendingIntent(R.id.widget_portrait, shufflePendingIntent)
             setOnClickPendingIntent(R.id.widget_quote, shufflePendingIntent)
             setOnClickPendingIntent(R.id.widget_shuffle_hint, shufflePendingIntent)
             val mutable = if (Build.VERSION.SDK_INT >= 31) PendingIntent.FLAG_MUTABLE else 0
@@ -155,13 +161,14 @@ internal object TodayWidgetViews {
     }
     internal fun stableId(course: Course): Long = UUID.fromString(course.id).let { it.mostSignificantBits xor it.leastSignificantBits }
     internal fun row(context: Context, entry: TodayCourse, dark: Boolean): RemoteViews = RemoteViews(context.packageName, R.layout.widget_course_row).apply {
-        setInt(R.id.widget_course_row, "setBackgroundResource", if (dark) R.drawable.widget_row_background_dark else R.drawable.widget_row_background)
+        val palette = ThemeRepository.get(context).find(AppearanceStore(context).themeId).palette(dark)
+        setInt(R.id.widget_row_background, "setColorFilter", palette.color("surface").toInt())
         setTextViewText(R.id.widget_course_name, entry.course.name)
         setTextViewText(R.id.widget_course_room, entry.room)
         setTextViewText(R.id.widget_course_time, "${entry.time} · ${entry.course.startPeriod}–${entry.course.endPeriod}节")
-        setTextColor(R.id.widget_course_name, Color.parseColor(if (dark) "#E6EAE7" else "#293B50"))
-        setTextColor(R.id.widget_course_room, Color.parseColor(if (dark) "#C0CEC4" else "#607268"))
-        setTextColor(R.id.widget_course_time, Color.parseColor(if (dark) "#A3D4C6" else "#2C716C"))
+        setTextColor(R.id.widget_course_name, palette.color("onSurface").toInt())
+        setTextColor(R.id.widget_course_room, palette.color("onSurfaceVariant").toInt())
+        setTextColor(R.id.widget_course_time, palette.color("primary").toInt())
         setContentDescription(R.id.widget_course_row, "${entry.course.name}，${entry.room}，${entry.time}")
         setOnClickFillInIntent(R.id.widget_course_row, Intent().putExtra(WIDGET_COURSE_ID, entry.course.id))
     }

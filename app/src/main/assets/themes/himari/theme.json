@@ -1,16 +1,251 @@
-package com.shike.timetable.data
-
-import java.time.LocalDateTime
-import java.time.LocalTime
-import kotlin.random.Random
-
-enum class HimariDayPart(val label: String) { Morning("早晨"), Noon("午间"), Evening("夜晚") }
-
-data class HimariMoment(val part: HimariDayPart, val artwork: String, val line: String)
-
-/** 按用户提供的角色 skill 创作的应用台词，均非原作引文。 */
-object HimariCompanion {
-    val morningLines = listOf(
+{
+  "schemaVersion": 1,
+  "id": "himari",
+  "version": 1,
+  "name": "阳茉莉主题",
+  "description": "奶油白与薄荷青绿，皆原阳茉莉的课间陪伴",
+  "palettes": {
+    "light": {
+      "primary": "#2C716C",
+      "primaryContainer": "#DDEEE7",
+      "onPrimaryContainer": "#234F4C",
+      "secondary": "#946D36",
+      "secondaryContainer": "#F6EBD3",
+      "onSecondaryContainer": "#6E542F",
+      "tertiary": "#52688C",
+      "tertiaryContainer": "#E6ECF5",
+      "onTertiaryContainer": "#30435F",
+      "background": "#FAF8F3",
+      "onBackground": "#293B50",
+      "surface": "#FFFEFB",
+      "onSurface": "#293B50",
+      "surfaceVariant": "#F0EFE7",
+      "onSurfaceVariant": "#70796F",
+      "surfaceContainer": "#F3F2EA",
+      "surfaceContainerLow": "#F8F6F0",
+      "surfaceContainerHigh": "#ECECE2",
+      "surfaceContainerHighest": "#E6E7DD",
+      "outline": "#ADB7AD",
+      "outlineVariant": "#E5E8DD",
+      "onPrimary": "#FFFFFF",
+      "onSecondary": "#FFFFFF",
+      "cardStart": "#DDEFE5",
+      "cardEnd": "#FBE6C9",
+      "courseAccents": [
+        "#397D79",
+        "#C5836D",
+        "#52688C",
+        "#9A80A5",
+        "#A48744",
+        "#5F8EA5"
+      ]
+    },
+    "dark": {
+      "primary": "#A3D4C6",
+      "onPrimary": "#163F3A",
+      "primaryContainer": "#284C49",
+      "onPrimaryContainer": "#CEECE2",
+      "secondary": "#E9CD97",
+      "onSecondary": "#46351D",
+      "secondaryContainer": "#4C402C",
+      "onSecondaryContainer": "#F1DDB8",
+      "tertiary": "#B2C5E2",
+      "tertiaryContainer": "#334359",
+      "onTertiaryContainer": "#DFE8F6",
+      "background": "#171F28",
+      "onBackground": "#E6EAE7",
+      "surface": "#222D35",
+      "onSurface": "#E6EAE7",
+      "surfaceVariant": "#34413F",
+      "onSurfaceVariant": "#ABB9B2",
+      "surfaceContainer": "#27333B",
+      "surfaceContainerLow": "#1E2831",
+      "surfaceContainerHigh": "#2D3B43",
+      "surfaceContainerHighest": "#34413F",
+      "outline": "#65776E",
+      "outlineVariant": "#34413F",
+      "cardStart": "#254843",
+      "cardEnd": "#474032",
+      "courseAccents": [
+        "#397D79",
+        "#C5836D",
+        "#52688C",
+        "#9A80A5",
+        "#A48744",
+        "#5F8EA5"
+      ]
+    }
+  },
+  "companion": {
+    "name": "皆原阳茉莉",
+    "shortName": "阳茉莉",
+    "tagline": "把时间留给热爱",
+    "attribution": "皆原陽茉莉 / フレラバ ～Friend to Lover～ · 角色 © SMEE",
+    "artworks": [
+      {
+        "id": "himari_home",
+        "label": "迎接",
+        "file": "artwork/himari_home.png",
+        "periods": [],
+        "scenes": [
+          "greeting"
+        ],
+        "framing": "crop"
+      },
+      {
+        "id": "himari_study",
+        "label": "学习",
+        "file": "artwork/himari_study.png",
+        "periods": [],
+        "scenes": [
+          "study",
+          "empty"
+        ],
+        "framing": "fit"
+      },
+      {
+        "id": "himari_rest",
+        "label": "休息",
+        "file": "artwork/himari_rest.png",
+        "periods": [],
+        "scenes": [
+          "rest"
+        ],
+        "framing": "fit"
+      },
+      {
+        "id": "himari",
+        "label": "原画",
+        "file": "artwork/himari.png",
+        "periods": [],
+        "scenes": [
+          "original"
+        ],
+        "framing": "crop"
+      },
+      {
+        "id": "himari_morning_wave",
+        "label": "早晨·招呼",
+        "file": "artwork/himari_morning_wave.png",
+        "periods": [
+          "morning"
+        ],
+        "scenes": [],
+        "framing": "crop"
+      },
+      {
+        "id": "himari_morning_bag",
+        "label": "早晨·出发",
+        "file": "artwork/himari_morning_bag.png",
+        "periods": [
+          "morning"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "himari_noon_lunch",
+        "label": "午间·午饭",
+        "file": "artwork/himari_noon_lunch.png",
+        "periods": [
+          "noon"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "himari_noon_break",
+        "label": "午间·休息",
+        "file": "artwork/himari_noon_break.png",
+        "periods": [
+          "noon"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "himari_evening_read",
+        "label": "夜晚·阅读",
+        "file": "artwork/himari_evening_read.png",
+        "periods": [
+          "evening"
+        ],
+        "scenes": [],
+        "framing": "crop"
+      },
+      {
+        "id": "himari_evening_rest",
+        "label": "夜晚·晚安",
+        "file": "artwork/himari_evening_rest.png",
+        "periods": [
+          "evening"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "himari_morning_coffee",
+        "label": "早晨·热饮",
+        "file": "artwork/himari_morning_coffee.png",
+        "periods": [
+          "morning"
+        ],
+        "scenes": [],
+        "framing": "crop"
+      },
+      {
+        "id": "himari_morning_stretch",
+        "label": "早晨·伸展",
+        "file": "artwork/himari_morning_stretch.png",
+        "periods": [
+          "morning"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "himari_noon_hamster",
+        "label": "午间·小仓鼠",
+        "file": "artwork/himari_noon_hamster.png",
+        "periods": [
+          "noon"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "himari_noon_library",
+        "label": "午间·图书馆",
+        "file": "artwork/himari_noon_library.png",
+        "periods": [
+          "noon"
+        ],
+        "scenes": [],
+        "framing": "crop"
+      },
+      {
+        "id": "himari_evening_stars",
+        "label": "夜晚·星星",
+        "file": "artwork/himari_evening_stars.png",
+        "periods": [
+          "evening"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "himari_evening_goodnight",
+        "label": "夜晚·挥手",
+        "file": "artwork/himari_evening_goodnight.png",
+        "periods": [
+          "evening"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      }
+    ],
+    "quotes": {
+      "morning": [
         "早、早上好……今天的课表，我陪你一起看看吧。",
         "书带好了吗？嗯，教室也再确认一下哦。",
         "啊哈哈，还没睡醒？那我们先看第一节课吧。",
@@ -48,9 +283,9 @@ object HimariCompanion {
         "嗯——睡意还没散？先站稳，再伸个懒腰吧。",
         "有些电影的清晨很漂亮，不过你的第一节课要赶上哦。",
         "诶嘿嘿，今天也见到你了。准备出发了吗？",
-        "先深呼吸。好啦，今天不是非得一口气跑完的。",
-    )
-    val noonLines = listOf(
+        "先深呼吸。好啦，今天不是非得一口气跑完的。"
+      ],
+      "noon": [
         "上午辛苦啦。先好好吃饭，再想下午的事吧。",
         "嗯——午休不用安排得满满的，留一点空白吧。",
         "下午在哪间教室？我陪你再看一眼好了。",
@@ -88,9 +323,9 @@ object HimariCompanion {
         "我没在催你哦。只是再不出发，就真的要跑了。",
         "诶？夸我考虑得周到？我、我只是多看了一眼而已。",
         "午后的阳光如果刚刚好，发一会儿呆也可以吧。",
-        "吃完后别把餐具落下。收拾好了，才算圆满结束呢。",
-    )
-    val eveningLines = listOf(
+        "吃完后别把餐具落下。收拾好了，才算圆满结束呢。"
+      ],
+      "evening": [
         "今天辛苦啦。还有没整理完的笔记吗？",
         "嗯——复习完这一点，就给自己留点休息时间吧。",
         "明天的书先放进包里，早上会从容一些哦。",
@@ -128,71 +363,16 @@ object HimariCompanion {
         "一起看星星的话，先站在安全又亮堂的地方吧。",
         "诶嘿嘿，今天也帮上了一点忙的话，就太好了。",
         "把窗边的书挪远一点吧，别让夜风把书页吹乱。",
-        "晚安。今天没做完的那一点，就留给明天的我们吧。",
-    )
-    val quietLines = listOf(
-        "今天没课的话，做点自己喜欢的事吧。",
-        "嗯——留白也很好呀，不用每一格都填满。",
-        "那、那个……教室还没确定，就先记下来别忘了。",
-        "课表整理好啦。接下来会轻松一点吧？",
-        "诶？这个关键词没找到呢，换一个试试看？",
-        "啊哈哈，我只是想帮上一点忙而已。",
-    )
-    val allLines: List<String> = morningLines + noonLines + eveningLines + quietLines
-    val artworks = mapOf(
-        HimariDayPart.Morning to listOf("himari_morning_wave", "himari_morning_bag", "himari_morning_coffee", "himari_morning_stretch"),
-        HimariDayPart.Noon to listOf("himari_noon_lunch", "himari_noon_break", "himari_noon_hamster", "himari_noon_library"),
-        HimariDayPart.Evening to listOf("himari_evening_read", "himari_evening_rest", "himari_evening_stars", "himari_evening_goodnight"),
-    )
-    fun partAt(time: LocalTime): HimariDayPart = when (time.hour) {
-        in 5..10 -> HimariDayPart.Morning
-        in 11..16 -> HimariDayPart.Noon
-        else -> HimariDayPart.Evening
+        "晚安。今天没做完的那一点，就留给明天的我们吧。"
+      ]
+    },
+    "contextLines": {
+      "free_day": "今天没课的话，做点自己喜欢的事吧。",
+      "empty_week": "嗯——留白也很好呀，不用每一格都填满。",
+      "classroom_pending": "那、那个……教室还没确定，就先记下来别忘了。",
+      "course_saved": "课表整理好啦。接下来会轻松一点吧？",
+      "search_empty": "诶？这个关键词没找到呢，换一个试试看？",
+      "import_saved": "啊哈哈，我只是想帮上一点忙而已。"
     }
-
-    /** 同一半小时内保持一致，应用与小组件可用它判断自动轮换的边界。 */
-    fun bucketAt(moment: LocalDateTime): Long =
-        moment.toLocalDate().toEpochDay() * 48 + moment.hour * 2 + moment.minute / 30
-
-    fun at(moment: LocalDateTime): HimariMoment {
-        val part = partAt(moment.toLocalTime())
-        val bucket = bucketAt(moment)
-        val lines = linesFor(part)
-        val pictures = artworks.getValue(part)
-        return HimariMoment(part, pictures[Math.floorMod(bucket, pictures.size.toLong()).toInt()],
-            lines[Math.floorMod(bucket, lines.size.toLong()).toInt()])
-    }
-
-    /** 点击时只从当前时段选取；优先避开最近五句，且不连续重复同一句或同一幅图。 */
-    fun randomNext(
-        moment: LocalDateTime,
-        current: HimariMoment,
-        recentLines: List<String>,
-        random: Random = Random.Default,
-    ): HimariMoment {
-        val part = partAt(moment.toLocalTime())
-        val alternatives = linesFor(part).filterNot { it == current.line }
-        val recent = recentLines.takeLast(5)
-        var candidates = alternatives.filterNot { it in recent }
-        // 若未来缩小台词池，先放回最早的一句；当前句始终不放回。
-        for (oldestToRelease in 1..recent.size) {
-            if (candidates.isNotEmpty()) break
-            candidates = alternatives.filterNot { it in recent.drop(oldestToRelease) }
-        }
-        val pictures = artworks.getValue(part).filterNot { it == current.artwork }
-        return HimariMoment(part, pictures.random(random), candidates.random(random))
-    }
-
-    private fun linesFor(part: HimariDayPart): List<String> = when (part) {
-        HimariDayPart.Morning -> morningLines
-        HimariDayPart.Noon -> noonLines
-        HimariDayPart.Evening -> eveningLines
-    }
-
-    fun quietLine(moment: LocalDateTime): String = quietLines[Math.floorMod(moment.toLocalDate().toEpochDay(), 2L).toInt()]
-
-    /** 在午夜或时段交界刷新；定期更新另由系统负责，不申请精确闹钟权限。 */
-    fun nextBoundary(moment: LocalDateTime): LocalDateTime = listOf(5, 11, 17)
-        .map { moment.toLocalDate().atTime(it, 0) }.firstOrNull { it.isAfter(moment) }
-        ?: moment.toLocalDate().plusDays(1).atStartOfDay()
+  }
 }

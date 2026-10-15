@@ -16,7 +16,7 @@ import org.junit.rules.ExternalResource
 import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
 import java.io.File
-import com.shike.timetable.data.HimariInteractionStore
+import com.shike.timetable.theme.*
 
 /** 示例数据上的视觉核查，以及陪伴开关重建后的持久化。 */
 class HimariAppearanceTest {
@@ -28,33 +28,78 @@ class HimariAppearanceTest {
     @get:Rule val rules: TestRule = RuleChain.outerRule(clean).around(compose)
 
     @Test fun tappingCompanionChangesTheLineAndKeepsItAcrossTabsAndRecreation() {
-        fun line() = compose.onNodeWithTag("himari_quote").fetchSemanticsNode()
+        fun line() = compose.onNodeWithTag("companion_quote").fetchSemanticsNode()
             .config[SemanticsProperties.Text].first().text
         val history = mutableListOf(line())
+        compose.onNodeWithTag("shuffle_hint", useUnmergedTree = true).assertIsDisplayed()
         repeat(7) {
-            compose.onNodeWithTag(if (it % 2 == 0) "himari_quote" else "himari_portrait_shuffle").performClick()
+            compose.onNodeWithTag(if (it % 2 == 0) "companion_quote" else "companion_portrait_shuffle").performClick()
             val next = line()
             assertNotEquals("点击后不应连续显示同一句", history.last(), next)
             history += next
+            compose.onNodeWithTag("shuffle_hint", useUnmergedTree = true).assertDoesNotExist()
         }
         val selected = line()
         snapshot("阳茉莉-点击换句")
         compose.onNodeWithText("设置").performClick()
         assertEquals(selected, line())
+        compose.onNodeWithTag("shuffle_hint", useUnmergedTree = true).assertDoesNotExist()
         compose.onNodeWithText("课表").performClick()
         assertEquals(selected, line())
         compose.activityRule.scenario.recreate()
         compose.waitForIdle()
         assertEquals(selected, line())
-        assertEquals(selected, HimariInteractionStore(context()).current().line)
+        assertEquals(selected, CompanionInteractionStore(context()).current(ThemeRepository.get(context()).find("himari"))!!.line)
         compose.onNodeWithText("设置").performClick()
         compose.onNodeWithContentDescription("阳茉莉陪伴").performScrollTo().performClick().assertIsOff()
-        compose.onNodeWithTag("himari_quote").assertDoesNotExist()
-        compose.onNodeWithTag("himari_portrait_shuffle").assertDoesNotExist()
+        compose.onNodeWithTag("companion_quote").assertDoesNotExist()
+        compose.onNodeWithTag("companion_portrait_shuffle").assertDoesNotExist()
         compose.onNodeWithText("点点我 · 换句话").assertDoesNotExist()
         compose.onNodeWithText("课表").performClick()
         compose.onNodeWithText("今日安排").assertIsDisplayed()
-        compose.onNodeWithTag("himari_quote").assertDoesNotExist()
+        compose.onNodeWithTag("companion_quote").assertDoesNotExist()
+    }
+
+    @Test fun aFirstInteractionElsewhereHidesTheHintOnAnAlreadyVisibleScreen() {
+        compose.onNodeWithTag("shuffle_hint", useUnmergedTree = true).assertIsDisplayed()
+        compose.runOnIdle {
+            CompanionInteractionStore(context()).shuffle(ThemeRepository.get(context()).find("himari"))
+        }
+        compose.onNodeWithTag("shuffle_hint", useUnmergedTree = true).assertDoesNotExist()
+        compose.onNodeWithTag("companion_quote").assertIsDisplayed()
+    }
+
+    @Test fun wholeThemeSwitchPersistsWithoutChangingTheScheduleOrRestoringTheHint() {
+        val schedule = com.shike.timetable.data.ScheduleStore(context()).read()
+        compose.onNodeWithTag("shuffle_hint", useUnmergedTree = true).assertIsDisplayed()
+        compose.onNodeWithTag("companion_quote").performClick()
+        compose.onNodeWithTag("shuffle_hint", useUnmergedTree = true).assertDoesNotExist()
+        compose.onNodeWithText("设置").performClick()
+        compose.onNodeWithText("整体主题").performScrollTo().performClick()
+        compose.onNodeWithText("简约主题").performClick()
+        compose.onNodeWithText("当前主题不包含角色插画与语录").performScrollTo().assertIsDisplayed()
+        compose.onNodeWithText("课表").performClick()
+        compose.onNodeWithContentDescription("吉祥物：皆原阳茉莉").assertDoesNotExist()
+        compose.onNodeWithTag("companion_quote").assertDoesNotExist()
+        compose.onNodeWithText("今日安排").assertIsDisplayed()
+        snapshot("主题-简约")
+        compose.activityRule.scenario.recreate()
+        compose.waitForIdle()
+        assertEquals("minimal", AppearanceStore(context()).themeId)
+        compose.onNodeWithTag("companion_quote").assertDoesNotExist()
+        assertEquals(schedule, com.shike.timetable.data.ScheduleStore(context()).read())
+        compose.onNodeWithText("设置").performClick()
+        compose.onNodeWithText("整体主题").performScrollTo().performClick()
+        compose.onNodeWithText("阳茉莉主题").performClick()
+        compose.onNodeWithText("课表").performClick()
+        compose.onNodeWithContentDescription("吉祥物：皆原阳茉莉").assertIsDisplayed()
+        compose.onNodeWithTag("companion_quote").assertIsDisplayed()
+        compose.onNodeWithTag("shuffle_hint", useUnmergedTree = true).assertDoesNotExist()
+        snapshot("主题-阳茉莉-提示已隐藏")
+        compose.activityRule.scenario.recreate()
+        compose.waitForIdle()
+        compose.onNodeWithTag("shuffle_hint", useUnmergedTree = true).assertDoesNotExist()
+        assertFalse(CompanionInteractionStore(context()).showShuffleHint())
     }
 
     @Test fun companionCanBeHiddenAndRestoredAcrossRecreation() {
@@ -69,10 +114,8 @@ class HimariAppearanceTest {
         snapshot("阳茉莉-设置")
         compose.onNodeWithText("阳茉莉的小小画册").performScrollTo().performClick()
         snapshot("阳茉莉-画册")
-        compose.onNodeWithText("学习").performClick().assertIsSelected()
-        compose.onNodeWithText("原画").performClick().assertIsSelected()
-        listOf("早晨·热饮", "早晨·伸展", "午间·小仓鼠", "午间·图书馆", "夜晚·星星", "夜晚·挥手").forEach {
-            compose.onNodeWithText(it).performScrollTo().performClick().assertIsSelected()
+        ThemeRepository.get(context()).find("himari").companion!!.artworks.forEach {
+            compose.onNodeWithText(it.label).performScrollTo().performClick().assertIsSelected()
         }
         snapshot("阳茉莉-画册-新增")
         compose.onNodeWithContentDescription("关闭画册").performClick()
@@ -82,7 +125,7 @@ class HimariAppearanceTest {
         compose.onNodeWithText("设置").performClick()
         compose.onNodeWithContentDescription("显示周末").performScrollTo().performClick()
         compose.onNodeWithContentDescription("阳茉莉陪伴").performScrollTo().performClick().assertIsOff()
-        assertFalse(context().getSharedPreferences("shike_appearance", Context.MODE_PRIVATE).getBoolean("show_himari", true))
+        assertFalse(context().getSharedPreferences("shike_appearance", Context.MODE_PRIVATE).getBoolean("show_companion", true))
         compose.activityRule.scenario.recreate()
         compose.waitForIdle()
         compose.onNodeWithContentDescription("阳茉莉陪伴").performScrollTo().assertIsOff()
@@ -126,7 +169,7 @@ class HimariAppearanceTest {
     private fun reset() {
         context().getSharedPreferences("shike_schedule", Context.MODE_PRIVATE).edit().clear().commit()
         context().getSharedPreferences("shike_appearance", Context.MODE_PRIVATE).edit().clear().commit()
-        context().getSharedPreferences(HimariInteractionStore.PREFERENCES, Context.MODE_PRIVATE).edit().clear().commit()
+        context().getSharedPreferences(CompanionInteractionStore.PREFERENCES, Context.MODE_PRIVATE).edit().clear().commit()
     }
     private fun context() = InstrumentationRegistry.getInstrumentation().targetContext
 }

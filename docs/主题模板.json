@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "id": "new_character",
+  "version": 1,
+  "name": "新角色主题",
+  "description": "请填写主题简介",
+  "palettes": {
+    "light": {
+      "primary": "#526986",
+      "primaryContainer": "#E3EBF5",
+      "onPrimaryContainer": "#233D59",
+      "secondary": "#776A94",
+      "secondaryContainer": "#EEE8F6",
+      "onSecondaryContainer": "#46375F",
+      "tertiary": "#52688C",
+      "tertiaryContainer": "#E6ECF5",
+      "onTertiaryContainer": "#30435F",
+      "background": "#F7F9FC",
+      "onBackground": "#263342",
+      "surface": "#FFFFFF",
+      "onSurface": "#263342",
+      "surfaceVariant": "#EBEFF5",
+      "onSurfaceVariant": "#657082",
+      "surfaceContainer": "#EEF2F8",
+      "surfaceContainerLow": "#F3F6FB",
+      "surfaceContainerHigh": "#E8EDF5",
+      "surfaceContainerHighest": "#E3E9F2",
+      "outline": "#A8B2C1",
+      "outlineVariant": "#DEE4ED",
+      "onPrimary": "#FFFFFF",
+      "onSecondary": "#FFFFFF",
+      "cardStart": "#E7EEF8",
+      "cardEnd": "#F3F0F8",
+      "courseAccents": [
+        "#526986",
+        "#87739E",
+        "#4B8587",
+        "#B2806C",
+        "#998953",
+        "#6F80A5"
+      ]
+    },
+    "dark": {
+      "primary": "#B9CDE9",
+      "onPrimary": "#21364F",
+      "primaryContainer": "#30455F",
+      "onPrimaryContainer": "#D9E6F8",
+      "secondary": "#D0C4E9",
+      "onSecondary": "#3D3251",
+      "secondaryContainer": "#4A3D61",
+      "onSecondaryContainer": "#EEE5FF",
+      "tertiary": "#B2C5E2",
+      "tertiaryContainer": "#334359",
+      "onTertiaryContainer": "#DFE8F6",
+      "background": "#18202B",
+      "onBackground": "#E7ECF3",
+      "surface": "#232E3B",
+      "onSurface": "#E7ECF3",
+      "surfaceVariant": "#354150",
+      "onSurfaceVariant": "#B4BFCD",
+      "surfaceContainer": "#283442",
+      "surfaceContainerLow": "#202A36",
+      "surfaceContainerHigh": "#2D3A49",
+      "surfaceContainerHighest": "#354150",
+      "outline": "#6E7D91",
+      "outlineVariant": "#354150",
+      "cardStart": "#2C4058",
+      "cardEnd": "#40394F",
+      "courseAccents": [
+        "#526986",
+        "#87739E",
+        "#4B8587",
+        "#B2806C",
+        "#998953",
+        "#6F80A5"
+      ]
+    }
+  },
+  "companion": {
+    "name": "角色全名",
+    "shortName": "角色简称",
+    "tagline": "请填写陪伴卡说明",
+    "attribution": "请填写角色版权和素材来源",
+    "artworks": [
+      {
+        "id": "portrait",
+        "label": "默认立绘",
+        "file": "artwork/portrait.png",
+        "periods": [
+          "morning",
+          "noon",
+          "evening"
+        ],
+        "scenes": [
+          "greeting",
+          "study",
+          "empty",
+          "rest"
+        ],
+        "framing": "fit"
+      }
+    ],
+    "quotes": {
+      "morning": [
+        "早晨占位文案，请替换。"
+      ],
+      "noon": [
+        "午间占位文案，请替换。"
+      ],
+      "evening": [
+        "夜晚占位文案，请替换。"
+      ]
+    },
+    "contextLines": {}
+  }
+}

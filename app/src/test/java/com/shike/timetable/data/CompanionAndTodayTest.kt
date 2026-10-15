@@ -6,72 +6,78 @@ import java.time.LocalTime
 import kotlin.random.Random
 import org.junit.Assert.*
 import org.junit.Test
+import com.shike.timetable.theme.*
+import java.io.File
 
 class CompanionAndTodayTest {
+    private val theme = ThemePackParser.parse(File("src/main/assets/themes/himari/theme.json").readText())
+    private val content = theme.companion!!
+    private fun at(moment: LocalDateTime) = CompanionEngine.at(theme, moment)!!
+    private fun pictures(part: DayPart) = content.pictures(part).map { it.id }
+    private fun next(moment: LocalDateTime, current: CompanionMoment, recent: List<String>, random: Random) =
+        CompanionEngine.randomNext(theme, moment, current, recent, random)!!
     @Test fun timeSlotsCrossMidnightAndRotateWithoutJitter() {
-        assertEquals(HimariDayPart.Evening, HimariCompanion.partAt(LocalTime.of(4, 59)))
-        assertEquals(HimariDayPart.Morning, HimariCompanion.partAt(LocalTime.of(5, 0)))
-        assertEquals(HimariDayPart.Noon, HimariCompanion.partAt(LocalTime.of(11, 0)))
-        assertEquals(HimariDayPart.Evening, HimariCompanion.partAt(LocalTime.of(17, 0)))
+        assertEquals(DayPart.Evening, DayPart.at(LocalTime.of(4, 59)))
+        assertEquals(DayPart.Morning, DayPart.at(LocalTime.of(5, 0)))
+        assertEquals(DayPart.Noon, DayPart.at(LocalTime.of(11, 0)))
+        assertEquals(DayPart.Evening, DayPart.at(LocalTime.of(17, 0)))
         val morning = LocalDateTime.of(2026, 10, 15, 8, 0)
-        assertEquals(HimariCompanion.bucketAt(morning), HimariCompanion.bucketAt(morning.plusMinutes(29)))
-        assertEquals(HimariCompanion.bucketAt(morning) + 1, HimariCompanion.bucketAt(morning.plusMinutes(30)))
-        assertEquals(HimariCompanion.at(morning), HimariCompanion.at(morning.plusMinutes(29)))
-        assertNotEquals(HimariCompanion.at(morning).artwork, HimariCompanion.at(morning.plusMinutes(30)).artwork)
-        assertEquals(4, (0L..3L).map { HimariCompanion.at(morning.plusMinutes(it * 30)).artwork }.toSet().size)
-        assertEquals(morning.toLocalDate().plusDays(1).atStartOfDay(), HimariCompanion.nextBoundary(morning.withHour(23)))
-        assertEquals(morning.withHour(11), HimariCompanion.nextBoundary(morning))
+        assertEquals(CompanionEngine.bucketAt(morning), CompanionEngine.bucketAt(morning.plusMinutes(29)))
+        assertEquals(CompanionEngine.bucketAt(morning) + 1, CompanionEngine.bucketAt(morning.plusMinutes(30)))
+        assertEquals(at(morning), at(morning.plusMinutes(29)))
+        if (pictures(DayPart.Morning).size > 1) assertNotEquals(at(morning).artwork, at(morning.plusMinutes(30)).artwork)
+        assertEquals(morning.toLocalDate().plusDays(1).atStartOfDay(), CompanionEngine.nextBoundary(morning.withHour(23)))
+        assertEquals(morning.withHour(11), CompanionEngine.nextBoundary(morning))
         val midnight = morning.toLocalDate().plusDays(1).atStartOfDay()
-        assertEquals(HimariCompanion.bucketAt(midnight.minusSeconds(1)) + 1, HimariCompanion.bucketAt(midnight))
-        assertEquals(midnight.withHour(5), HimariCompanion.nextBoundary(midnight))
-        assertEquals(morning.withHour(11), HimariCompanion.nextBoundary(morning.withHour(5)))
+        assertEquals(CompanionEngine.bucketAt(midnight.minusSeconds(1)) + 1, CompanionEngine.bucketAt(midnight))
+        assertEquals(midnight.withHour(5), CompanionEngine.nextBoundary(midnight))
+        assertEquals(morning.withHour(11), CompanionEngine.nextBoundary(morning.withHour(5)))
     }
-    @Test fun everySlotHasMultiplePicturesAndDistinctShortDialogue() {
-        assertEquals(120, HimariCompanion.allLines.size)
-        assertEquals(HimariCompanion.allLines.size, HimariCompanion.allLines.toSet().size)
-        assertTrue(HimariCompanion.allLines.all { it.isNotBlank() && it.length <= 45 })
-        assertEquals(6, HimariCompanion.quietLines.size)
-        listOf(HimariCompanion.morningLines, HimariCompanion.noonLines, HimariCompanion.eveningLines)
-            .forEach { assertEquals(38, it.size) }
-        HimariDayPart.entries.forEach { assertEquals(4, HimariCompanion.artworks.getValue(it).distinct().size) }
+    @Test fun everySlotHasValidContentWithoutHardcodedCounts() {
+        assertTrue(content.allLines.all { it.isNotBlank() })
+        DayPart.entries.forEach {
+            val lines = content.quotes.getValue(it)
+            assertTrue(lines.isNotEmpty())
+            assertEquals(lines.size, lines.distinct().size)
+            assertTrue(pictures(it).isNotEmpty())
+        }
     }
     @Test fun randomTapAvoidsCurrentAndRecentFiveLinesWithinTheTimeSlot() {
         val morning = LocalDateTime.of(2026, 10, 15, 8, 0)
-        val pools = listOf(HimariCompanion.morningLines, HimariCompanion.noonLines, HimariCompanion.eveningLines)
+        val pools = listOf(content.quotes.getValue(DayPart.Morning), content.quotes.getValue(DayPart.Noon), content.quotes.getValue(DayPart.Evening))
         listOf(morning, morning.withHour(13), morning.withHour(21)).forEachIndexed { index, moment ->
             val random = Random(300 + index)
-            var current = HimariCompanion.at(moment)
+            var current = at(moment)
             val recent = mutableListOf(current.line)
             val seen = mutableSetOf<String>()
             repeat(200) {
-                val next = HimariCompanion.randomNext(moment, current, recent, random)
-                assertEquals(HimariCompanion.partAt(moment.toLocalTime()), next.part)
+                val next = next(moment, current, recent, random)
+                assertEquals(DayPart.at(moment.toLocalTime()), next.part)
                 assertTrue(next.line in pools[index])
-                assertTrue(next.artwork in HimariCompanion.artworks.getValue(next.part))
-                assertNotEquals(current.line, next.line)
-                assertNotEquals(current.artwork, next.artwork)
-                assertFalse(next.line in recent.takeLast(5))
+                assertTrue(next.artwork in pictures(next.part))
+                if (pools[index].size > 1) assertNotEquals(current.line, next.line)
+                if (pictures(next.part).size > 1) assertNotEquals(current.artwork, next.artwork)
+                if (pools[index].size > 5) assertFalse(next.line in recent.takeLast(5))
                 seen += next.line
                 current = next
                 recent += next.line
             }
-            assertTrue("点击应覆盖多条语录", seen.size > 20)
+            assertTrue("点击应覆盖多条语录", seen.size >= minOf(6, pools[index].size))
         }
     }
     @Test fun randomTapUsesTheNewTimeSlotAndCanBeReproducedForTests() {
         val morning = LocalDateTime.of(2026, 10, 15, 8, 0)
-        val previous = HimariCompanion.at(morning)
+        val previous = at(morning)
         val noon = morning.withHour(11)
-        val recent = HimariCompanion.morningLines.takeLast(5)
-        val selected = HimariCompanion.randomNext(noon, previous, recent, Random(42))
-        assertEquals(HimariDayPart.Noon, selected.part)
-        assertTrue(selected.line in HimariCompanion.noonLines)
-        assertTrue(selected.artwork in HimariCompanion.artworks.getValue(HimariDayPart.Noon))
-        assertFalse(selected.line in HimariCompanion.morningLines)
-        assertEquals(selected, HimariCompanion.randomNext(noon, previous, recent, Random(42)))
-        val late = HimariCompanion.randomNext(morning.withHour(2), selected, listOf(selected.line), Random(7))
-        assertEquals(HimariDayPart.Evening, late.part)
-        assertTrue(late.line in HimariCompanion.eveningLines)
+        val recent = content.quotes.getValue(DayPart.Morning).takeLast(5)
+        val selected = next(noon, previous, recent, Random(42))
+        assertEquals(DayPart.Noon, selected.part)
+        assertTrue(selected.line in content.quotes.getValue(DayPart.Noon))
+        assertTrue(selected.artwork in pictures(DayPart.Noon))
+        assertEquals(selected, next(noon, previous, recent, Random(42)))
+        val late = next(morning.withHour(2), selected, listOf(selected.line), Random(7))
+        assertEquals(DayPart.Evening, late.part)
+        assertTrue(late.line in content.quotes.getValue(DayPart.Evening))
     }
     @Test fun todayUsesRealWeekOddEvenWeekendAndClassroomFallback() {
         val settings = TermSettings(startDate = "2026-09-07", totalWeeks = 20, showWeekend = false)

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="false"
         android:theme="@style/Theme.Shike">
-        <receiver android:name=".widget.TodayWidgetProvider" android:exported="true" android:label="阳茉莉 · 今日课表">
+        <receiver android:name=".widget.TodayWidgetProvider" android:exported="true" android:label="拾课 · 今日课表">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.intent.action.DATE_CHANGED" />

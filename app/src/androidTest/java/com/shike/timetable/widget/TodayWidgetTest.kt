@@ -22,6 +22,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.shike.timetable.MainActivity
 import com.shike.timetable.R
 import com.shike.timetable.data.*
+import com.shike.timetable.theme.*
 import java.io.File
 import java.io.FileInputStream
 import java.time.LocalDate
@@ -126,18 +127,21 @@ class TodayWidgetTest {
                 waitFor("增大后应能同时显示更多课程") { widget.findViewById<ListView>(R.id.widget_courses).childCount >= 3 }
                 snapshot("小组件-展开")
                 val initialMoment = LocalDateTime.now()
-                val initialLine = HimariInteractionStore(context).current(initialMoment).line
+                val initialLine = CompanionInteractionStore(context).current(ThemeRepository.get(context).find("himari"), initialMoment)!!.line
                 main { widget.updateAppWidget(TodayWidgetViews.build(context, id, data, initialMoment)) }
                 waitFor("语录应与应用共享当前选择") { widget.findViewById<TextView>(R.id.widget_quote).text.toString() == "阳茉莉：$initialLine" }
+                main { assertEquals(android.view.View.VISIBLE, widget.findViewById<android.view.View>(R.id.widget_shuffle_hint).visibility) }
                 val firstTapMoment = LocalDateTime.now()
                 onView(withId(R.id.widget_quote)).perform(click())
                 waitFor("点击语录应随机换一句") {
                     widget.findViewById<TextView>(R.id.widget_quote).text.toString() != "阳茉莉：$initialLine"
                 }
+                waitFor("首次换句后应永久隐藏提示") { widget.findViewById<android.view.View>(R.id.widget_shuffle_hint).visibility == android.view.View.GONE }
+                assertFalse(CompanionInteractionStore(context).showShuffleHint())
                 val firstObservedMoment = LocalDateTime.now()
-                val quoteAfterTap = HimariInteractionStore(context).current(firstObservedMoment).line
+                val quoteAfterTap = CompanionInteractionStore(context).current(ThemeRepository.get(context).find("himari"), firstObservedMoment)!!.line
                 main {
-                    if (HimariCompanion.bucketAt(firstTapMoment) == HimariCompanion.bucketAt(firstObservedMoment)) {
+                    if (CompanionEngine.bucketAt(firstTapMoment) == CompanionEngine.bucketAt(firstObservedMoment)) {
                         assertEquals("阳茉莉：$quoteAfterTap", widget.findViewById<TextView>(R.id.widget_quote).text.toString())
                     }
                     assertEquals("点击语录不应改变课程数量", 10, widget.findViewById<ListView>(R.id.widget_courses).count)
@@ -145,17 +149,17 @@ class TodayWidgetTest {
                 assertEquals("随机互动不应写入课程数据", data, ScheduleStore(context).read())
                 var beforePortraitTap = ""
                 main { beforePortraitTap = widget.findViewById<TextView>(R.id.widget_quote).text.toString() }
-                onView(withId(R.id.widget_himari)).perform(click())
+                onView(withId(R.id.widget_portrait)).perform(click())
                 waitFor("点击立绘也应切换语录") {
                     widget.findViewById<TextView>(R.id.widget_quote).text.toString() != beforePortraitTap
                 }
                 val selectedMoment = LocalDateTime.now()
-                val selectedLine = HimariInteractionStore(context).current(selectedMoment).line
+                val selectedLine = CompanionInteractionStore(context).current(ThemeRepository.get(context).find("himari"), selectedMoment)!!.line
                 main { widget.findViewById<TextView>(R.id.widget_title).text = "等待刷新验证" }
                 onView(withId(R.id.widget_refresh)).perform(click())
                 waitFor("刷新按钮应更新小组件") { widget.findViewById<TextView>(R.id.widget_title).text.toString() == "今日课表" }
                 main {
-                    if (HimariCompanion.bucketAt(selectedMoment) == HimariCompanion.bucketAt(LocalDateTime.now())) {
+                    if (CompanionEngine.bucketAt(selectedMoment) == CompanionEngine.bucketAt(LocalDateTime.now())) {
                         assertEquals("普通刷新应保留手选语录", "阳茉莉：$selectedLine", widget.findViewById<TextView>(R.id.widget_quote).text.toString())
                     }
                     assertEquals(10, widget.findViewById<ListView>(R.id.widget_courses).count)
@@ -167,7 +171,7 @@ class TodayWidgetTest {
                     widget.findViewById<ListView>(R.id.widget_courses).getChildAt(0)?.findViewById<TextView>(R.id.widget_course_room)?.text == "新教学楼 201"
                 }
                 main {
-                    if (HimariCompanion.bucketAt(selectedMoment) == HimariCompanion.bucketAt(LocalDateTime.now())) {
+                    if (CompanionEngine.bucketAt(selectedMoment) == CompanionEngine.bucketAt(LocalDateTime.now())) {
                         assertEquals("修改课程也应保留手选语录", "阳茉莉：$selectedLine", widget.findViewById<TextView>(R.id.widget_quote).text.toString())
                     }
                 }
@@ -180,14 +184,29 @@ class TodayWidgetTest {
                 }
                 main { widget.updateAppWidget(TodayWidgetViews.build(context, id, darkData, date.atTime(21, 0))) }
                 snapshot("小组件-夜晚")
+                AppearanceStore(context).themeId = "minimal"
+                TodayWidgetUpdates.request(context)
+                waitFor("切换简约主题应隐藏角色与语录") {
+                    widget.findViewById<android.view.View>(R.id.widget_portrait_companion).visibility == android.view.View.GONE &&
+                        widget.findViewById<TextView>(R.id.widget_quote).text.isEmpty() &&
+                        widget.findViewById<TextView>(R.id.widget_title).currentTextColor == android.graphics.Color.parseColor("#E7ECF3")
+                }
+                assertEquals(darkData, ScheduleStore(context).read())
+                snapshot("小组件-简约")
+                AppearanceStore(context).themeId = "himari"
+                TodayWidgetUpdates.request(context)
+                waitFor("返回角色主题应保留提示已隐藏状态") {
+                    widget.findViewById<android.view.View>(R.id.widget_portrait_companion).visibility == android.view.View.VISIBLE &&
+                        widget.findViewById<android.view.View>(R.id.widget_shuffle_hint).visibility == android.view.View.GONE
+                }
                 ScheduleStore(context).save(changed.copy(courses = emptyList()))
                 waitFor("清空后不应保留过期课程") { widget.findViewById<ListView>(R.id.widget_courses)?.count == 0 }
                 waitFor("无课提示应可见") { widget.findViewById<TextView>(R.id.widget_empty).visibility == android.view.View.VISIBLE }
                 snapshot("小组件-无课")
-                context.getSharedPreferences("shike_appearance", Context.MODE_PRIVATE).edit().putBoolean("show_himari", false).commit()
+                context.getSharedPreferences("shike_appearance", Context.MODE_PRIVATE).edit().putBoolean("show_companion", false).commit()
                 TodayWidgetUpdates.request(context)
                 waitFor("关闭角色后应隐藏立绘及语录切换区域") {
-                    widget.findViewById<android.view.View>(R.id.widget_himari).visibility == android.view.View.GONE &&
+                    widget.findViewById<android.view.View>(R.id.widget_portrait).visibility == android.view.View.GONE &&
                         widget.findViewById<android.view.View>(R.id.widget_companion).visibility == android.view.View.GONE &&
                         widget.findViewById<android.view.View>(R.id.widget_portrait_companion).visibility == android.view.View.GONE
                 }

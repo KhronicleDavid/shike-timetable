@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shike.timetable.data.*
+import com.shike.timetable.theme.*
 import com.shike.timetable.ui.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -153,16 +154,20 @@ class BackupViewModel : ViewModel() {
 @Composable private fun ShikeApp(backup: BackupViewModel, widgetLaunch: Intent?, onWidgetHandled: () -> Unit) {
     val context = LocalContext.current
     val store = remember { ScheduleStore(context) }
-    val appearance = remember { context.getSharedPreferences("shike_appearance", Context.MODE_PRIVATE) }
-    var showMascot by remember { mutableStateOf(appearance.getBoolean("show_himari", true)) }
+    val appearance = remember { AppearanceStore(context) }
+    val themes = remember { ThemeRepository.get(context) }
+    var themeId by remember { mutableStateOf(appearance.themeId) }
+    val theme = themes.find(themeId)
+    var showMascot by remember { mutableStateOf(appearance.showCompanion) }
     var data by remember { mutableStateOf(store.read()) }
     var tab by rememberSaveable { mutableIntStateOf(0) }
     var editor by rememberSaveable { mutableStateOf(false) }
     var schoolImport by rememberSaveable { mutableStateOf(false) }
     var editingId by rememberSaveable { mutableStateOf<String?>(null) }
     var clockTime by remember { mutableStateOf(LocalDateTime.now()) }
-    val companionStore = remember { HimariInteractionStore(context) }
-    var companion by remember { mutableStateOf(companionStore.current(clockTime)) }
+    val companionStore = remember { CompanionInteractionStore(context) }
+    var companion by remember(theme.id) { mutableStateOf(companionStore.current(theme, clockTime)) }
+    var showShuffleHint by remember { mutableStateOf(companionStore.showShuffleHint()) }
     val today = clockTime.toLocalDate()
     val currentWeek = ScheduleRules.currentWeek(data.settings, today)
     var selectedWeek by rememberSaveable { mutableIntStateOf(currentWeek.coerceIn(1, data.settings.totalWeeks)) }
@@ -185,25 +190,38 @@ class BackupViewModel : ViewModel() {
     LaunchedEffect(backup.resultMessage) {
         backup.resultMessage?.let { message(it); backup.consumeMessage() }
     }
-    LaunchedEffect(Unit) { while (true) {
-        delay(60_000)
+    LaunchedEffect(theme.id) { while (true) {
+        delay(60_000 - System.currentTimeMillis() % 60_000)
         clockTime = LocalDateTime.now()
-        companion = companionStore.current(clockTime)
+        companion = companionStore.current(theme, clockTime)
+        showShuffleHint = companionStore.showShuffleHint()
     } }
-    DisposableEffect(context) {
+    DisposableEffect(context, theme.id) {
         val lifecycle = (context as ComponentActivity).lifecycle
+        val interactionPreferences = context.getSharedPreferences(CompanionInteractionStore.PREFERENCES, Context.MODE_PRIVATE)
+        val hintObserver = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == CompanionInteractionStore.HINT_DISMISSED) showShuffleHint = companionStore.showShuffleHint()
+        }
+        interactionPreferences.registerOnSharedPreferenceChangeListener(hintObserver)
         val observer = LifecycleEventObserver { _, event -> if (event == Lifecycle.Event.ON_RESUME) {
             clockTime = LocalDateTime.now()
-            companion = companionStore.current(clockTime)
+            themeId = appearance.themeId
+            showMascot = appearance.showCompanion
+            companion = companionStore.current(themes.find(appearance.themeId), clockTime)
+            showShuffleHint = companionStore.showShuffleHint()
         } }
         lifecycle.addObserver(observer)
-        onDispose { lifecycle.removeObserver(observer) }
+        onDispose {
+            lifecycle.removeObserver(observer)
+            interactionPreferences.unregisterOnSharedPreferenceChangeListener(hintObserver)
+        }
     }
     LaunchedEffect(widgetLaunch) {
         if (widgetLaunch != null) {
             data = store.read()
             clockTime = LocalDateTime.now()
-            companion = companionStore.current(clockTime)
+            companion = companionStore.current(theme, clockTime)
+            showShuffleHint = companionStore.showShuffleHint()
             tab = 0
             selectedWeek = ScheduleRules.currentWeek(data.settings, clockTime.toLocalDate()).coerceIn(1, data.settings.totalWeeks)
             schoolImport = false
@@ -219,10 +237,11 @@ class BackupViewModel : ViewModel() {
             lastCurrentWeek = currentWeek
         }
     }
-    ShikeTheme(data.settings.darkMode, showMascot, moment = clockTime, companion = companion,
-        onHimariShuffle = {
+    ShikeTheme(data.settings.darkMode, theme, showMascot, companion = companion, showShuffleHint = showShuffleHint,
+        onCompanionShuffle = {
             clockTime = LocalDateTime.now()
-            companion = companionStore.shuffle(clockTime)
+            companion = companionStore.shuffle(theme, clockTime)
+            showShuffleHint = companionStore.showShuffleHint()
             TodayWidgetUpdates.request(context)
         }) {
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -234,7 +253,7 @@ class BackupViewModel : ViewModel() {
                             schoolImport = false
                             tab = 0
                             selectedWeek = ScheduleRules.currentWeek(imported.settings, today).coerceIn(1, imported.settings.totalWeeks)
-                            message("教务课表已导入\n${HimariCompanion.quietLines[5]}")
+                            message(listOfNotNull("教务课表已导入", theme.companion?.contextLines?.get("import_saved")?.takeIf { showMascot }).joinToString("\n"))
                         }
                         saved
                     }, onBack = { schoolImport = false })
@@ -243,7 +262,7 @@ class BackupViewModel : ViewModel() {
                 CourseEditorScreen(data.courses.find { it.id == editingId }, data.settings, data.courses,
                     onSave = { course ->
                         val next = data.copy(courses = data.courses.filterNot { it.id == course.id } + course)
-                        if (save(next)) { editor = false; message("课程已保存\n${HimariCompanion.quietLines[3]}") }
+                        if (save(next)) { editor = false; message(listOfNotNull("课程已保存", theme.companion?.contextLines?.get("course_saved")?.takeIf { showMascot }).joinToString("\n")) }
                     }, onDelete = { course -> if (save(data.copy(courses = data.courses.filterNot { it.id == course.id }))) { editor = false; message("课程已删除") } },
                     onBack = { editor = false })
             } else {
@@ -263,7 +282,12 @@ class BackupViewModel : ViewModel() {
                             onImport = { import.launch(arrayOf("application/json", "text/plain", "application/octet-stream")) },
                             onSchoolImport = { schoolImport = true },
                             onClear = { save(data.copy(courses = emptyList())) },
-                            showMascot = showMascot, onMascot = { showMascot = it; appearance.edit().putBoolean("show_himari", it).apply(); TodayWidgetUpdates.request(context) },
+                            themes = themes.themes, onTheme = { selected ->
+                                appearance.themeId = selected.id; themeId = selected.id
+                                clockTime = LocalDateTime.now(); companion = companionStore.current(selected, clockTime)
+                                showShuffleHint = companionStore.showShuffleHint(); TodayWidgetUpdates.request(context)
+                            },
+                            showMascot = showMascot, onMascot = { showMascot = it; appearance.showCompanion = it; TodayWidgetUpdates.request(context) },
                             modifier = Modifier.padding(padding))
                     }
                 }
@@ -348,11 +372,11 @@ class BackupViewModel : ViewModel() {
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(title, style = MaterialTheme.typography.headlineLarge)
-                if (title == "拾课") HimariFlower(Modifier.padding(start = 9.dp).size(22.dp))
+                if (title == "拾课" && LocalCompanionVisible.current) ThemeFlower(Modifier.padding(start = 9.dp).size(22.dp))
             }
             Text(subtitle, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, modifier = Modifier.padding(top = 3.dp))
         }
-        if (title == "我的课程" && LocalHimariVisible.current) HimariPortrait(Modifier.padding(end = 8.dp).size(56.dp, 70.dp), artwork = HimariArtwork.Study)
+        if (title == "我的课程" && LocalCompanionVisible.current) CompanionPortrait(Modifier.padding(end = 8.dp).size(56.dp, 70.dp), scene = "study")
         if (onAdd != null) FilledIconButton(onClick = onAdd, modifier = Modifier.size(42.dp).semantics { contentDescription = "添加课程" }, shape = RoundedCornerShape(15.dp)) {
             AppGlyph(3, MaterialTheme.colorScheme.onPrimary, Modifier.size(23.dp))
         }
@@ -366,8 +390,8 @@ class BackupViewModel : ViewModel() {
     val todayCourses = ScheduleRules.coursesForWeek(data.courses, currentWeek).filter { it.day == today.dayOfWeek.value }.sortedBy { it.startPeriod }
     val next = todayCourses.firstOrNull { runCatching { LocalTime.parse(data.settings.periods[it.endPeriod - 1].end) > now }.getOrDefault(false) }
     Column(modifier.fillMaxSize().padding(horizontal = 20.dp)) {
-        PageTitle("拾课", if (LocalHimariVisible.current) "阳茉莉陪你，把时间留给热爱" else "把时间留给热爱", onAdd)
-        HimariCompanionCard(
+        PageTitle("拾课", if (LocalCompanionVisible.current) "${LocalAppTheme.current.companion?.shortName}陪你，${LocalAppTheme.current.companion?.tagline}" else "把时间留给热爱", onAdd)
+        CompanionCard(
             title = when { currentWeek < 1 -> "新学期，准备出发"; currentWeek > data.settings.totalWeeks -> "学期已结束，好好休息"; todayCourses.isEmpty() -> "今天没有课\n自由安排时间"; next == null -> "今日课程已结束"; else -> "今天 · ${todayCourses.size} 门课" },
             detail = next?.let { "${data.settings.periods[it.startPeriod - 1].start}  ${it.name}${if (it.room.isBlank()) "" else " · ${it.room}"}" }
                 ?: "${today.monthValue}月${today.dayOfMonth}日  ·  ${listOf("周一","周二","周三","周四","周五","周六","周日")[today.dayOfWeek.value - 1]}\n留一点时间，做喜欢的事。",
@@ -397,7 +421,7 @@ class BackupViewModel : ViewModel() {
             BoxWithConstraints(Modifier.weight(1f).fillMaxWidth()) {
                 val illustrationSize = (maxHeight - 140.dp * LocalDensity.current.fontScale).coerceIn(48.dp, 180.dp)
                 Box(Modifier.fillMaxSize().verticalScroll(rememberScrollState()), contentAlignment = Alignment.Center) {
-                    HimariEmptyState("这一周，留白也很美", if (LocalHimariVisible.current) HimariCompanion.quietLines[if (todayCourses.isEmpty()) 0 else 1] else "添加课程，开始规划你的学期", illustrationSize = illustrationSize) {
+                    CompanionEmptyState("这一周，留白也很美", if (LocalCompanionVisible.current) LocalAppTheme.current.companion?.contextLines?.get(if (todayCourses.isEmpty()) "free_day" else "empty_week") ?: "添加课程，开始规划你的学期" else "添加课程，开始规划你的学期", illustrationSize = illustrationSize) {
                         TextButton(onClick = onAdd) { Text("添加第一门课") }
                     }
                 }
@@ -473,7 +497,7 @@ private fun placeCourses(courses: List<Course>): Pair<List<Placement>, Int> {
     val filtered = (if (onlyThisWeek) ScheduleRules.coursesForWeek(data.courses, week) else data.courses)
         .filter { query.isBlank() || listOf(it.name, it.room, it.teacher).any { s -> s.contains(query, ignoreCase = true) } }.sortedWith(compareBy<Course> { it.day }.thenBy { it.startPeriod })
     Column(modifier.fillMaxSize().padding(horizontal = 20.dp)) {
-        PageTitle("我的课程", if (LocalHimariVisible.current) "阳茉莉的课程手记" else "每一份热爱，都值得安排", onAdd)
+        PageTitle("我的课程", if (LocalCompanionVisible.current) "${LocalAppTheme.current.companion?.shortName}的课程手记" else "每一份热爱，都值得安排", onAdd)
         OutlinedTextField(query, { query = it }, placeholder = { Text("搜索课程、教师或教室", fontSize = 13.sp) }, singleLine = true,
             shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth(), colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant, unfocusedContainerColor = MaterialTheme.colorScheme.surface))
         Row(Modifier.fillMaxWidth().padding(vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -482,8 +506,8 @@ private fun placeCourses(courses: List<Course>): Pair<List<Placement>, Int> {
             Spacer(Modifier.weight(1f)); Text("${filtered.size} 门", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
         }
         if (filtered.isEmpty()) Box(Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()), contentAlignment = Alignment.Center) {
-            HimariEmptyState(if (query.isNotBlank()) "没有找到相关课程" else "还没有课程，点击右上角添加",
-                if (LocalHimariVisible.current) HimariCompanion.quietLines[if (query.isNotBlank()) 4 else 1]
+            CompanionEmptyState(if (query.isNotBlank()) "没有找到相关课程" else "还没有课程，点击右上角添加",
+                if (LocalCompanionVisible.current) LocalAppTheme.current.companion?.contextLines?.get(if (query.isNotBlank()) "search_empty" else "empty_week") ?: "添加课程，开始规划你的学期"
                     else if (query.isNotBlank()) "试试课程名、教师或教室的其他关键词" else "从一门课开始，慢慢填满这个学期")
         }
         else LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 20.dp)) {

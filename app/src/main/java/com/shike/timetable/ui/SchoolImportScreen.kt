@@ -265,7 +265,7 @@ private fun SchoolWelcome(model: SchoolImportViewModel, onOpen: () -> Unit, onFi
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(22.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {
         Spacer(Modifier.height(14.dp))
         Text("把学校课表\n带进拾课", style = MaterialTheme.typography.headlineLarge)
-        HimariCompanionCard("新学期，一起准备好", "登录学校官网，核对后再导入。", label = "阳茉莉 · 学期准备", artwork = HimariArtwork.Study)
+        CompanionCard("新学期，一起准备好", "登录学校官网，核对后再导入。", label = "${LocalAppTheme.current.companion?.shortName.orEmpty()} · 学期准备", scene = "study")
         Text("在学校官网完成登录，打开课表后即可读取。导入前会显示完整预览，由你确认课程和学期。", color = MaterialTheme.colorScheme.onSurfaceVariant)
         ImportCard {
             Text("电子科技大学", style = MaterialTheme.typography.titleLarge)

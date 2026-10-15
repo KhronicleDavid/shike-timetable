@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
@@ -18,16 +19,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shike.timetable.data.*
+import com.shike.timetable.theme.ThemePack
 import java.time.LocalDate
 
 @Composable fun SettingsScreen(data: ScheduleData, onSettings: (TermSettings) -> Unit, onExport: () -> Unit,
     onImport: () -> Unit, onSchoolImport: () -> Unit, onClear: () -> Unit,
+    themes: List<ThemePack>, onTheme: (ThemePack) -> Unit,
     modifier: Modifier = Modifier, showMascot: Boolean = true, onMascot: (Boolean) -> Unit = {}) {
     var dialog by rememberSaveable { mutableStateOf("") }
+    val theme = LocalAppTheme.current
+    val companion = theme.companion
     Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 20.dp)) {
         Text("设置", style = MaterialTheme.typography.headlineLarge, modifier = Modifier.padding(top = 19.dp))
         Text("让课表更适合你", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, modifier = Modifier.padding(top = 3.dp, bottom = 18.dp))
-        if (showMascot) HimariCompanionCard("温柔陪伴，从容上课", "皆原阳茉莉\n把平凡的上课日，过得轻盈一点。", label = "拾课 × 阳茉莉", modifier = Modifier.padding(bottom = 15.dp))
+        if (LocalCompanionVisible.current) CompanionCard("温柔陪伴，从容上课", "${companion?.name}\n${companion?.tagline}", label = "拾课 × ${companion?.shortName}", modifier = Modifier.padding(bottom = 15.dp))
         SectionLabel("学期与作息")
         SettingsCard {
             SettingRow("当前学期", "${data.settings.name}\n${data.settings.startDate} 开学 · ${data.settings.totalWeeks} 周", { dialog = "term" })
@@ -36,9 +41,13 @@ import java.time.LocalDate
         }
         SectionLabel("外观")
         SettingsCard {
-            SettingRow("阳茉莉的小小画册", "原画与十五幅重绘 · 早晨、午间、夜晚", { dialog = "himari" })
+            SettingRow("整体主题", "${theme.name}\n${theme.description}", { dialog = "theme" })
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-            SettingRow("桌面今日课表", "课程、教室与阳茉莉 · 可滚动和调节高度", { dialog = "widget" })
+            if (companion != null) {
+                SettingRow("${companion.shortName}的小小画册", "${companion.artworks.size} 幅插画 · 早晨、午间、夜晚", { dialog = "gallery" })
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            }
+            SettingRow("桌面今日课表", "课程与教室 · 随整体主题切换外观", { dialog = "widget" })
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             Row(Modifier.fillMaxWidth().padding(17.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) { Text("显示周末", fontWeight = FontWeight.Medium); Text("在周课表中显示周六和周日", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp, modifier = Modifier.padding(top = 4.dp)) }
@@ -46,7 +55,7 @@ import java.time.LocalDate
             }
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             Column(Modifier.padding(17.dp)) {
-                Text("主题", fontWeight = FontWeight.Medium)
+                Text("明暗模式", fontWeight = FontWeight.Medium)
                 Row(Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf("system" to "跟随系统", "light" to "浅色", "dark" to "深色").forEach { (value, label) ->
                         FilterChip(data.settings.darkMode == value, { onSettings(data.settings.copy(darkMode = value)) }, label = { Text(label, fontSize = 12.sp) }, modifier = Modifier.weight(1f))
@@ -57,10 +66,11 @@ import java.time.LocalDate
         SettingsCard {
             Row(Modifier.fillMaxWidth().padding(17.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("阳茉莉陪伴", fontWeight = FontWeight.Medium)
-                    Text("在应用和桌面小组件中显示吉祥物", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp, modifier = Modifier.padding(top = 4.dp))
+                    Text(if (companion != null) "${companion.shortName}陪伴" else "角色陪伴", fontWeight = FontWeight.Medium)
+                    Text(if (companion != null) "在应用和桌面小组件中显示吉祥物" else "当前主题不包含角色插画与语录", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp, modifier = Modifier.padding(top = 4.dp))
                 }
-                Switch(showMascot, onMascot, modifier = Modifier.semantics { contentDescription = "阳茉莉陪伴" })
+                Switch(showMascot && companion != null, onMascot, enabled = companion != null,
+                    modifier = Modifier.semantics { contentDescription = if (companion != null) "${companion.shortName}陪伴" else "角色陪伴" })
             }
         }
         SectionLabel("课表数据")
@@ -75,15 +85,28 @@ import java.time.LocalDate
         }
         Column(Modifier.fillMaxWidth().padding(vertical = 30.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                HimariFlower(Modifier.size(18.dp))
-                Text("拾课  1.4.0", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(start = 7.dp))
+                if (companion != null) ThemeFlower(Modifier.size(18.dp))
+                Text("拾课  1.5.0", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(start = 7.dp))
             }
             Text("本机保存 · 无广告", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .8f), fontSize = 10.sp, modifier = Modifier.padding(top = 5.dp))
         }
     }
     when (dialog) {
         "widget" -> WidgetHelpDialog { dialog = "" }
-        "himari" -> HimariGallery { dialog = "" }
+        "gallery" -> CompanionGallery { dialog = "" }
+        "theme" -> AlertDialog(onDismissRequest = { dialog = "" }, title = { Text("选择整体主题") },
+            text = { Column(Modifier.verticalScroll(rememberScrollState())) {
+                themes.forEach { option ->
+                    Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable { onTheme(option); dialog = "" }.padding(vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically) {
+                        RadioButton(theme.id == option.id, onClick = null)
+                        Column(Modifier.padding(start = 10.dp)) {
+                            Text(option.name, style = MaterialTheme.typography.titleMedium)
+                            Text(option.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                    }
+                }
+            } }, confirmButton = { TextButton(onClick = { dialog = "" }) { Text("关闭") } })
         "term" -> TermDialog(data, { onSettings(it); dialog = "" }, { dialog = "" })
         "periods" -> PeriodsDialog(data.settings, { onSettings(it); dialog = "" }, { dialog = "" })
         "clear" -> AlertDialog(onDismissRequest = { dialog = "" }, title = { Text("清空所有课程？") }, text = { Text("这会删除 ${data.courses.size} 门课程。建议先导出备份，删除后无法撤销。") },

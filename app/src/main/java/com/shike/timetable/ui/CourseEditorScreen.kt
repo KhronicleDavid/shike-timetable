@@ -53,7 +53,6 @@ import androidx.compose.ui.unit.sp
 import com.shike.timetable.data.Course
 import com.shike.timetable.data.ScheduleRules
 import com.shike.timetable.data.TermSettings
-import com.shike.timetable.data.HimariCompanion
 import java.util.UUID
 
 @Composable
@@ -192,7 +191,7 @@ fun CourseEditorScreen(
                 .padding(bottom = 20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            EditorSection(title = "课程信息", subtitle = if (LocalHimariVisible.current && name.isNotBlank() && room.isBlank()) HimariCompanion.quietLines[2] else "从一门新课程开始") {
+            EditorSection(title = "课程信息", subtitle = if (LocalCompanionVisible.current && name.isNotBlank() && room.isBlank()) LocalAppTheme.current.companion?.contextLines?.get("classroom_pending") ?: "从一门新课程开始" else "从一门新课程开始") {
                 EditorTextField(
                     value = name,
                     onValueChange = { name = it; errorMessage = null },

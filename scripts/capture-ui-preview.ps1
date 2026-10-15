@@ -9,11 +9,11 @@ $ErrorActionPreference = 'Stop'
 $PreviewProjectRoot = Split-Path -Parent $PSScriptRoot
 $PreviewDirectory = Join-Path $PreviewProjectRoot 'screenshots'
 New-Item -ItemType Directory -Force -Path $PreviewDirectory | Out-Null
-$PreviewNames = if ($Widget) { @('小组件-紧凑', '小组件-展开', '小组件-午间', '小组件-夜晚', '小组件-无课') }
+$PreviewNames = if ($Widget) { @('小组件-紧凑', '小组件-展开', '小组件-午间', '小组件-夜晚', '小组件-无课', '小组件-简约') }
 elseif ($LargeFont) { @('阳茉莉-课表-浅色', '阳茉莉-空课表') } else {
     @('阳茉莉-课表-浅色', '阳茉莉-课表-深色', '阳茉莉-课表-七天', '阳茉莉-课程',
       '阳茉莉-课程编辑', '阳茉莉-设置', '阳茉莉-画册', '阳茉莉-教务导入', '阳茉莉-空课表', '阳茉莉-关闭陪伴',
-      '阳茉莉-点击换句', '阳茉莉-画册-新增')
+      '阳茉莉-点击换句', '阳茉莉-画册-新增', '主题-简约', '主题-阳茉莉-提示已隐藏')
 }
 
 # 仅读取 HimariAppearanceTest 使用虚构示例生成的截图，不捕获当前个人课表。
