@@ -1,0 +1,1039 @@
+{
+  "engine": "IndexTTS-2.5",
+  "synthetic": true,
+  "language": "JA",
+  "reference": {
+    "sourceFile": "100800540.ogg",
+    "sourceSha256": "cd26d93cbdb965ed50eec8bff36c6543c2c520417e85a1c07ec971d23a37775f",
+    "seconds": 5.198,
+    "sha256": "bb0bf856983e9aebb4a5f60bdc12b9930a8195f70463ebeca5bbb56cde2c4de9"
+  },
+  "clips": [
+    {
+      "line": "早上好～先看看今天的课，再从容地出发吧。",
+      "text": "おはよう。今日の授業を確かめて、ゆっくり出発しましょう。",
+      "language": "JA",
+      "file": "voice/morning_001.ogg",
+      "seconds": 5.631,
+      "sampleRate": 22050,
+      "sha256": "99a4932a693da3ee4535303d880a8fa62ec31541b5159ef0200d7bdcf9872789"
+    },
+    {
+      "line": "呵呵，新的一天，也想和你分享一点好心情呢。",
+      "text": "ふふ、新しい一日も、あなたと楽しい気持ちを分け合いたいな。",
+      "language": "JA",
+      "file": "voice/morning_002.ogg",
+      "seconds": 6.908,
+      "sampleRate": 22050,
+      "sha256": "571f8fddf4b72dded4ed22e73195ad11c2405de3e36ddd3669c365287aa968d0"
+    },
+    {
+      "line": "早餐吃了吗？空着肚子，可听不清知识的旋律哦。",
+      "text": "朝ごはんは食べましたか。お腹がすいていたら、お勉強の旋律も聞き逃しちゃいますよ。",
+      "language": "JA",
+      "file": "voice/morning_003.ogg",
+      "seconds": 8.022,
+      "sampleRate": 22050,
+      "sha256": "ef8be755141735a1454033eebfc3adc7cc24827f02e0ff82dbb98f82648a7c24"
+    },
+    {
+      "line": "今天第一间教室在哪里？我们再确认一下吧。",
+      "text": "今日の最初の教室はどこかな。もう一度確かめましょう。",
+      "language": "JA",
+      "file": "voice/morning_004.ogg",
+      "seconds": 5.828,
+      "sampleRate": 22050,
+      "sha256": "ab9bf1b99581c15f88c0ddcdc1a4b51f8e739601433794f455df2cf32a50e5c0"
+    },
+    {
+      "line": "嗯哼哼，清晨的光，好像给窗边镀了一层金色。",
+      "text": "ふふっ、朝の光が、窓辺を金色に染めていますね。",
+      "language": "JA",
+      "file": "voice/morning_005.ogg",
+      "seconds": 6.467,
+      "sampleRate": 22050,
+      "sha256": "c9522adc76c13c98f09079ff5be51874877054a54b61102fa105713d2e91e311"
+    },
+    {
+      "line": "要是有刚出炉的蜜瓜包，早起也会变得很值得呢。",
+      "text": "焼きたてのメロンパンがあったら、早起きも楽しみになりそうですね。",
+      "language": "JA",
+      "file": "voice/morning_006.ogg",
+      "seconds": 6.385,
+      "sampleRate": 22050,
+      "sha256": "9e93d5aa94a7dcc1ee1bca9f661f0b6f301561ae24a7e7716671509f0d39c7db"
+    },
+    {
+      "line": "书本、水杯，还有今天要交的东西，都带好了吧？",
+      "text": "教科書と水筒、それから今日提出するものも、持ちましたか。",
+      "language": "JA",
+      "file": "voice/morning_007.ogg",
+      "seconds": 6.989,
+      "sampleRate": 22050,
+      "sha256": "1fcbc484ae12781ed18e2290da48c49c693cb9e18900f45487fc318b7bb43d8e"
+    },
+    {
+      "line": "早晨的脚步不用太急，提前一点就安心啦。",
+      "text": "朝は慌てなくて大丈夫。少し早めに出れば安心ですよ。",
+      "language": "JA",
+      "file": "voice/morning_008.ogg",
+      "seconds": 6.861,
+      "sampleRate": 22050,
+      "sha256": "593b49fff305b2f9861c6514b6bffd23f4c567b99e14ad6d06f823c5ee8c988a"
+    },
+    {
+      "line": "今天也叫我希尔维就好，呵呵，不必拘谨。",
+      "text": "今日もシルヴィと呼んでくださいね。ふふ、遠慮はいりませんよ。",
+      "language": "JA",
+      "file": "voice/morning_009.ogg",
+      "seconds": 6.42,
+      "sampleRate": 22050,
+      "sha256": "332dce282e41c11569ee271d5272e264f4bc94f4b24684433b3e4ad2a49c49b6"
+    },
+    {
+      "line": "早上的这一小段空闲，想用来读什么呢？",
+      "text": "朝のこの少しの時間、何を読んで過ごしましょうか。",
+      "language": "JA",
+      "file": "voice/morning_010.ogg",
+      "seconds": 5.944,
+      "sampleRate": 22050,
+      "sha256": "678416894441b155b33939fd0171788692301b3e8efe768aacf023538f346732"
+    },
+    {
+      "line": "醒来还有些困吗？先把窗帘轻轻拉开吧。",
+      "text": "まだ少し眠いですか。まずは、そっとカーテンを開けましょう。",
+      "language": "JA",
+      "file": "voice/morning_011.ogg",
+      "seconds": 5.747,
+      "sampleRate": 22050,
+      "sha256": "9384b4cf5481b089dbb68048ab082aba11703eabb9ec21457c871343337b5584"
+    },
+    {
+      "line": "出发前看看上课时间，我可不想让你慌慌张张的。",
+      "text": "出かける前に授業の時間を見ましょう。あなたには落ち着いていてほしいもの。",
+      "language": "JA",
+      "file": "voice/morning_012.ogg",
+      "seconds": 6.745,
+      "sampleRate": 22050,
+      "sha256": "b3842c56597e7afc71b3f7acb8b44e69f64bdc1e29dc9f8a1d31d6a2c6364f58"
+    },
+    {
+      "line": "呵呵，今天的课表也像一张等着演奏的乐谱呢。",
+      "text": "ふふ、今日の時間割も、演奏を待っている楽譜みたいですね。",
+      "language": "JA",
+      "file": "voice/morning_013.ogg",
+      "seconds": 6.385,
+      "sampleRate": 22050,
+      "sha256": "9390eda5d7288936d3521156b6e47c413debf3906987b3910578dcc1c2e37f5f"
+    },
+    {
+      "line": "先从最容易的一件事开始，好心情会慢慢跟上来的。",
+      "text": "一番簡単なことから始めましょう。楽しい気持ちも、少しずつついてきますよ。",
+      "language": "JA",
+      "file": "voice/morning_014.ogg",
+      "seconds": 8.301,
+      "sampleRate": 22050,
+      "sha256": "50a6d6b223aa95288e03d16cb2da2bde974df337eeeeb918aa9effef7f32b7e9"
+    },
+    {
+      "line": "晨风有些凉的话，别忘了添件衣服哦。",
+      "text": "朝の風が冷たかったら、上着を忘れないでくださいね。",
+      "language": "JA",
+      "file": "voice/morning_015.ogg",
+      "seconds": 5.828,
+      "sampleRate": 22050,
+      "sha256": "a33225048fef0ee447a5587da688c9d70a3d1e37bc48405225afa3e9b83724af"
+    },
+    {
+      "line": "早上好。今天也请多关照，一起认真上课吧。",
+      "text": "おはようございます。今日もよろしくお願いします。一緒に授業を頑張りましょう。",
+      "language": "JA",
+      "file": "voice/morning_016.ogg",
+      "seconds": 6.339,
+      "sampleRate": 22050,
+      "sha256": "e95188f652f7e90cd090bc1554da64a35077aa6edab4ffe7305b87a4ab867549"
+    },
+    {
+      "line": "洗漱之后，给早餐也留一点时间，好不好？",
+      "text": "身支度のあとには、朝ごはんの時間も少し残しませんか。",
+      "language": "JA",
+      "file": "voice/morning_017.ogg",
+      "seconds": 5.503,
+      "sampleRate": 22050,
+      "sha256": "9b06afe844af6ac4b7eacf4e115273cc79aa47e408add08d702b67d288ad028e"
+    },
+    {
+      "line": "上课前翻翻笔记，就像演奏前先试一试音。",
+      "text": "授業の前にノートを開くのも、演奏前の音合わせみたいですね。",
+      "language": "JA",
+      "file": "voice/morning_018.ogg",
+      "seconds": 6.107,
+      "sampleRate": 22050,
+      "sha256": "c774c82675b5b39b624c6e64bd8fe7d5d23894141d4437be12e3ba8fbc5c36e1"
+    },
+    {
+      "line": "今天想学会什么？哪怕只是一点点，也很令人期待。",
+      "text": "今日は何を覚えたいですか。ほんの少しでも、楽しみですね。",
+      "language": "JA",
+      "file": "voice/morning_019.ogg",
+      "seconds": 6.06,
+      "sampleRate": 22050,
+      "sha256": "1a06ad4edf3ceff515e5c2308e7feb17eb76dcd28f71699bdb561b144fc974b3"
+    },
+    {
+      "line": "嘻嘻，准备妥当以后，走向教室也会轻快些吧。",
+      "text": "ふふ、準備ができていれば、教室へ向かう足取りも軽くなりそう。",
+      "language": "JA",
+      "file": "voice/morning_020.ogg",
+      "seconds": 5.909,
+      "sampleRate": 22050,
+      "sha256": "5a5d5f495ef574277d850402763de625fdd76825af9faba62ad357c85f8b8a20"
+    },
+    {
+      "line": "别只顾着看我呀，第一节课的教室也要看清楚哦。",
+      "text": "私ばかり見ていないで、最初の授業の教室も確かめてくださいね。",
+      "language": "JA",
+      "file": "voice/morning_021.ogg",
+      "seconds": 6.745,
+      "sampleRate": 22050,
+      "sha256": "2f1d4b88c604e7c4960792e1ab928a13032e37665a67b5c2aafe8f3104f0b205"
+    },
+    {
+      "line": "清晨安静的时候，读几页书也很舒服呢。",
+      "text": "静かな朝に、何ページか本を読むのも気持ちがいいですね。",
+      "language": "JA",
+      "file": "voice/morning_022.ogg",
+      "seconds": 5.991,
+      "sampleRate": 22050,
+      "sha256": "9c65d2e242a428bbada21b5f54e1b05407e4b1da6de0d0fd9d78ffc0e512a95e"
+    },
+    {
+      "line": "如果还有空，慢慢喝口水，再出门吧。",
+      "text": "まだ時間があれば、お水を一口飲んでから出かけましょう。",
+      "language": "JA",
+      "file": "voice/morning_023.ogg",
+      "seconds": 5.7,
+      "sampleRate": 22050,
+      "sha256": "a38f08316b02da927a70addd6a21a2938a8aacc9a2fd6a5d76bad9625231d721"
+    },
+    {
+      "line": "今天的安排有些满吗？先把最要紧的那件记下来。",
+      "text": "今日は予定が多いですか。まずは一番大切なことを書いておきましょう。",
+      "language": "JA",
+      "file": "voice/morning_024.ogg",
+      "seconds": 7.465,
+      "sampleRate": 22050,
+      "sha256": "95c15531d302ecdb3367ea2e358a31e7faf2ae25730d386e8a7814bb4ea01d48"
+    },
+    {
+      "line": "呵呵，认真准备的样子，很让人安心呢。",
+      "text": "ふふ、きちんと準備している姿を見ると、安心しますね。",
+      "language": "JA",
+      "file": "voice/morning_025.ogg",
+      "seconds": 5.863,
+      "sampleRate": 22050,
+      "sha256": "b79a034a23013c9472a0d38d196f4817d1f3e0fa7bfa6d210d179be29a36b276"
+    },
+    {
+      "line": "不要和别人的早晨比速度，照着自己的节奏来吧。",
+      "text": "朝の速さを誰かと比べなくて大丈夫。自分のリズムでいきましょう。",
+      "language": "JA",
+      "file": "voice/morning_026.ogg",
+      "seconds": 6.908,
+      "sampleRate": 22050,
+      "sha256": "29c7226e637cd04b5970f2dddf7046a95809af16e40195592c219793e5ad949b"
+    },
+    {
+      "line": "面包的香气、干净的笔记本，都是很好的开始呢。",
+      "text": "パンの香りも、きれいなノートも、素敵な一日の始まりですね。",
+      "language": "JA",
+      "file": "voice/morning_027.ogg",
+      "seconds": 6.142,
+      "sampleRate": 22050,
+      "sha256": "7d1e8fe588a8721488d6d8789e46a789100b21f96f04ea8514dc8b4bd89b232e"
+    },
+    {
+      "line": "课间想做什么呢？现在先给自己留个小期待吧。",
+      "text": "休み時間には何をしましょうか。小さな楽しみを用意しておきましょう。",
+      "language": "JA",
+      "file": "voice/morning_028.ogg",
+      "seconds": 6.827,
+      "sampleRate": 22050,
+      "sha256": "4c1f27df5d876a1d6c4a58363daf047d665c0578ee37690eefae6c04bcf34f18"
+    },
+    {
+      "line": "早上好～今天也有许多普通、却值得珍惜的小事。",
+      "text": "おはよう。今日も、何気なくて大切なことがたくさんありそうですね。",
+      "language": "JA",
+      "file": "voice/morning_029.ogg",
+      "seconds": 5.991,
+      "sampleRate": 22050,
+      "sha256": "a5b2bdadbcb7c1c2b913708d7af094cbabdf1fd7dc794f05a5e6038c1e43b3f9"
+    },
+    {
+      "line": "听见上课铃以前，让心情也慢慢就位吧。",
+      "text": "授業のベルが鳴る前に、気持ちもゆっくり整えましょう。",
+      "language": "JA",
+      "file": "voice/morning_030.ogg",
+      "seconds": 4.551,
+      "sampleRate": 22050,
+      "sha256": "7e822d6444223ad937caaf12bae0693e6ae2ededb7c71e4a7cb9ba74dce5abc0"
+    },
+    {
+      "line": "昨晚没弄懂的地方，可以带着问题去听今天的课。",
+      "text": "昨夜わからなかったところは、今日の授業で確かめてみましょう。",
+      "language": "JA",
+      "file": "voice/morning_031.ogg",
+      "seconds": 5.631,
+      "sampleRate": 22050,
+      "sha256": "6da2277b9f35d3c8add578a9a95d82340ec561ced091d44aec450e06542739d4"
+    },
+    {
+      "line": "呵呵，把今天想做的事写下来，像给日子排一段旋律。",
+      "text": "ふふ、今日したいことを書くと、一日に旋律をつけるみたいですね。",
+      "language": "JA",
+      "file": "voice/morning_032.ogg",
+      "seconds": 6.989,
+      "sampleRate": 22050,
+      "sha256": "cf8c18619e7e92878448878d8fad7e2ab5934df4c429da18d8888bc0fd2ba1e4"
+    },
+    {
+      "line": "不必一醒来就做到完美，先好好说声早安吧。",
+      "text": "起きてすぐに完璧でなくてもいいんです。まずは、おはようのご挨拶から。",
+      "language": "JA",
+      "file": "voice/morning_033.ogg",
+      "seconds": 6.107,
+      "sampleRate": 22050,
+      "sha256": "84a90c0ba7e0729349d6fdc9e20d9ebecb75e89dde27d0a0af5e7be861dce37d"
+    },
+    {
+      "line": "如果路上有好看的晨光，也分一点心思欣赏它吧。",
+      "text": "途中で素敵な朝の光に出会ったら、少しだけ眺めてみてくださいね。",
+      "language": "JA",
+      "file": "voice/morning_034.ogg",
+      "seconds": 6.188,
+      "sampleRate": 22050,
+      "sha256": "473aef00eaf94031c89aa9367642cafdbc731540feb2f2056a0366390084e972"
+    },
+    {
+      "line": "今天要用的笔，还写得出来吗？现在试一下就放心了。",
+      "text": "今日使うペンは、ちゃんと書けますか。今試しておけば安心ですね。",
+      "language": "JA",
+      "file": "voice/morning_035.ogg",
+      "seconds": 6.629,
+      "sampleRate": 22050,
+      "sha256": "cdc2f225be6cc626f72afa526b677225e3cb0778b1a9d93929b3266305910509"
+    },
+    {
+      "line": "嗯，出发的准备做好了。接下来，也保持这个步调吧。",
+      "text": "ええ、出発の準備はできましたね。この調子でいきましょう。",
+      "language": "JA",
+      "file": "voice/morning_036.ogg",
+      "seconds": 7.187,
+      "sampleRate": 22050,
+      "sha256": "7980446a963a0e09ecad4b1e30dd3199cc84480318eae4be3c4d3143617af59e"
+    },
+    {
+      "line": "早晨的第一份鼓励送给你，今天也请照顾好自己。",
+      "text": "朝一番の応援をあなたに。今日も自分を大切にしてくださいね。",
+      "language": "JA",
+      "file": "voice/morning_037.ogg",
+      "seconds": 7.105,
+      "sampleRate": 22050,
+      "sha256": "746a3b9df820beb2d7a6872e48de0102ceed71b13b11ed31be5c7bb92e48f201"
+    },
+    {
+      "line": "呵呵，带着一点期待出门吧，愿今天有让你微笑的事。",
+      "text": "ふふ、少しだけ楽しみにして出かけましょう。笑顔になれることがありますように。",
+      "language": "JA",
+      "file": "voice/morning_038.ogg",
+      "seconds": 7.779,
+      "sampleRate": 22050,
+      "sha256": "6b3720594dbb0ad9d7ae2b8f83667a962aec7b07f7c9a67f41fe661c75e68763"
+    },
+    {
+      "line": "中午好～先歇一歇，再看看下午的安排吧。",
+      "text": "こんにちは。少し休んでから、午後の予定を見ましょう。",
+      "language": "JA",
+      "file": "voice/noon_001.ogg",
+      "seconds": 5.631,
+      "sampleRate": 22050,
+      "sha256": "98878b21f69401a110632b83b00227a7d0d49baa9b6e5fcc2f0d0b2008511e3a"
+    },
+    {
+      "line": "午饭想吃什么呢？呵呵，我一说到吃的就很有精神。",
+      "text": "お昼は何を食べましょうか。ふふ、食べ物のお話だと元気が出ちゃいます。",
+      "language": "JA",
+      "file": "voice/noon_002.ogg",
+      "seconds": 7.024,
+      "sampleRate": 22050,
+      "sha256": "13f46cf52d8ec6e23f062ef69ee283280929f40618771236b320f544e287580f"
+    },
+    {
+      "line": "上午辛苦了，认真上过的课，都算今天的收获哦。",
+      "text": "午前中はお疲れさまでした。しっかり受けた授業は、今日の収穫ですね。",
+      "language": "JA",
+      "file": "voice/noon_003.ogg",
+      "seconds": 7.546,
+      "sampleRate": 22050,
+      "sha256": "91e497c8e034f85845e047459503cb09c51f951b73d5560b1621a964cb00c67b"
+    },
+    {
+      "line": "下一节换教室吗？吃饭前先确认一下，会更从容。",
+      "text": "次は教室が変わりますか。食事の前に確かめておくと安心ですよ。",
+      "language": "JA",
+      "file": "voice/noon_004.ogg",
+      "seconds": 8.022,
+      "sampleRate": 22050,
+      "sha256": "a8fde237086d0342804701b6eaf0f7f62d4fbe15e15d7ab9726a8f9adbb137c7"
+    },
+    {
+      "line": "呵呵，一起吃饭时，连平常的午餐也会变得特别呢。",
+      "text": "ふふ、一緒に食べると、いつものお昼ごはんも特別になりますね。",
+      "language": "JA",
+      "file": "voice/noon_005.ogg",
+      "seconds": 6.42,
+      "sampleRate": 22050,
+      "sha256": "48fc8a3f5f32991d6b6778ba9cb69f01a16c67c4bbb2d2d595c7429a0fe72b69"
+    },
+    {
+      "line": "下午还有课的话，现在就给自己一点休息吧。",
+      "text": "午後も授業があるなら、今は少し休んでおきましょう。",
+      "language": "JA",
+      "file": "voice/noon_006.ogg",
+      "seconds": 5.062,
+      "sampleRate": 22050,
+      "sha256": "d4c158d54983902366bf5f80fb5d2f3a4242e7a46414ca485aa73b4a994f541b"
+    },
+    {
+      "line": "点心可以慢慢挑，午饭可不能被它替代哦。",
+      "text": "お菓子はゆっくり選びましょう。でも、お昼ごはんの代わりにはしないでくださいね。",
+      "language": "JA",
+      "file": "voice/noon_007.ogg",
+      "seconds": 7.14,
+      "sampleRate": 22050,
+      "sha256": "5e7d8bbf83d471c417a141cb857ad90f8c079f6555eb3cee79dd805c76bb218b"
+    },
+    {
+      "line": "坐了一个上午，课间也起来活动一下吧。",
+      "text": "午前中ずっと座っていたなら、休み時間には少し体を動かしましょう。",
+      "language": "JA",
+      "file": "voice/noon_008.ogg",
+      "seconds": 6.664,
+      "sampleRate": 22050,
+      "sha256": "ad5509df37eaae52ec4c88fe801942301b52e7164f33985cbdcd94416e8291cb"
+    },
+    {
+      "line": "午后的节奏稍微放缓一点，也没有关系呀。",
+      "text": "午後は少しゆっくりのリズムでも、大丈夫ですよ。",
+      "language": "JA",
+      "file": "voice/noon_009.ogg",
+      "seconds": 5.387,
+      "sampleRate": 22050,
+      "sha256": "85b9f2c9de2c805503dc55ba0101993be162ed9c6cb7049cb9ac4d7b8b06e426"
+    },
+    {
+      "line": "有没有什么新鲜事，想在午休时和我分享呢？",
+      "text": "お昼休みに、私に話したい出来事はありますか。",
+      "language": "JA",
+      "file": "voice/noon_010.ogg",
+      "seconds": 5.7,
+      "sampleRate": 22050,
+      "sha256": "ec755abf19b2a7ada024b2466d9f86ece51c3c67bba242f2464e333da84bc698"
+    },
+    {
+      "line": "呵呵，面包和红茶放在一起，总让人想多坐一会儿。",
+      "text": "ふふ、パンと紅茶が並ぶと、もう少し座っていたくなりますね。",
+      "language": "JA",
+      "file": "voice/noon_011.ogg",
+      "seconds": 6.385,
+      "sampleRate": 22050,
+      "sha256": "fbefc93447211dbd5ff52d83f344e10ece6f547f20a91e21e99452566876e002"
+    },
+    {
+      "line": "上午留下的问题，先记在纸上，别让它一直占着心思。",
+      "text": "午前中に残った疑問は、紙に書いておきましょう。ずっと気にしなくて済みますよ。",
+      "language": "JA",
+      "file": "voice/noon_012.ogg",
+      "seconds": 7.628,
+      "sampleRate": 22050,
+      "sha256": "b72c1c73fb494a87821ae6b5fb5db44336fc200662571ad62aa7a85fbe252cc8"
+    },
+    {
+      "line": "吃饭的时候，就把注意力分给饭菜吧。",
+      "text": "食事のときは、ごはんの味にも気持ちを向けてくださいね。",
+      "language": "JA",
+      "file": "voice/noon_013.ogg",
+      "seconds": 5.062,
+      "sampleRate": 22050,
+      "sha256": "e72f2660207433109d82fff9603e8abdc4c734a2ba6782659a9d64fdfceacfbb"
+    },
+    {
+      "line": "午休不必安排得满满的，安静坐会儿也很好。",
+      "text": "お昼休みまで予定でいっぱいにしなくていいんです。静かに座るのも素敵ですよ。",
+      "language": "JA",
+      "file": "voice/noon_014.ogg",
+      "seconds": 6.664,
+      "sampleRate": 22050,
+      "sha256": "f9dd1dc1d998388d9b55d08dd4f60246b79c6b35bbdab8c597a2b3099386c45d"
+    },
+    {
+      "line": "下午需要的书，趁现在放到容易拿的地方吧。",
+      "text": "午後に使う教科書は、今のうちに取り出しやすいところへ置きましょう。",
+      "language": "JA",
+      "file": "voice/noon_015.ogg",
+      "seconds": 5.55,
+      "sampleRate": 22050,
+      "sha256": "46b0cdbe25f59abf2cf5c1e780ea39cbe62e2aeebf7afd811823946dfe729afe"
+    },
+    {
+      "line": "想喝点什么呢？我觉得温热的茶很适合短暂休息。",
+      "text": "何か飲みませんか。短い休憩には、温かいお茶がよさそうですね。",
+      "language": "JA",
+      "file": "voice/noon_016.ogg",
+      "seconds": 6.42,
+      "sampleRate": 22050,
+      "sha256": "9c7b1a744f41de3d6e485ecc4123080747981f72dd363e23e25a09339d7bcd67"
+    },
+    {
+      "line": "嘻嘻，要是遇到好吃的蜜瓜包，我大概会很难移开目光。",
+      "text": "ふふ、おいしそうなメロンパンを見つけたら、目が離せなくなりそう。",
+      "language": "JA",
+      "file": "voice/noon_017.ogg",
+      "seconds": 6.548,
+      "sampleRate": 22050,
+      "sha256": "aca06ae0e0b2da1da2be3e53a81ea8d52d5cf8439aa94fd98e6470698c7142a9"
+    },
+    {
+      "line": "今天已经学到了不少吧？先给自己一个小小的肯定。",
+      "text": "今日はもう、いろいろ学びましたよね。自分を少し褒めてあげましょう。",
+      "language": "JA",
+      "file": "voice/noon_018.ogg",
+      "seconds": 6.989,
+      "sampleRate": 22050,
+      "sha256": "a1d96b8918879c8db3c6ad2a7ad454a39ad4566f9fc8d621f640756b683d5738"
+    },
+    {
+      "line": "演奏也需要停顿，学习时当然也可以歇口气。",
+      "text": "演奏にも休符があります。勉強の途中で一息ついてもいいんですよ。",
+      "language": "JA",
+      "file": "voice/noon_019.ogg",
+      "seconds": 7.744,
+      "sampleRate": 22050,
+      "sha256": "48420626b48406997bd1dc38ca5b4724c98c0eb430557b910bffd338d6cd0d07"
+    },
+    {
+      "line": "下午的第一节课，别和上午的教室记混啦。",
+      "text": "午後の最初の授業、午前中の教室と間違えないようにしましょうね。",
+      "language": "JA",
+      "file": "voice/noon_020.ogg",
+      "seconds": 5.991,
+      "sampleRate": 22050,
+      "sha256": "819fc88c0b1c46f7753a222976668894b2f42c21ddab14e8c41cb64b7b6659fc"
+    },
+    {
+      "line": "眼睛累了的话，就从屏幕上移开一会儿吧。",
+      "text": "目が疲れたら、少しだけ画面から目を離しましょう。",
+      "language": "JA",
+      "file": "voice/noon_021.ogg",
+      "seconds": 5.143,
+      "sampleRate": 22050,
+      "sha256": "7faec08989e6f64263ac0503d561259b9a9ba36de57d5ece2ac80dd4830aad22"
+    },
+    {
+      "line": "呵呵，阳光好的时候，散一小段步也很令人开心。",
+      "text": "ふふ、日差しが気持ちいいときは、少し歩くのも楽しいですね。",
+      "language": "JA",
+      "file": "voice/noon_022.ogg",
+      "seconds": 6.664,
+      "sampleRate": 22050,
+      "sha256": "fe11f61d8467a9c6f40728077a601a50599c1d21deb4fece4ec0f651d4c75517"
+    },
+    {
+      "line": "先吃好、再休息，下午也照着自己的节奏来。",
+      "text": "ごはんを食べて、少し休んで。午後も自分のリズムでいきましょう。",
+      "language": "JA",
+      "file": "voice/noon_023.ogg",
+      "seconds": 5.944,
+      "sampleRate": 22050,
+      "sha256": "ab5e5cfafd1ffc7d2bbd49b5e6dcb24686816cb8065ca0d892513992d60fae0f"
+    },
+    {
+      "line": "午后的书页慢慢翻，也许就找到上午没懂的线索啦。",
+      "text": "午後にゆっくりページをめくったら、午前中の疑問の手がかりが見つかるかも。",
+      "language": "JA",
+      "file": "voice/noon_024.ogg",
+      "seconds": 6.188,
+      "sampleRate": 22050,
+      "sha256": "c56a7e1013babad69f674ff56f78d859f16e0eef5c12ae03d26f10bc225c0ba1"
+    },
+    {
+      "line": "今天有什么值得高兴的小事吗？很小的也可以哦。",
+      "text": "今日は、何か嬉しいことがありましたか。ほんの小さなことでもいいんですよ。",
+      "language": "JA",
+      "file": "voice/noon_025.ogg",
+      "seconds": 6.861,
+      "sampleRate": 22050,
+      "sha256": "a318f7165df053a1b6a273dd7070af982f08963e17de4b1aba39ea7133dd7627"
+    },
+    {
+      "line": "不用急着把所有事做完，先选下午最重要的一件吧。",
+      "text": "全部終わらせようと急がなくて大丈夫。午後の一番大切なことを選びましょう。",
+      "language": "JA",
+      "file": "voice/noon_026.ogg",
+      "seconds": 6.339,
+      "sampleRate": 22050,
+      "sha256": "7ede62159cfb7749c7b1146ab081a06885863381bc87edf333ab8403ac6e4cd6"
+    },
+    {
+      "line": "呵呵，普通的午休，也能成为一天里明亮的一小段。",
+      "text": "ふふ、いつものお昼休みも、一日の明るいひとときになりますね。",
+      "language": "JA",
+      "file": "voice/noon_027.ogg",
+      "seconds": 7.14,
+      "sampleRate": 22050,
+      "sha256": "8a8fa1b842a7b30177809f71af68c3a8e4db2debf664a58e3268e8ff92c162ce"
+    },
+    {
+      "line": "书签夹好了吧？休息之后，就能从这里接着读。",
+      "text": "しおりは挟みましたか。休んだあと、ここから続きを読めますね。",
+      "language": "JA",
+      "file": "voice/noon_028.ogg",
+      "seconds": 6.06,
+      "sampleRate": 22050,
+      "sha256": "11a14464c07d4c54f0cc77f399b035d392b0fd3d5ca3e2ace81a170671d924ed"
+    },
+    {
+      "line": "听课时遇见喜欢的内容，也记下来留着慢慢看吧。",
+      "text": "授業で好きだと思ったことも、書いておいて、あとでゆっくり読みましょう。",
+      "language": "JA",
+      "file": "voice/noon_029.ogg",
+      "seconds": 5.387,
+      "sampleRate": 22050,
+      "sha256": "77a3a2d4dee9170837e4c061c915a0b18167dadd9fe06dc26fcb31f1e0e1b8ca"
+    },
+    {
+      "line": "午餐之后还有一点时间，就别把脚步催得那么急啦。",
+      "text": "お昼ごはんのあとに少し時間があるなら、そんなに急がなくても大丈夫ですよ。",
+      "language": "JA",
+      "file": "voice/noon_030.ogg",
+      "seconds": 7.697,
+      "sampleRate": 22050,
+      "sha256": "1182c293c00bd299257d4f9ab4bc0c11b6ed86d17ddae15523f436b1b85367ef"
+    },
+    {
+      "line": "我很喜欢大家分享快乐时的样子，呵呵，笑容会传开呢。",
+      "text": "みんなで楽しさを分け合うのが好きなんです。ふふ、笑顔が広がりますね。",
+      "language": "JA",
+      "file": "voice/noon_031.ogg",
+      "seconds": 7.024,
+      "sampleRate": 22050,
+      "sha256": "7794fa1e5d413e24b7c5f0651a2b2196fb3a900cf47607872a8e9a98c0b6ecd2"
+    },
+    {
+      "line": "今天的安排变了吗？把课表改好，心里也会踏实些。",
+      "text": "今日の予定は変わりましたか。時間割を直しておけば、気持ちも落ち着きますよ。",
+      "language": "JA",
+      "file": "voice/noon_032.ogg",
+      "seconds": 7.338,
+      "sampleRate": 22050,
+      "sha256": "144b854eac9824d47bad1f2d064b2d07484710a21c08ad9f3c6c248457382a9d"
+    },
+    {
+      "line": "有些题目要慢慢想，就像旋律也要一段一段练习。",
+      "text": "ゆっくり考える問題もありますね。旋律を一節ずつ練習するのと同じです。",
+      "language": "JA",
+      "file": "voice/noon_033.ogg",
+      "seconds": 7.419,
+      "sampleRate": 22050,
+      "sha256": "47c1f21156cf70b094d53b32a49aea84145d0bd5e44eee042efde72f990b9715"
+    },
+    {
+      "line": "累的时候不用硬撑着微笑，我可以安静陪你休息。",
+      "text": "疲れたときは、無理に笑わなくていいんです。静かに一緒に休みましょう。",
+      "language": "JA",
+      "file": "voice/noon_034.ogg",
+      "seconds": 7.024,
+      "sampleRate": 22050,
+      "sha256": "caba6528debd5151552794db4498f97004724a4df127aa36dc9d19b79605adc5"
+    },
+    {
+      "line": "下午出门前，再看看有没有落下水杯哦。",
+      "text": "午後に出かける前に、水筒を忘れていないか見てくださいね。",
+      "language": "JA",
+      "file": "voice/noon_035.ogg",
+      "seconds": 6.269,
+      "sampleRate": 22050,
+      "sha256": "4e8fae95edec3471f6b7b81da0f54de4030fe009d43909d9e684fde5c8b564b0"
+    },
+    {
+      "line": "呵呵，把午休留一点给自己，这可不是偷懒。",
+      "text": "ふふ、お昼休みを少し自分のために使っても、怠けているわけではありませんよ。",
+      "language": "JA",
+      "file": "voice/noon_036.ogg",
+      "seconds": 7.187,
+      "sampleRate": 22050,
+      "sha256": "b72f927b9b4223a961b64b810eb4964d315c31ccb4e0d7fa7e34884b1d51069e"
+    },
+    {
+      "line": "下一段学习开始前，先轻轻整理一下桌面吧。",
+      "text": "次の勉強を始める前に、机の上を少し整えましょう。",
+      "language": "JA",
+      "file": "voice/noon_037.ogg",
+      "seconds": 5.863,
+      "sampleRate": 22050,
+      "sha256": "d2a3ac9288b115eaf5e8a2096f5e0799b837faeb958c8e3986e4ce415574383b"
+    },
+    {
+      "line": "愿今天的下午，也有一件让你想说“真好呀”的事。",
+      "text": "今日の午後にも、よかったなと思えることがありますように。",
+      "language": "JA",
+      "file": "voice/noon_038.ogg",
+      "seconds": 5.468,
+      "sampleRate": 22050,
+      "sha256": "ad66f860ee821bf7388e6c92a9bac273a446150281ddb8ae9993634981610952"
+    },
+    {
+      "line": "晚上好。今天辛苦了，先把肩膀放松一下吧。",
+      "text": "こんばんは。今日もお疲れさまでした。まずは肩の力を抜きましょう。",
+      "language": "JA",
+      "file": "voice/evening_001.ogg",
+      "seconds": 6.78,
+      "sampleRate": 22050,
+      "sha256": "ef84cc15840fd26ca7be957558404cbd927ebc038a9fdc5448f8b1074bce6320"
+    },
+    {
+      "line": "呵呵，到了可以慢慢回顾一天的时候呢。",
+      "text": "ふふ、一日をゆっくり振り返る時間になりましたね。",
+      "language": "JA",
+      "file": "voice/evening_002.ogg",
+      "seconds": 5.909,
+      "sampleRate": 22050,
+      "sha256": "9da32dd97ea100dbe367bf4c9423d866e3dcf2df2bea246d9588dd0f264ed5dc"
+    },
+    {
+      "line": "晚饭吃了吗？今天的努力，也要好好补充一点力气。",
+      "text": "晩ごはんは食べましたか。今日頑張った分、元気を補ってくださいね。",
+      "language": "JA",
+      "file": "voice/evening_003.ogg",
+      "seconds": 6.583,
+      "sampleRate": 22050,
+      "sha256": "7d547f9371d1d6c1df88020f8c7d181b43b6065dec560cbd2b8f53edbd35a948"
+    },
+    {
+      "line": "明天第一节的教室，现在看看，早晨就不必慌张啦。",
+      "text": "明日の最初の教室を今見ておけば、朝に慌てなくて済みますね。",
+      "language": "JA",
+      "file": "voice/evening_004.ogg",
+      "seconds": 6.664,
+      "sampleRate": 22050,
+      "sha256": "7b75b80de553656097897f0ca09ac97b6f49c5027d041d3066851d63ba875afc"
+    },
+    {
+      "line": "今天有让你微笑的瞬间吗？我想听听呢。",
+      "text": "今日は笑顔になれた瞬間がありましたか。聞かせてほしいな。",
+      "language": "JA",
+      "file": "voice/evening_005.ogg",
+      "seconds": 6.664,
+      "sampleRate": 22050,
+      "sha256": "5d0125d08640767403ee0b0f46ab26bb865b0e5f66b5008821d548d5f15cc584"
+    },
+    {
+      "line": "夜晚也可以留一点安静，听听自己喜欢的旋律。",
+      "text": "夜には少し静かな時間を残して、好きな旋律を聴くのもいいですね。",
+      "language": "JA",
+      "file": "voice/evening_006.ogg",
+      "seconds": 8.104,
+      "sampleRate": 22050,
+      "sha256": "e042bf5bc32f78495224ed773c75ef6aeadef1ae7ccb96c74360253599b5cb71"
+    },
+    {
+      "line": "没做完的事情，写下来交给明天，也是一种安排哦。",
+      "text": "終わらなかったことを書いて、明日に任せるのも、立派な予定ですよ。",
+      "language": "JA",
+      "file": "voice/evening_007.ogg",
+      "seconds": 6.223,
+      "sampleRate": 22050,
+      "sha256": "d6b42c22c3406b6824e3afcabfcd468a97f2cd1d4d489f66c90712cfeb907a9d"
+    },
+    {
+      "line": "呵呵，今天努力过的你，也值得被温柔地对待。",
+      "text": "ふふ、今日頑張ったあなたも、優しくしてもらっていいんですよ。",
+      "language": "JA",
+      "file": "voice/evening_008.ogg",
+      "seconds": 5.863,
+      "sampleRate": 22050,
+      "sha256": "5aa2581c5d3c5e9ce970cd2a0f6d3c7d0b3545fabaab0bc69c8c94bf606af959"
+    },
+    {
+      "line": "夜里的复习别安排太久，休息也要认真对待呢。",
+      "text": "夜の復習は長くしすぎないでくださいね。休むことも大切ですから。",
+      "language": "JA",
+      "file": "voice/evening_009.ogg",
+      "seconds": 6.989,
+      "sampleRate": 22050,
+      "sha256": "c20834dc85134d239d75ee4e0b121957ef828052d6864b9c7af5c1dd20e2f8c1"
+    },
+    {
+      "line": "明天要用的东西，趁现在一件一件收好吧。",
+      "text": "明日使うものは、今のうちに一つずつ揃えておきましょう。",
+      "language": "JA",
+      "file": "voice/evening_010.ogg",
+      "seconds": 6.223,
+      "sampleRate": 22050,
+      "sha256": "0a0df52b77f0620aa49aeab5d3df78ce08dd7449942d1fd12470437282b23bc2"
+    },
+    {
+      "line": "窗外暗下来了，读书时记得把灯开得合适一些。",
+      "text": "外が暗くなりましたね。本を読むなら、明かりを整えてくださいね。",
+      "language": "JA",
+      "file": "voice/evening_011.ogg",
+      "seconds": 7.663,
+      "sampleRate": 22050,
+      "sha256": "6ee94b5a5d8915d0e8fa693bda5efc283e66bea457b84495a0c130bb3d39eecc"
+    },
+    {
+      "line": "今天最难的那一段，你已经走过来啦。",
+      "text": "今日一番大変だった時間も、ちゃんと乗り越えてきたんですね。",
+      "language": "JA",
+      "file": "voice/evening_012.ogg",
+      "seconds": 6.107,
+      "sampleRate": 22050,
+      "sha256": "d228d0817b43b63805543dd4307ecfa2167fe928a038abe18baf33990be5749f"
+    },
+    {
+      "line": "嗯哼哼，夜色这么安静，说话也想轻一点。",
+      "text": "ふふっ、夜はこんなに静かだから、声も少し小さくしたくなりますね。",
+      "language": "JA",
+      "file": "voice/evening_013.ogg",
+      "seconds": 7.697,
+      "sampleRate": 22050,
+      "sha256": "e59e4d53ed730ee8425c852f0291243a0a677e029a85e045f034f3a1e5475f10"
+    },
+    {
+      "line": "把今天学会的一点点记下来，就能看见自己的进步。",
+      "text": "今日覚えたことを少し書いてみると、自分の成長が見えてきますよ。",
+      "language": "JA",
+      "file": "voice/evening_014.ogg",
+      "seconds": 6.861,
+      "sampleRate": 22050,
+      "sha256": "6f547d2b13592b9c56b0d760558bd657011bce11717b581c88950f9e7485039b"
+    },
+    {
+      "line": "如果心里还有些乱，就先不急着给今天下结论吧。",
+      "text": "まだ気持ちが落ち着かないなら、今日の結論を急がなくてもいいんです。",
+      "language": "JA",
+      "file": "voice/evening_015.ogg",
+      "seconds": 6.467,
+      "sampleRate": 22050,
+      "sha256": "d12bce847a1a25c44185425363898b238ff95e667c0e660cccab6bd05f6de38f"
+    },
+    {
+      "line": "晚上的茶会，不如就用轻松的心情来参加吧。",
+      "text": "夜のお茶会には、どうぞ気楽な気持ちで来てくださいね。",
+      "language": "JA",
+      "file": "voice/evening_016.ogg",
+      "seconds": 6.107,
+      "sampleRate": 22050,
+      "sha256": "fb47148b18cbe132c27c4ea01b57e2711aced8aaa86c990e5a0d0087abe3a2ce"
+    },
+    {
+      "line": "呵呵，我喜欢这样不必赶路、可以慢慢说话的时间。",
+      "text": "ふふ、急がずに、ゆっくりお話しできる時間が好きなんです。",
+      "language": "JA",
+      "file": "voice/evening_017.ogg",
+      "seconds": 5.828,
+      "sampleRate": 22050,
+      "sha256": "18980e4df8b6f4327c5eb7ff16804edb77db5ec240d5096d57afdb053bbb2dc9"
+    },
+    {
+      "line": "今晚想读几页书呢？读到舒服的地方就停下来吧。",
+      "text": "今夜は何ページ読みましょうか。心地よいところで、終わりにしましょう。",
+      "language": "JA",
+      "file": "voice/evening_018.ogg",
+      "seconds": 6.548,
+      "sampleRate": 22050,
+      "sha256": "96ab4a7efc915a05eec17b26d3621b479c5aaac84eb1f4020333c7357f22b15a"
+    },
+    {
+      "line": "今天有点遗憾也没关系，不必把它带进每一个梦里。",
+      "text": "今日は少し残念なことがあっても、夢の中まで抱えていかなくていいんですよ。",
+      "language": "JA",
+      "file": "voice/evening_019.ogg",
+      "seconds": 7.024,
+      "sampleRate": 22050,
+      "sha256": "e48894c43cf06fecd96166a291a5417f82fe1b303a63196fda96c1fccf266dd3"
+    },
+    {
+      "line": "睡前再看一眼明天的课表，就把屏幕放下吧。",
+      "text": "眠る前に明日の時間割を確かめたら、画面は閉じておきましょう。",
+      "language": "JA",
+      "file": "voice/evening_020.ogg",
+      "seconds": 6.861,
+      "sampleRate": 22050,
+      "sha256": "e176f5f3625bdc2d0e4787e7ef17ed44eb88c6ab641033edf77c6f052548cd18"
+    },
+    {
+      "line": "认真练习之后要让手休息，认真学习之后也一样哦。",
+      "text": "練習のあとに手を休めるように、勉強のあとにも休みましょうね。",
+      "language": "JA",
+      "file": "voice/evening_021.ogg",
+      "seconds": 7.86,
+      "sampleRate": 22050,
+      "sha256": "4b7dc6709bf62e0eafe30c9f8fa2c8c2024533d7e78d9a28305f424a47013ca0"
+    },
+    {
+      "line": "外面如果能看见星星，就把今晚的一点好心情留给它吧。",
+      "text": "もし星が見えたら、今夜の楽しい気持ちを少し届けてみましょうか。",
+      "language": "JA",
+      "file": "voice/evening_022.ogg",
+      "seconds": 6.745,
+      "sampleRate": 22050,
+      "sha256": "fdcf12cb12d40838dcbd061d08089386713261d8ddf6643b73d040639494db09"
+    },
+    {
+      "line": "呵呵，平凡的一天里，也藏着值得珍惜的金色时光。",
+      "text": "ふふ、何気ない一日の中にも、大切な金色の時間が隠れていますね。",
+      "language": "JA",
+      "file": "voice/evening_023.ogg",
+      "seconds": 7.86,
+      "sampleRate": 22050,
+      "sha256": "48d27464e15260a8562751b1cfb4f16626fc33f48c6a167f68f748b28ab44292"
+    },
+    {
+      "line": "现在不用赶着回答我，先舒舒服服地坐一会儿吧。",
+      "text": "今は急いで答えなくても大丈夫。まずは楽に座っていてくださいね。",
+      "language": "JA",
+      "file": "voice/evening_024.ogg",
+      "seconds": 7.221,
+      "sampleRate": 22050,
+      "sha256": "e20002f2ae8edb3e14ee5f0e5b7c002cdbad3061b38a1f0d76729af4f4f92d1c"
+    },
+    {
+      "line": "明天有要交的作业吗？检查好以后，就能安心些啦。",
+      "text": "明日提出する課題はありますか。確かめておけば、安心できますね。",
+      "language": "JA",
+      "file": "voice/evening_025.ogg",
+      "seconds": 6.304,
+      "sampleRate": 22050,
+      "sha256": "5615bfee392e4fc899c926ed56f407703b40f1c9229b76dde1485859f2184e2b"
+    },
+    {
+      "line": "今天已经很认真了，别让一点小失误遮住所有努力。",
+      "text": "今日はちゃんと頑張りましたね。小さな失敗で、その努力を隠さないでください。",
+      "language": "JA",
+      "file": "voice/evening_026.ogg",
+      "seconds": 8.22,
+      "sampleRate": 22050,
+      "sha256": "365ccbea063cb6f50d900b1be1f88612526ac3d60e526b579121470008ed2804"
+    },
+    {
+      "line": "夜晚的旋律可以轻一些，心情也可以慢一些。",
+      "text": "夜の旋律は優しく、気持ちも少しゆっくりでいいんですよ。",
+      "language": "JA",
+      "file": "voice/evening_027.ogg",
+      "seconds": 6.502,
+      "sampleRate": 22050,
+      "sha256": "4b0b09e60ffeaa0c929bbeb6e157a833ee1cdababcc0d95f232a1dade130a7e9"
+    },
+    {
+      "line": "睡前把桌面整理好，明天会有一个清爽的开始。",
+      "text": "眠る前に机を整えれば、明日をすっきり始められますね。",
+      "language": "JA",
+      "file": "voice/evening_028.ogg",
+      "seconds": 5.863,
+      "sampleRate": 22050,
+      "sha256": "a4f96916909edfc6939ca1ec856e67deb806a523a4082ca034b4a3faee300a8d"
+    },
+    {
+      "line": "呵呵，今天能和你分享这些小事，我很开心。",
+      "text": "ふふ、今日もあなたと小さなことを分け合えて、嬉しいです。",
+      "language": "JA",
+      "file": "voice/evening_029.ogg",
+      "seconds": 5.782,
+      "sampleRate": 22050,
+      "sha256": "d3f39ee1f46680f564de03a4a774514745210c93cd10008636c36ce785339ccd"
+    },
+    {
+      "line": "如果还没准备休息，就给今晚留个温柔的结束时间吧。",
+      "text": "まだ休むつもりがなくても、今夜を終える時間は優しく決めておきましょう。",
+      "language": "JA",
+      "file": "voice/evening_030.ogg",
+      "seconds": 7.187,
+      "sampleRate": 22050,
+      "sha256": "0ceefd139e6b954fbc0ff0c1bd5f74aa4dfcadcdb5e61a52434c6365e5409e12"
+    },
+    {
+      "line": "一首曲子结束以后，余韵也需要一点安静呀。",
+      "text": "一曲を弾き終えたあとには、余韻のための静けさも必要ですね。",
+      "language": "JA",
+      "file": "voice/evening_031.ogg",
+      "seconds": 5.584,
+      "sampleRate": 22050,
+      "sha256": "05656b11e52acf1ac884be731c54f93388f7a1ad330de5871f0483fbfe2b6574"
+    },
+    {
+      "line": "那些暂时想不明白的事，也许休息以后就有了新想法。",
+      "text": "今はわからないことも、休んだあとには、新しい考えが浮かぶかもしれませんね。",
+      "language": "JA",
+      "file": "voice/evening_032.ogg",
+      "seconds": 7.779,
+      "sampleRate": 22050,
+      "sha256": "cd15b04a4ad62a40844f60b6ee8338b4d2d70001be9f02a0d5c1abf5e0559fa2"
+    },
+    {
+      "line": "晚上好～今天的小小收获，也可以算作一份礼物呢。",
+      "text": "こんばんは。今日の小さな収穫も、贈り物に数えていいんですよ。",
+      "language": "JA",
+      "file": "voice/evening_033.ogg",
+      "seconds": 5.944,
+      "sampleRate": 22050,
+      "sha256": "80f06fbae051d05d0d87935d420a9b1e9d8e22feb01c390ac836affe96310498"
+    },
+    {
+      "line": "别忘了给水杯添点水，也给自己留点从容。",
+      "text": "水筒にお水を足すのを忘れずに。自分にも少し余裕をあげてくださいね。",
+      "language": "JA",
+      "file": "voice/evening_034.ogg",
+      "seconds": 7.86,
+      "sampleRate": 22050,
+      "sha256": "0cc61e56aac33e4d7c9e12d45c269ab6c143b2e7717a7874753b42ed10c21fc3"
+    },
+    {
+      "line": "呵呵，明天的快乐还没有到，今晚就先好好休息。",
+      "text": "ふふ、明日の楽しみは、まだこれから。今夜はゆっくり休みましょう。",
+      "language": "JA",
+      "file": "voice/evening_035.ogg",
+      "seconds": 6.304,
+      "sampleRate": 22050,
+      "sha256": "68bc44b555d12251108cbc8364c99a189fbe18e4bca7ede71a7f122a77ad630a"
+    },
+    {
+      "line": "今天已经走到了这里，就让晚风轻轻替你收个尾吧。",
+      "text": "今日もここまで来ましたね。夜風に、そっと一日を締めくくってもらいましょう。",
+      "language": "JA",
+      "file": "voice/evening_036.ogg",
+      "seconds": 6.699,
+      "sampleRate": 22050,
+      "sha256": "af134ca55591eae7640a31fc3af0d1a9c2cd1030cb98367938e575987f706aef"
+    },
+    {
+      "line": "准备睡觉了吗？愿你今晚的梦，也有柔和的光。",
+      "text": "そろそろ眠りますか。今夜の夢にも、優しい光がありますように。",
+      "language": "JA",
+      "file": "voice/evening_037.ogg",
+      "seconds": 8.057,
+      "sampleRate": 22050,
+      "sha256": "e671c59e9faa2d19ea240182ec76e284f4463036280bb5155cab035e33b36858"
+    },
+    {
+      "line": "晚安。明天也请用你自己的步调，迎接新的一天。",
+      "text": "おやすみなさい。明日もあなたの歩幅で、新しい一日を迎えてくださいね。",
+      "language": "JA",
+      "file": "voice/evening_038.ogg",
+      "seconds": 8.185,
+      "sampleRate": 22050,
+      "sha256": "074262ee076bcab8a7e0425109fc29733c122886d978927f3136924530ee37c3"
+    }
+  ]
+}

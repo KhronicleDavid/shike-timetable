@@ -14,7 +14,10 @@ import java.time.LocalDateTime
 enum class VoicePhase(val label: String) {
     Preparing("语音准备中…"), Playing("正在说话 · 播完再换句"), Paused("语音已暂停 · 等待恢复")
 }
-data class VoiceSession(val token: Long, val themeId: String, val moment: CompanionMoment, val phase: VoicePhase)
+data class VoiceSession(val token: Long, val themeId: String, val moment: CompanionMoment, val phase: VoicePhase,
+    val showCompletionHint: Boolean = false) {
+    val displayLabel: String? get() = if (phase == VoicePhase.Playing && !showCompletionHint) null else phase.label
+}
 
 /** 应用和所有桌面小组件共用一个会话，不排队，不按估算时长提前解锁。 */
 object CompanionVoicePlayback {
@@ -36,7 +39,8 @@ object CompanionVoicePlayback {
             TodayWidgetUpdates.request(app)
             return
         }
-        val session = VoiceSession(System.nanoTime(), theme.id, next, VoicePhase.Preparing)
+        val session = VoiceSession(System.nanoTime(), theme.id, next, VoicePhase.Preparing,
+            CompanionInteractionStore(app).showPlaybackHint())
         state.value = session
         TodayWidgetUpdates.request(app)
         try {
@@ -49,7 +53,10 @@ object CompanionVoicePlayback {
     }
 
     internal fun phase(context: Context, token: Long, phase: VoicePhase) {
-        state.value?.takeIf { it.token == token }?.let { state.value = it.copy(phase = phase) }
+        state.value?.takeIf { it.token == token }?.let {
+            if (phase == VoicePhase.Playing && it.showCompletionHint) CompanionInteractionStore(context).dismissPlaybackHint()
+            state.value = it.copy(phase = phase)
+        }
         TodayWidgetUpdates.request(context)
     }
     internal fun finish(context: Context, token: Long) {

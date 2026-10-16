@@ -23,7 +23,7 @@ import org.junit.rules.TestRule
 import java.io.File
 import java.time.LocalDateTime
 
-/** 新主题只含原画与15幅重绘，不使用占位台词或其他角色的语音。 */
+/** 希尔维娅分时语录、16幅图片、主题与小组件的视觉回归；此处关闭声音以独立检查换句。 */
 class SylviaAppearanceTest {
     private val compose = createAndroidComposeRule<MainActivity>()
     private fun context() = InstrumentationRegistry.getInstrumentation().targetContext
@@ -38,10 +38,10 @@ class SylviaAppearanceTest {
         listOf("shike_appearance", CompanionInteractionStore.PREFERENCES).forEach {
             context().getSharedPreferences(it, Context.MODE_PRIVATE).edit().clear().commit()
         }
-        AppearanceStore(context()).apply { this.themeId = themeId; voiceEnabled = true }
+        AppearanceStore(context()).apply { this.themeId = themeId; voiceEnabled = false }
     }
 
-    @Test fun galleryTimeSpecificArtworkAndThemeSelectionWorkWithoutDialogue() {
+    @Test fun galleryTimeSpecificArtworkAndThemeSelectionWorkWithDialogue() {
         val theme = ThemeRepository.get(context()).find("sylvia")
         val content = theme.companion!!
         assertEquals(16, content.artworks.size)
@@ -52,14 +52,15 @@ class SylviaAppearanceTest {
         val schedule = ScheduleStore(context()).read()
         val store = CompanionInteractionStore(context())
         compose.onNodeWithContentDescription("吉祥物：希尔维娅").assertIsDisplayed()
-        compose.onNodeWithTag("companion_quote").assertDoesNotExist()
-        compose.onNodeWithText("点点我 · 换句话").assertDoesNotExist()
-        compose.onNodeWithText("点点我 · 换幅图").assertIsDisplayed()
+        compose.onNodeWithTag("companion_quote").assertIsDisplayed()
+        compose.onNodeWithText("点点我 · 换句话").assertIsDisplayed()
+        compose.onNodeWithText("点点我 · 换幅图").assertDoesNotExist()
         repeat(8) {
             val old = store.current(theme)!!
             compose.onNodeWithTag("companion_portrait_shuffle").performClick()
             val next = store.current(theme)!!
-            assertEquals("", next.line)
+            assertTrue(next.line in content.quotes.getValue(next.part))
+            assertNotEquals(old.line, next.line)
             assertNotEquals(old.artwork, next.artwork)
             assertTrue(next.artwork in content.pictures(next.part).map { it.id })
             assertFalse(CompanionVoicePlayback.isBusy)
@@ -68,11 +69,11 @@ class SylviaAppearanceTest {
         snapshot("希尔维娅-课表-浅色")
         compose.activityRule.scenario.recreate()
         assertEquals("sylvia", AppearanceStore(context()).themeId)
-        compose.onNodeWithTag("companion_quote").assertDoesNotExist()
+        compose.onNodeWithTag("companion_quote").assertIsDisplayed()
         compose.onNodeWithText("课程").performClick()
         snapshot("希尔维娅-课程")
         compose.onNodeWithText("设置").performClick()
-        compose.onNodeWithContentDescription("角色语音").assertDoesNotExist()
+        compose.onNodeWithContentDescription("角色语音").performScrollTo().assertIsDisplayed()
         compose.onNodeWithText("希尔维娅的小小画册").performScrollTo().performClick()
         content.artworks.forEach { art -> compose.onNodeWithText(art.label).performScrollTo().performClick().assertIsSelected() }
         snapshot("希尔维娅-画册", dialog = true)
@@ -90,7 +91,7 @@ class SylviaAppearanceTest {
         assertEquals(schedule.settings.copy(darkMode = "dark"), ScheduleStore(context()).read().settings)
     }
 
-    @Test fun widgetShowsQArtworkAndCoursesButNoBlankDialogueAreaAcrossAllPeriods() {
+    @Test fun widgetShowsQArtworkAndMatchingDialogueAcrossAllPeriods() {
         val context = context()
         val theme = ThemeRepository.get(context).find("sylvia")
         val store = CompanionInteractionStore(context)
@@ -100,12 +101,12 @@ class SylviaAppearanceTest {
                 val moment = store.current(theme, time)!!
                 val layout = TodayWidgetViews.build(context, 901, ScheduleStore(context).read(), time)
                     .apply(context, FrameLayout(context))
-                assertEquals(View.GONE, layout.findViewById<View>(R.id.widget_companion).visibility)
-                assertEquals(View.GONE, layout.findViewById<View>(R.id.widget_quote).visibility)
-                assertEquals("", layout.findViewById<TextView>(R.id.widget_quote).text.toString())
+                assertEquals(View.VISIBLE, layout.findViewById<View>(R.id.widget_companion).visibility)
+                assertEquals(View.VISIBLE, layout.findViewById<View>(R.id.widget_quote).visibility)
+                assertEquals("希尔维娅：${moment.line}", layout.findViewById<TextView>(R.id.widget_quote).text.toString())
                 val portrait = layout.findViewById<ImageView>(R.id.widget_portrait)
                 assertNotNull(portrait.drawable)
-                assertTrue(portrait.contentDescription.contains("切换插画"))
+                assertTrue(portrait.contentDescription.contains("换一句"))
                 val expected = ThemeImages.load(context, theme, theme.companion!!.artwork(moment.artwork)!!, 256, compact = true)
                 val actual = (portrait.drawable as android.graphics.drawable.BitmapDrawable).bitmap
                 assertTrue(actual.sameAs(expected))

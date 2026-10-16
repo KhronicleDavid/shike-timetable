@@ -122,8 +122,28 @@ class ThemePackTest {
         assertThrows(IllegalArgumentException::class.java) { ThemePackParser.parse(config.toString()) }
     }
 
+    @Test fun sylviaPoolsHaveIndependentTextAndCompleteVoiceMappings() {
+        val theme = ThemePackParser.parse(File(assets, "themes/sylvia/theme.json").readText())
+        val content = theme.companion!!
+        assertEquals(2, theme.version)
+        assertEquals(114, content.voices.size)
+        assertEquals(120, content.allLines.size)
+        assertTrue(content.allLines.intersect(ThemePackParser.parse(json().toString()).companion!!.allLines.toSet()).isEmpty())
+        content.quotes.values.forEach { pool ->
+            assertEquals(38, pool.size)
+            pool.forEach { line ->
+                val clip = content.voices.getValue(line)
+                assertEquals("JA", clip.language)
+                val file = File(assets, "themes/sylvia/${clip.file}")
+                assertEquals("OggS", file.inputStream().use { String(it.readNBytes(4), Charsets.US_ASCII) })
+            }
+        }
+    }
+
     @Test fun artworkOnlyThemeMatchesHimariCountAndDoesNotInventDialogue() {
-        val sylvia = ThemePackParser.parse(File(assets, "themes/sylvia/theme.json").readText())
+        val config = JSONObject(File(assets, "themes/sylvia/theme.json").readText())
+        config.getJSONObject("companion").apply { remove("quotes"); remove("contextLines"); remove("voices") }
+        val sylvia = ThemePackParser.parse(config.toString())
         val content = sylvia.companion!!
         assertEquals(ThemePackParser.parse(json().toString()).companion!!.artworks.size, content.artworks.size)
         assertEquals(16, content.artworks.size)

@@ -83,8 +83,9 @@ import kotlin.math.sin
                         .testTag("companion_quote")) {
                         Text(companion.line, color = colors.primary, fontSize = 11.sp, lineHeight = 18.sp,
                             maxLines = 3, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
-                        if (voicePhase != null) Text(voicePhase.label, color = colors.onSurfaceVariant,
+                        LocalVoiceStatus.current?.let { Text(it, color = colors.onSurfaceVariant,
                             fontSize = 10.sp, modifier = Modifier.padding(top = 5.dp).testTag("voice_status"))
+                        }
                         if (voicePhase == null && shuffle != null && LocalShuffleHint.current) Text("点点我 · 换句话", color = colors.onSurfaceVariant.copy(alpha = .8f),
                             fontSize = 11.sp, modifier = Modifier.padding(top = 5.dp, bottom = 4.dp).testTag("shuffle_hint"))
                     }

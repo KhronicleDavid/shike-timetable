@@ -21,6 +21,7 @@ val LocalCompanionMoment = staticCompositionLocalOf<CompanionMoment?> { null }
 val LocalCompanionShuffle = staticCompositionLocalOf<(() -> Unit)?> { null }
 val LocalShuffleHint = staticCompositionLocalOf { false }
 val LocalVoicePhase = staticCompositionLocalOf<com.shike.timetable.theme.VoicePhase?> { null }
+val LocalVoiceStatus = staticCompositionLocalOf<String?> { null }
 val LocalDarkTheme = staticCompositionLocalOf { false }
 val CourseAccents: List<Color> @Composable get() = LocalAppTheme.current.palette(LocalDarkTheme.current).courseAccents.map { Color(it) }
 
@@ -40,6 +41,7 @@ private fun ThemePalette.scheme(dark: Boolean): ColorScheme {
 @Composable fun ShikeTheme(mode: String, theme: ThemePack, showMascot: Boolean = true,
     companion: CompanionMoment? = null, showShuffleHint: Boolean = false,
     voicePhase: com.shike.timetable.theme.VoicePhase? = null,
+    voiceStatus: String? = null,
     onCompanionShuffle: (() -> Unit)? = null, content: @Composable () -> Unit) {
     val dark = mode == "dark" || (mode == "system" && isSystemInDarkTheme())
     val colors = theme.palette(dark).scheme(dark)
@@ -58,6 +60,7 @@ private fun ThemePalette.scheme(dark: Boolean): ColorScheme {
     }
     CompositionLocalProvider(LocalAppTheme provides theme,
         LocalCompanionVisible provides (showMascot && theme.companion != null), LocalCompanionMoment provides companion,
+        LocalVoiceStatus provides voiceStatus,
         LocalCompanionShuffle provides onCompanionShuffle, LocalShuffleHint provides showShuffleHint,
         LocalVoicePhase provides voicePhase, LocalDarkTheme provides dark) {
         MaterialTheme(colorScheme = colors, shapes = Shapes(

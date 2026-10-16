@@ -247,6 +247,7 @@ class BackupViewModel : ViewModel() {
     }
     ShikeTheme(data.settings.darkMode, theme, showMascot, companion = companion, showShuffleHint = showShuffleHint,
         voicePhase = voiceSession?.phase,
+        voiceStatus = voiceSession?.displayLabel,
         onCompanionShuffle = {
             clockTime = LocalDateTime.now()
             CompanionVoicePlayback.shuffle(context)

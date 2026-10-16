@@ -11,6 +11,8 @@ class CompanionInteractionStore internal constructor(private val preferences: Sh
     constructor(context: Context) : this(context.applicationContext.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE))
 
     fun showShuffleHint(): Boolean = preferences.all[HINT_DISMISSED] != true
+    fun showPlaybackHint(): Boolean = preferences.all[PLAYBACK_HINT_DISMISSED] != true
+    internal fun dismissPlaybackHint() { preferences.edit().putBoolean(PLAYBACK_HINT_DISMISSED, true).apply() }
     fun current(theme: ThemePack, moment: LocalDateTime = LocalDateTime.now()): CompanionMoment? = synchronized(lock) {
         readCurrent(theme, moment)
     }
@@ -74,6 +76,7 @@ class CompanionInteractionStore internal constructor(private val preferences: Sh
         // 保留旧偏好文件名，只迁移结构，不修改已有课表或角色开关。
         const val PREFERENCES = "shike_companion_interaction"
         const val HINT_DISMISSED = "shuffle_hint_dismissed"
+        const val PLAYBACK_HINT_DISMISSED = "playback_hint_dismissed"
         private val lock = Any()
     }
 }

@@ -89,4 +89,15 @@ class CompanionInteractionStoreTest {
         assertTrue(AppearanceStore(preferences).showCompanion)
         assertEquals("minimal", AppearanceStore(preferences).themeId)
     }
+
+    @Test fun playbackHintPersistsIndependentlyFromFirstShuffleAndThemeSelection() {
+        val store = CompanionInteractionStore(preferences)
+        store.shuffle(theme, moment)
+        assertFalse(store.showShuffleHint())
+        assertTrue(store.showPlaybackHint())
+        store.dismissPlaybackHint()
+        assertFalse(CompanionInteractionStore(preferences).showPlaybackHint())
+        store.shuffle(ThemeRepository.get(context).find("sylvia"), moment.withHour(21))
+        assertFalse(CompanionInteractionStore(preferences).showPlaybackHint())
+    }
 }

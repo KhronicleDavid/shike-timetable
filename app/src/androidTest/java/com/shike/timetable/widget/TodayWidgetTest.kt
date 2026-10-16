@@ -37,7 +37,7 @@ import org.junit.Test
 /** 在独立模拟器中绑定真正的 AppWidgetHost，验证系统远程列表而非静态预览。 */
 class TodayWidgetTest {
     @Test fun systemWidgetScrollsResizesRefreshesAndHandlesAnEmptyDay() {
-        assumeTrue(Build.FINGERPRINT.contains("generic") || Build.FINGERPRINT.contains("emulator"))
+        assumeTrue(Build.FINGERPRINT.contains("generic") || Build.FINGERPRINT.contains("emulator") || Build.FINGERPRINT.contains("emu64"))
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext
         fun shell(command: String) = instrumentation.uiAutomation.executeShellCommand(command).use { descriptor ->
@@ -210,10 +210,14 @@ class TodayWidgetTest {
                 AppearanceStore(context).themeId = "sylvia"
                 TodayWidgetUpdates.request(context)
                 val sylvia = ThemeRepository.get(context).find("sylvia")
-                waitFor("希尔维娅应隐藏语录并保留插画") {
-                    widget.findViewById<TextView>(R.id.widget_quote).visibility == View.GONE &&
+                waitFor("希尔维娅应展示语录与插画") {
+                    widget.findViewById<TextView>(R.id.widget_quote).text.startsWith("希尔维娅：") &&
+                        widget.findViewById<TextView>(R.id.widget_quote).currentTextColor == sylvia.dark.color("primary").toInt() &&
                         widget.findViewById<android.widget.ImageView>(R.id.widget_portrait).visibility == View.VISIBLE
                 }
+                instrumentation.waitForIdleSync()
+                TodayWidgetUpdates.executor.submit {}.get(10, java.util.concurrent.TimeUnit.SECONDS)
+                instrumentation.waitForIdleSync()
                 listOf(8 to "早晨", 13 to "午间", 21 to "夜晚").forEach { (hour, label) ->
                     val moment = date.atTime(hour, 0)
                     val choice = CompanionInteractionStore(context).current(sylvia, moment)!!
@@ -221,7 +225,7 @@ class TodayWidgetTest {
                     val expected = ThemeImages.load(context, sylvia, art, 256, compact = true)!!
                     main { widget.updateAppWidget(TodayWidgetViews.build(context, id, darkData, moment)) }
                     waitFor("希尔维娅小组件应展示对应时段Q版") {
-                        widget.findViewById<TextView>(R.id.widget_quote).text.isEmpty() &&
+                        widget.findViewById<TextView>(R.id.widget_quote).text.toString() == "希尔维娅：${choice.line}" &&
                             (widget.findViewById<android.widget.ImageView>(R.id.widget_portrait).drawable as? android.graphics.drawable.BitmapDrawable)
                                 ?.bitmap?.sameAs(expected) == true
                     }
@@ -230,11 +234,11 @@ class TodayWidgetTest {
                 }
                 val sylviaBefore = CompanionInteractionStore(context).current(sylvia)!!.artwork
                 onView(withId(R.id.widget_portrait)).perform(click())
-                waitFor("希尔维娅桌面点击仅切换插画") {
+                waitFor("希尔维娅桌面点击切换同一时段语录与插画") {
                     CompanionInteractionStore(context).current(sylvia)!!.artwork != sylviaBefore &&
-                        widget.findViewById<TextView>(R.id.widget_quote).visibility == View.GONE
+                        widget.findViewById<TextView>(R.id.widget_quote).visibility == View.VISIBLE
                 }
-                assertFalse("希尔维娅不能借用其他角色语音", CompanionVoicePlayback.isBusy)
+                assertFalse("语音关闭后希尔维娅静默换句", CompanionVoicePlayback.isBusy)
                 assertEquals(darkData, ScheduleStore(context).read())
                 AppearanceStore(context).themeId = "minimal"
                 TodayWidgetUpdates.request(context)
