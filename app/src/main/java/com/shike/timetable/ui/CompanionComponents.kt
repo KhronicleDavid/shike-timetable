@@ -47,7 +47,7 @@ import kotlin.math.sin
     val content = theme.companion ?: return
     val actual = artwork ?: content.scene(scene)
     val context = LocalContext.current
-    val bitmap = remember(theme.id, theme.version, actual.file) { ThemeImages.load(context, theme, actual) } ?: return
+    val bitmap = remember(theme.sourceKey, theme.version, actual.file) { ThemeImages.load(context, theme, actual) } ?: return
     Image(bitmap.asImageBitmap(), contentDescription = "吉祥物：${content.name}", modifier = modifier,
         contentScale = if (cropped ?: actual.crop) ContentScale.Crop else ContentScale.Fit, alignment = Alignment.TopCenter)
 }

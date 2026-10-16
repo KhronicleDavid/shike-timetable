@@ -13,11 +13,20 @@ class ThemeRepository private constructor(val themes: List<ThemePack>, val defau
         ?: themes.firstOrNull { it.id == defaultId } ?: themes.first()
 
     companion object {
-        @Volatile private var cached: ThemeRepository? = null
-        fun get(context: Context): ThemeRepository = cached ?: synchronized(this) {
-            cached ?: read { path -> context.applicationContext.assets.open(path).bufferedReader().use { it.readText() } }
-                .also { cached = it }
+        private data class Snapshot(val revision: Long, val repository: ThemeRepository)
+        @Volatile private var cached: Snapshot? = null
+        fun get(context: Context): ThemeRepository = cached?.takeIf { it.revision == ExternalThemeStore.changes.value }?.repository ?: synchronized(this) {
+            cached?.takeIf { it.revision == ExternalThemeStore.changes.value }?.repository ?: run {
+                val revision = ExternalThemeStore.changes.value
+                val loaded = bundled(context).let { base ->
+                    ThemeRepository(base.themes + ExternalThemeStore(context).installed().filter { extra -> base.themes.none { it.id == extra.id } }, base.defaultId)
+                }
+                cached = Snapshot(revision, loaded)
+                loaded
+            }
         }
+        fun invalidate() { cached = null }
+        fun bundled(context: Context): ThemeRepository = read { path -> context.applicationContext.assets.open(path).bufferedReader().use { it.readText() } }
         fun read(load: (String) -> String): ThemeRepository {
             val index = JSONObject(load("themes/catalog.json"))
             require(index.getInt("schemaVersion") == 1) { "不支持的主题列表版本" }
@@ -42,16 +51,17 @@ object ThemeImages {
     }
     @Synchronized fun load(context: Context, theme: ThemePack, artwork: ThemeArtwork, maxEdge: Int = 1024, compact: Boolean = false): Bitmap? {
         val path = theme.asset(artwork, compact)
-        val key = "${theme.version}:$path:$maxEdge"
+        val key = "${theme.sourceKey}:${theme.version}:$path:$maxEdge"
         cache.get(key)?.let { return it }
         return runCatching {
             val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-            context.assets.open(path).use { BitmapFactory.decodeStream(it, null, bounds) }
+            val relative = if (compact) artwork.compactFile ?: artwork.file else artwork.file
+            ThemeFiles.open(context, theme, relative).use { BitmapFactory.decodeStream(it, null, bounds) }
             val options = BitmapFactory.Options().apply {
                 inSampleSize = 1
                 while (maxOf(bounds.outWidth, bounds.outHeight) / (inSampleSize * 2) >= maxEdge) inSampleSize *= 2
             }
-            context.assets.open(path).use { BitmapFactory.decodeStream(it, null, options) }?.also { cache.put(key, it) }
+            ThemeFiles.open(context, theme, relative).use { BitmapFactory.decodeStream(it, null, options) }?.also { cache.put(key, it) }
         }.getOrNull()
     }
 }

@@ -10,7 +10,7 @@ import com.shike.timetable.theme.*
 import java.io.File
 
 class CompanionAndTodayTest {
-    private val theme = ThemePackParser.parse(File("src/main/assets/themes/himari/theme.json").readText())
+    private val theme = ThemePackParser.parse(File("../theme-packs/himari/theme.json").readText())
     private val content = theme.companion!!
     private fun at(moment: LocalDateTime) = CompanionEngine.at(theme, moment)!!
     private fun pictures(part: DayPart) = content.pictures(part).map { it.id }

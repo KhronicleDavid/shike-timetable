@@ -1,10 +1,1 @@
-{
-  "schemaVersion": 1,
-  "defaultTheme": "himari",
-  "themes": [
-    "himari",
-    "sagiri",
-    "sylvia",
-    "minimal"
-  ]
-}
+{"schemaVersion":1,"defaultTheme":"minimal","themes":["minimal"]}

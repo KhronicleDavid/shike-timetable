@@ -26,8 +26,10 @@ import java.time.LocalDate
     onImport: () -> Unit, onSchoolImport: () -> Unit, onClear: () -> Unit,
     themes: List<ThemePack>, onTheme: (ThemePack) -> Unit,
     modifier: Modifier = Modifier, showMascot: Boolean = true, onMascot: (Boolean) -> Unit = {},
+    onImportTheme: () -> Unit = {}, onRemoveTheme: (ThemePack) -> Unit = {}, themeBusy: Boolean = false,
     voiceEnabled: Boolean = true, onVoice: (Boolean) -> Unit = {}) {
     var dialog by rememberSaveable { mutableStateOf("") }
+    var removing by remember { mutableStateOf<ThemePack?>(null) }
     val theme = LocalAppTheme.current
     val companion = theme.companion
     Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 20.dp)) {
@@ -43,6 +45,14 @@ import java.time.LocalDate
         SectionLabel("外观")
         SettingsCard {
             SettingRow("整体主题", "${theme.name}\n${theme.description}", { dialog = "theme" })
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            SettingRow(if (themeBusy) "正在处理主题…" else "导入主题包", "选择ZIP压缩包 · 立绘、语录与语音一起加载", { if (!themeBusy) onImportTheme() })
+            if (themes.any { it.directory != null }) {
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                SettingRow("管理主题包", "${themes.count { it.directory != null }}个已导入主题 · 查看空间与移除", { dialog = "manage_themes" })
+            } else {
+                Text("角色主题已改为独立主题包，导入后即可切换；升级不会改变课表。", modifier = Modifier.padding(17.dp), fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             if (companion != null) {
                 SettingRow("${companion.shortName}的小小画册", "${companion.artworks.size} 幅插画 · 早晨、午间、夜晚", { dialog = "gallery" })
@@ -97,12 +107,24 @@ import java.time.LocalDate
         Column(Modifier.fillMaxWidth().padding(vertical = 30.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (companion != null) ThemeFlower(Modifier.size(18.dp))
-                Text("拾课  1.8.0", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(start = 7.dp))
+                Text("拾课  ${com.shike.timetable.BuildConfig.VERSION_NAME}", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(start = 7.dp))
             }
             Text("本机保存 · 无广告", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .8f), fontSize = 10.sp, modifier = Modifier.padding(top = 5.dp))
         }
     }
     when (dialog) {
+        "manage_themes" -> AlertDialog(onDismissRequest = { dialog = "" }, title = { Text("已导入主题") },
+            text = { Column(Modifier.verticalScroll(rememberScrollState())) {
+                themes.filter { it.directory != null }.forEach { item ->
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                        Column(Modifier.weight(1f)) {
+                            Text(item.name)
+                            Text("版本${item.version} · ${android.text.format.Formatter.formatShortFileSize(LocalContext.current, item.installedBytes)}", fontSize = 12.sp)
+                        }
+                        TextButton(onClick = { removing = item }, enabled = !themeBusy) { Text("移除") }
+                    }
+                }
+            } }, confirmButton = { TextButton(onClick = { dialog = "" }) { Text("关闭") } })
         "widget" -> WidgetHelpDialog { dialog = "" }
         "gallery" -> CompanionGallery { dialog = "" }
         "theme" -> AlertDialog(onDismissRequest = { dialog = "" }, title = { Text("选择整体主题") },
@@ -124,6 +146,10 @@ import java.time.LocalDate
             confirmButton = { TextButton(onClick = { onClear(); dialog = "" }) { Text("确认清空", color = MaterialTheme.colorScheme.error) } },
             dismissButton = { TextButton(onClick = { dialog = "" }) { Text("取消") } })
     }
+    removing?.let { item -> AlertDialog(onDismissRequest = { removing = null }, title = { Text("移除${item.name}？") },
+        text = { Text("仅移除该主题素材，不删除课表。若正在使用，将切回简约主题；以后可重新导入。") },
+        confirmButton = { TextButton(onClick = { onRemoveTheme(item); removing = null; dialog = "" }, enabled = !themeBusy) { Text("确认移除") } },
+        dismissButton = { TextButton(onClick = { removing = null }) { Text("取消") } }) }
 }
 
 @Composable private fun SectionLabel(text: String) {

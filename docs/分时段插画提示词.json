@@ -1,36 +1,36 @@
 {
   "date": "2026-10-15",
   "generator": "built-in imagegen",
-  "reference": "app/src/main/assets/themes/himari/artwork/himari.png",
+  "reference": "theme-packs/himari/artwork/himari.png",
   "transparent_background": true,
   "assets": [
     {
-      "file": "app/src/main/assets/themes/himari/artwork/himari_morning_wave.png",
+      "file": "theme-packs/himari/artwork/himari_morning_wave.png",
       "slot": "morning",
       "prompt": "Use case: illustration-story. Asset: transparent anime character illustration for Android timetable app and desktop widget. Input reference is the exact identity and school uniform of Minahara Himari (皆原陽茉莉). Preserve warm peach-blonde long hair, small braid, white daisy hair clip on viewer left, turquoise emerald eyes, yellow bow, white collared blouse, navy double-breasted uniform with gold buttons and modest pleated skirt. Same recognizable face and gentle Japanese visual novel anime aesthetic. One character only. Fully contained silhouette with a small margin, crisp linework, soft shading, highly readable at small UI sizes. Genuine transparent background with alpha, no colored background, no checkerboard, no text or watermark. Morning greeting pose: waist-up view, cheerful but slightly shy smile, one hand lightly waving by shoulder, other hand holding school bag strap, soft warm morning highlights on hair. Centered portrait composition with tight framing, face towards viewer. No environment."
     },
     {
-      "file": "app/src/main/assets/themes/himari/artwork/himari_morning_bag.png",
+      "file": "theme-packs/himari/artwork/himari_morning_bag.png",
       "slot": "morning",
       "prompt": "Use case: illustration-story. Asset: transparent anime character illustration for Android timetable app and desktop widget. Input reference is the exact identity and school uniform of Minahara Himari (皆原陽茉莉). Preserve warm peach-blonde long hair, small braid, white daisy hair clip on viewer left, turquoise emerald eyes, yellow bow, white collared blouse, navy double-breasted uniform with gold buttons and modest pleated skirt. Same recognizable face and gentle Japanese visual novel anime aesthetic. One character only. Fully contained silhouette with a small margin, crisp linework, soft shading, highly readable at small UI sizes. Genuine transparent background with alpha, no colored background, no checkerboard, no text or watermark. Morning heading-to-class illustration: full-body cute 3-head chibi with open bright eyes, carefully checking a little navy school satchel and holding one mint notebook. Sweet earnest expression, standing feet together, neat uniform. Compact centered portrait, suitable as morning widget mascot."
     },
     {
-      "file": "app/src/main/assets/themes/himari/artwork/himari_noon_lunch.png",
+      "file": "theme-packs/himari/artwork/himari_noon_lunch.png",
       "slot": "noon",
       "prompt": "Use case: illustration-story. Asset: transparent anime character illustration for Android timetable app and desktop widget. Input reference is the exact identity and school uniform of Minahara Himari (皆原陽茉莉). Preserve warm peach-blonde long hair, small braid, white daisy hair clip on viewer left, turquoise emerald eyes, yellow bow, white collared blouse, navy double-breasted uniform with gold buttons and modest pleated skirt. Same recognizable face and gentle Japanese visual novel anime aesthetic. One character only. Fully contained silhouette with a small margin, crisp linework, soft shading, highly readable at small UI sizes. Genuine transparent background with alpha, no colored background, no checkerboard, no text or watermark. Lunch break: full-body 3-head chibi sitting neatly on a simple cream cushion, happily holding a small closed pastel lunch box and chopsticks in their sleeve, softly smiling with eyes open. Mint and peach accents, no scenery. Centered compact composition, modest uniform."
     },
     {
-      "file": "app/src/main/assets/themes/himari/artwork/himari_noon_break.png",
+      "file": "theme-packs/himari/artwork/himari_noon_break.png",
       "slot": "noon",
       "prompt": "Use case: illustration-story. Asset: transparent anime character illustration for Android timetable app and desktop widget. Input reference is the exact identity and school uniform of Minahara Himari (皆原陽茉莉). Preserve warm peach-blonde long hair, small braid, white daisy hair clip on viewer left, turquoise emerald eyes, yellow bow, white collared blouse, navy double-breasted uniform with gold buttons and modest pleated skirt. Same recognizable face and gentle Japanese visual novel anime aesthetic. One character only. Fully contained silhouette with a small margin, crisp linework, soft shading, highly readable at small UI sizes. Genuine transparent background with alpha, no colored background, no checkerboard, no text or watermark. Midday break: full-body 3-head chibi, standing and gently stretching arms above head after reading, eyes softly closed with a content smile, one small closed book tucked under arm naturally, relaxed kind expression. No exposed midriff, keep uniform tidy. Centered portrait with all hands inside frame, no environment."
     },
     {
-      "file": "app/src/main/assets/themes/himari/artwork/himari_evening_read.png",
+      "file": "theme-packs/himari/artwork/himari_evening_read.png",
       "slot": "evening",
       "prompt": "Use case: illustration-story. Asset: transparent anime character illustration for Android timetable app and desktop widget. Input reference is the exact identity and school uniform of Minahara Himari (皆原陽茉莉). Preserve warm peach-blonde long hair, small braid, white daisy hair clip on viewer left, turquoise emerald eyes, yellow bow, white collared blouse, navy double-breasted uniform with gold buttons and modest pleated skirt. Same recognizable face and gentle Japanese visual novel anime aesthetic. One character only. Fully contained silhouette with a small margin, crisp linework, soft shading, highly readable at small UI sizes. Genuine transparent background with alpha, no colored background, no checkerboard, no text or watermark. Evening quiet study: waist-up view, holding an open mint green book with both hands, face looking toward viewer with a soft encouraging smile and turquoise eyes open, navy cardigan loosely worn over her usual white blouse and yellow bow. Subtle cool lavender rim highlights and warm face shading, no lamp or background. Tightly framed centered portrait."
     },
     {
-      "file": "app/src/main/assets/themes/himari/artwork/himari_evening_rest.png",
+      "file": "theme-packs/himari/artwork/himari_evening_rest.png",
       "slot": "evening",
       "prompt": "Use case: illustration-story. Asset: transparent anime character illustration for Android timetable app and desktop widget. Input reference is the exact identity and school uniform of Minahara Himari (皆原陽茉莉). Preserve warm peach-blonde long hair, small braid, white daisy hair clip on viewer left, turquoise emerald eyes, yellow bow, white collared blouse, navy double-breasted uniform with gold buttons and modest pleated skirt. Same recognizable face and gentle Japanese visual novel anime aesthetic. One character only. Fully contained silhouette with a small margin, crisp linework, soft shading, highly readable at small UI sizes. Genuine transparent background with alpha, no colored background, no checkerboard, no text or watermark. End of day: full-body 3-head chibi sitting on a cream cushion holding a small mint square pillow, gently sleepy happy expression, eyes nearly closed, face still recognizable. Keep her school uniform with a modest navy cardigan, long hair flowing neatly beside her, gold daisy details. Compact square portrait composition, no night scenery."
     }

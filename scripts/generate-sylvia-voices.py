@@ -18,7 +18,7 @@ def main():
     root = args.tts_root.resolve()
     work = project / "work/sylvia-voice-release"
     work.mkdir(parents=True, exist_ok=True)
-    pack = project / "app/src/main/assets/themes/sylvia"
+    pack = project / "theme-packs/sylvia"
     output = pack / "voice"
     output.mkdir(exist_ok=True)
     script = json.loads((project / "docs/希尔维娅语音台本.json").read_text(encoding="utf-8"))

@@ -10,17 +10,19 @@ import kotlin.random.Random
 
 class ThemePackTest {
     private val assets = File("src/main/assets")
-    private fun json() = JSONObject(File(assets, "themes/himari/theme.json").readText())
+    private fun asset(path: String): File = if (path == "themes/catalog.json") File("../theme-packs/catalog.json")
+        else File(assets, path).takeIf { it.isFile } ?: File("../theme-packs", path.removePrefix("themes/"))
+    private fun json() = JSONObject(asset("themes/himari/theme.json").readText())
 
     @Test fun bundledThemesHaveAllAssetsAndIndependentPalettes() {
-        val repository = ThemeRepository.read { File(assets, it).readText() }
+        val repository = ThemeRepository.read { asset(it).readText() }
         assertEquals(repository.defaultId, repository.find("removed_theme").id)
         repository.themes.forEach { theme ->
             assertEquals(6, theme.light.courseAccents.size)
             assertEquals(6, theme.dark.courseAccents.size)
             theme.companion?.artworks?.forEach {
-                assertTrue("缺少素材 ${theme.id}/${it.file}", File(assets, theme.asset(it)).isFile)
-                assertTrue("缺少紧凑素材 ${theme.id}/${it.compactFile}", File(assets, theme.asset(it, compact = true)).isFile)
+                assertTrue("缺少素材 ${theme.id}/${it.file}", asset(theme.asset(it)).isFile)
+                assertTrue("缺少紧凑素材 ${theme.id}/${it.compactFile}", asset(theme.asset(it, compact = true)).isFile)
             }
         }
     }
@@ -92,13 +94,13 @@ class ThemePackTest {
     }
 
     @Test fun voiceFilesCoverAllHimariTimePoolsAndOtherThemesRemainOptional() {
-        val repository = ThemeRepository.read { File(assets, it).readText() }
+        val repository = ThemeRepository.read { asset(it).readText() }
         val content = repository.find("himari").companion!!
         assertEquals(114, content.voices.size)
         content.quotes.values.flatten().forEach { line ->
             val clip = content.voices.getValue(line)
             assertEquals("JA", clip.language)
-            val file = File(assets, "themes/himari/${clip.file}")
+            val file = asset("themes/himari/${clip.file}")
             assertTrue(file.isFile)
             assertEquals("OggS", file.inputStream().use { String(it.readNBytes(4), Charsets.US_ASCII) })
         }
@@ -123,7 +125,7 @@ class ThemePackTest {
     }
 
     @Test fun sylviaPoolsHaveIndependentTextAndCompleteVoiceMappings() {
-        val theme = ThemePackParser.parse(File(assets, "themes/sylvia/theme.json").readText())
+        val theme = ThemePackParser.parse(asset("themes/sylvia/theme.json").readText())
         val content = theme.companion!!
         assertEquals(2, theme.version)
         assertEquals(114, content.voices.size)
@@ -134,14 +136,14 @@ class ThemePackTest {
             pool.forEach { line ->
                 val clip = content.voices.getValue(line)
                 assertEquals("JA", clip.language)
-                val file = File(assets, "themes/sylvia/${clip.file}")
+                val file = asset("themes/sylvia/${clip.file}")
                 assertEquals("OggS", file.inputStream().use { String(it.readNBytes(4), Charsets.US_ASCII) })
             }
         }
     }
 
     @Test fun artworkOnlyThemeMatchesHimariCountAndDoesNotInventDialogue() {
-        val config = JSONObject(File(assets, "themes/sylvia/theme.json").readText())
+        val config = JSONObject(asset("themes/sylvia/theme.json").readText())
         config.getJSONObject("companion").apply { remove("quotes"); remove("contextLines"); remove("voices") }
         val sylvia = ThemePackParser.parse(config.toString())
         val content = sylvia.companion!!

@@ -13,16 +13,18 @@ android {
         applicationId = "com.shike.timetable"
         minSdk = 26
         targetSdk = 35
-        versionCode = 12
-        versionName = "1.9.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        versionCode = 13
+        versionName = "1.10.0"
+        testInstrumentationRunner = "com.shike.timetable.ThemeTestRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("debug")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 
@@ -31,7 +33,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
-    buildFeatures { compose = true }
+    buildFeatures { compose = true; buildConfig = true }
+    sourceSets.getByName("androidTest").assets.srcDir(rootProject.file("theme-packs"))
     androidResources { noCompress += "ogg" }
     packaging {
         resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"

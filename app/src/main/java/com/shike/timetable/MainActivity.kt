@@ -155,7 +155,9 @@ class BackupViewModel : ViewModel() {
     val context = LocalContext.current
     val store = remember { ScheduleStore(context) }
     val appearance = remember { AppearanceStore(context) }
-    val themes = remember { ThemeRepository.get(context) }
+    val themeRevision by ExternalThemeStore.changes.collectAsState()
+    val themes = remember(themeRevision) { ThemeRepository.get(context) }
+    val themeImport = remember(context) { ViewModelProvider(context as ComponentActivity)[ThemeImportModel::class.java] }
     var themeId by remember { mutableStateOf(appearance.themeId) }
     val theme = themes.find(themeId)
     var showMascot by remember { mutableStateOf(appearance.showCompanion) }
@@ -166,11 +168,11 @@ class BackupViewModel : ViewModel() {
     var editingId by rememberSaveable { mutableStateOf<String?>(null) }
     var clockTime by remember { mutableStateOf(LocalDateTime.now()) }
     val companionStore = remember { CompanionInteractionStore(context) }
-    var companion by remember(theme.id) { mutableStateOf(companionStore.current(theme, clockTime)) }
+    var companion by remember(theme.sourceKey, theme.version) { mutableStateOf(companionStore.current(theme, clockTime)) }
     var showShuffleHint by remember { mutableStateOf(companionStore.showShuffleHint()) }
     val voiceSession by CompanionVoicePlayback.sessions.collectAsState()
     var voiceEnabled by remember { mutableStateOf(appearance.voiceEnabled) }
-    LaunchedEffect(voiceSession) {
+    LaunchedEffect(voiceSession, theme.sourceKey, theme.version) {
         companion = companionStore.current(theme, LocalDateTime.now())
         showShuffleHint = companionStore.showShuffleHint()
     }
@@ -193,16 +195,29 @@ class BackupViewModel : ViewModel() {
     val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
         if (uri != null) backup.importBackup(context, uri)
     }
+    val importTheme = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+        if (uri != null) themeImport.prepare(uri)
+    }
+    LaunchedEffect(themeImport.installed) {
+        themeImport.installed?.let { selected ->
+            CompanionVoicePlayback.cancel(context)
+            appearance.themeId = selected.id; themeId = selected.id
+            companion = companionStore.current(selected, LocalDateTime.now())
+            themeImport.consumeInstalled(); TodayWidgetUpdates.request(context)
+            message("${selected.name}已导入")
+        }
+    }
+    LaunchedEffect(themeRevision) { TodayWidgetUpdates.request(context) }
     LaunchedEffect(backup.resultMessage) {
         backup.resultMessage?.let { message(it); backup.consumeMessage() }
     }
-    LaunchedEffect(theme.id) { while (true) {
+    LaunchedEffect(theme.sourceKey, theme.version) { while (true) {
         delay(60_000 - System.currentTimeMillis() % 60_000)
         clockTime = LocalDateTime.now()
         companion = companionStore.current(theme, clockTime)
         showShuffleHint = companionStore.showShuffleHint()
     } }
-    DisposableEffect(context, theme.id) {
+    DisposableEffect(context, theme.sourceKey, theme.version) {
         val lifecycle = (context as ComponentActivity).lifecycle
         val interactionPreferences = context.getSharedPreferences(CompanionInteractionStore.PREFERENCES, Context.MODE_PRIVATE)
         val hintObserver = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
@@ -299,6 +314,14 @@ class BackupViewModel : ViewModel() {
                                 clockTime = LocalDateTime.now(); companion = companionStore.current(selected, clockTime)
                                 showShuffleHint = companionStore.showShuffleHint(); TodayWidgetUpdates.request(context)
                             },
+                            themeBusy = themeImport.busy, onImportTheme = { importTheme.launch(arrayOf("*/*")) },
+                            onRemoveTheme = { selected ->
+                                if (theme.id == selected.id) {
+                                    CompanionVoicePlayback.cancel(context)
+                                    appearance.themeId = "minimal"; themeId = "minimal"
+                                }
+                                themeImport.remove(selected)
+                            },
                             showMascot = showMascot, onMascot = {
                                 if (!it) CompanionVoicePlayback.cancel(context)
                                 showMascot = it; appearance.showCompanion = it; TodayWidgetUpdates.request(context)
@@ -313,6 +336,7 @@ class BackupViewModel : ViewModel() {
             }
             if (picker) WeekPicker(selectedWeek, data.settings.totalWeeks, currentWeek,
                 onSelect = { selectedWeek = it; picker = false }, onDismiss = { picker = false })
+            ThemeImportDialogs(themeImport, themes.themes)
             backup.pendingImport?.let { imported ->
                 AlertDialog(onDismissRequest = { backup.dismissImport() }, title = { Text("导入课表备份") },
                     text = { Text("将导入 ${imported.courses.size} 门课程及学期设置，并替换当前课表。建议先导出一份备份。") },

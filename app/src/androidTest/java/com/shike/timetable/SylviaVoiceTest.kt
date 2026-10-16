@@ -48,9 +48,7 @@ class SylviaVoiceTest {
         theme.companion.voices.values.forEach { clip ->
             val player = MediaPlayer()
             try {
-                context().assets.openFd("themes/sylvia/${clip.file}").use {
-                    player.setDataSource(it.fileDescriptor, it.startOffset, it.length)
-                }
+                ThemeFiles.setDataSource(context(), theme, clip, player)
                 player.prepare()
                 assertTrue("语音时长不正常 ${clip.file}", player.duration in 1000..20000)
             } finally { player.release() }
@@ -71,9 +69,7 @@ class SylviaVoiceTest {
         val started = SystemClock.elapsedRealtime()
         val duration = MediaMetadataRetriever().let { retriever ->
             try {
-                context.assets.openFd("themes/sylvia/${theme.companion!!.voices.getValue(session.moment.line).file}").use {
-                    retriever.setDataSource(it.fileDescriptor, it.startOffset, it.length)
-                }
+                retriever.setDataSource(java.io.File(theme.directory!!, theme.companion!!.voices.getValue(session.moment.line).file).path)
                 retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)!!.toLong()
             } finally { retriever.release() }
         }

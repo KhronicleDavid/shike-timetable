@@ -12,7 +12,7 @@
   "assets": [
     {
       "id": "sylvia_home",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_home.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_home.png",
       "reference": "bs2_sy_dress3_1216.png",
       "prompt": "Use case: illustration-story. Create ONE original polished anime illustration for an Android timetable mascot theme, Silvia from 金色ラブリッチェ. Attached image is ONLY the character/clothing reference, not a target to copy pixel-for-pixel. Preserve her recognizable golden-blonde very long hair, straight bangs, little side braided bun, blue hair ribbon, tiny crossed pink/blue hair clips and large blue-to-green jewel-like eyes. Crisp delicate blue-gray linework, softly shaded bright opaque colors, refined cheerful expression; tasteful everyday fully clothed depiction, relaxed natural posture. True transparent background outside character silhouette including hair gaps. Absolutely NO glow, halo, haze, floor shadow, gradient backdrop, background panel, sparkles, text, logo, border or watermark. Entire intended silhouette centered with 8% clean transparent margin. Only one girl, no duplicates, no montage or sprite sheet. Formal welcome portrait, from head to just below knees, one hand gracefully raised in a small greeting, the other holding a small closed navy planner close to torso. Warm open-eye smile. Reference blue-and-white layered princess dress with gold trim, blue gemstone ornaments, long white gloves and a delicate blue gem tiara; keep gown neckline modest. No scenery.",
       "sha256": "d9a343d4a3edb5740f285512d0a086aaa5b10b3ffb81645aae75f3c5f7fb42f0",
@@ -25,7 +25,7 @@
     },
     {
       "id": "sylvia_study",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_study.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_study.png",
       "reference": "sylvia_noon_library（本次同批采用的透明重绘）",
       "prompt": "Draw one clean cutout chibi of this same blonde anime girl, sitting with a closed blue book held to her chest and a pencil in one hand. Match the attached character's face, hair, ribbon, blue-and-gold uniform, opaque dark tights and shoes. About 2.7 heads tall, gentle focused smile. Square framing, full compact silhouette with roomy transparent margins. Flat clean cel-shaded illustration with a crisp silhouette, like the supplied cutout. Empty transparent canvas surrounding the character. No lighting effects. No writing.",
       "sha256": "f2ddd3bf7475f59e8d804ae14b90eaf6fa194ed39fe4b5f51e3e1283f6bf899b",
@@ -38,7 +38,7 @@
     },
     {
       "id": "sylvia_rest",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_rest.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_rest.png",
       "reference": "bs1_sy_dress2_1215.png",
       "prompt": "Use case: illustration-story. Create ONE original polished anime illustration for an Android timetable mascot theme, Silvia from 金色ラブリッチェ. Attached image is ONLY the character/clothing reference, not a target to copy pixel-for-pixel. Preserve her recognizable golden-blonde very long hair, straight bangs, little side braided bun, blue hair ribbon, tiny crossed pink/blue hair clips and large blue-to-green jewel-like eyes. Crisp delicate blue-gray linework, softly shaded bright opaque colors, refined cheerful expression; tasteful everyday fully clothed depiction, relaxed natural posture. True transparent background outside character silhouette including hair gaps. Absolutely NO glow, halo, haze, floor shadow, gradient backdrop, background panel, sparkles, text, logo, border or watermark. Entire intended silhouette centered with 8% clean transparent margin. Only one girl, no duplicates, no montage or sprite sheet. CHIBI full body, 2.7 heads tall, sitting on a small blue cushion cradling a teacup in both hands, relaxed contented open-eye smile. Compact tidy silhouette. Clothing: reference soft pink beret and pink-and-ivory frilled long-sleeved cardigan with little bow closures, ivory knee-length skirt with pink trim, opaque pale stockings, simple shoes. Blue hair ribbons, no tiara.",
       "sha256": "998c9ce6d289c0e245dad0a4d4251dd65defb357cc1bf1f452e6eb47c0c48799",
@@ -51,7 +51,7 @@
     },
     {
       "id": "sylvia_morning_wave",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_morning_wave.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_morning_wave.png",
       "reference": "sylvia_noon_library（本次同批采用的透明重绘）",
       "prompt": "Create one clean isolated anime character cutout of the SAME girl in the reference, with her exact golden hair, blue-green eyes, blue hair ribbons, little braided hair bun, clothing and crisp cel-shaded rendering. Standard anime proportions (not chibi), head-to-waist portrait. One hand waves a friendly morning greeting while the other holds a closed blue planner. Cheerful smile. Square canvas, entire intended silhouette with ample empty transparent margins. Fully solid character colors on a completely empty transparent canvas, matching the clean cutout quality of the reference. Only character and named handheld props. No lighting effects. No text or border.",
       "sha256": "0de85c2a64561b24fa2961ac1d9ec732da7da440c4b407d963037e0e4ed1bff6",
@@ -64,7 +64,7 @@
     },
     {
       "id": "sylvia_morning_tea",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_morning_tea.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_morning_tea.png",
       "reference": "sylvia_rest（本次同批采用的透明重绘）",
       "prompt": "Create one clean isolated anime character cutout of the SAME girl in the reference, with her exact golden hair, blue-green eyes, blue hair ribbons, little braided hair bun, clothing and crisp cel-shaded rendering. Standard anime proportions (not chibi), head-to-waist portrait. Both hands hold an ivory mug just below her chin, relaxed morning smile. Pink beret and cardigan as in reference. Square canvas, entire intended silhouette with ample empty transparent margins. Fully solid character colors on a completely empty transparent canvas, matching the clean cutout quality of the reference. Only character and named handheld props. No lighting effects. No text or border.",
       "sha256": "02dd693d85268e69046684fe672f979d2e7706d16c10a21edae8ee1fa07cdb07",
@@ -77,7 +77,7 @@
     },
     {
       "id": "sylvia_morning_bag",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_morning_bag.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_morning_bag.png",
       "reference": "sylvia_noon_library（本次同批采用的透明重绘）",
       "prompt": "Create one clean isolated anime character cutout of the SAME girl in the reference, with her exact golden hair, blue-green eyes, blue hair ribbons, little braided hair bun, clothing and crisp cel-shaded rendering. Chibi, full compact body about 2.7 heads tall, sitting neatly beside a small closed navy school satchel, one hand on the handle, bright ready-for-school smile. Square canvas, entire intended silhouette with ample empty transparent margins. Fully solid character colors on a completely empty transparent canvas, matching the clean cutout quality of the reference. Only character and named handheld props. No lighting effects. No text or border.",
       "sha256": "681351b18d559ca3b53cf6f0eeb36809e27d767461adf2d2076fea828fff91a7",
@@ -90,7 +90,7 @@
     },
     {
       "id": "sylvia_morning_stretch",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_morning_stretch.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_morning_stretch.png",
       "reference": "sylvia_rest（本次同批采用的透明重绘）",
       "prompt": "Create one clean isolated anime character cutout of the SAME girl in the reference, with her exact golden hair, blue-green eyes, blue hair ribbons, little braided hair bun, clothing and crisp cel-shaded rendering. Chibi, full compact body about 2.7 heads tall, seated on a small cushion, gently lifting both arms over her head in a morning stretch, eyes smiling closed, legs neatly covered. Pink beret and cardigan. Square canvas, entire intended silhouette with ample empty transparent margins. Fully solid character colors on a completely empty transparent canvas, matching the clean cutout quality of the reference. Only character and named handheld props. No lighting effects. No text or border.",
       "sha256": "91bffc9b21dae5e63a47afb9d22b4547611e5e039a446e41aa9ffeebf37090c1",
@@ -103,7 +103,7 @@
     },
     {
       "id": "sylvia_noon_book",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_noon_book.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_noon_book.png",
       "reference": "sylvia_noon_library（本次同批采用的透明重绘）",
       "prompt": "Create one clean isolated anime character cutout of the SAME girl in the reference, with her exact golden hair, blue-green eyes, blue hair ribbons, little braided hair bun, clothing and crisp cel-shaded rendering. Standard anime proportions (not chibi), head-to-waist portrait. Holding an open blue book with both hands, reading with a gentle thoughtful expression. No visible writing. Square canvas, entire intended silhouette with ample empty transparent margins. Fully solid character colors on a completely empty transparent canvas, matching the clean cutout quality of the reference. Only character and named handheld props. No lighting effects. No text or border.",
       "sha256": "4d984c9d468d5e3ab49bffde809c6a917e33196e993d6ff95dacd6db4a49fae4",
@@ -116,7 +116,7 @@
     },
     {
       "id": "sylvia_noon_lunch",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_noon_lunch.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_noon_lunch.png",
       "reference": "sylvia_rest（本次同批采用的透明重绘）",
       "prompt": "Create one clean isolated anime character cutout of the SAME girl in the reference, with her exact golden hair, blue-green eyes, blue hair ribbons, little braided hair bun, clothing and crisp cel-shaded rendering. Standard anime proportions (not chibi), head-to-waist portrait. Holding a closed small ivory lunch box tied with a blue ribbon in both hands, cheerful smile. Pink beret and cardigan. Square canvas, entire intended silhouette with ample empty transparent margins. Fully solid character colors on a completely empty transparent canvas, matching the clean cutout quality of the reference. Only character and named handheld props. No lighting effects. No text or border.",
       "sha256": "0f1cef28b17a70e50ad42fd12d596734880a81f465c271643df677b3dfd30855",
@@ -129,7 +129,7 @@
     },
     {
       "id": "sylvia_noon_library",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_noon_library.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_noon_library.png",
       "reference": "bs1_sy_dress1_2108.png",
       "prompt": "Use case: illustration-story. Create ONE original polished anime illustration for an Android timetable mascot theme, Silvia from 金色ラブリッチェ. Attached image is ONLY the character/clothing reference, not a target to copy pixel-for-pixel. Preserve her recognizable golden-blonde very long hair, straight bangs, little side braided bun, blue hair ribbon, tiny crossed pink/blue hair clips and large blue-to-green jewel-like eyes. Crisp delicate blue-gray linework, softly shaded bright opaque colors, refined cheerful expression; tasteful everyday fully clothed depiction, relaxed natural posture. True transparent background outside character silhouette including hair gaps. Absolutely NO glow, halo, haze, floor shadow, gradient backdrop, background panel, sparkles, text, logo, border or watermark. Entire intended silhouette centered with 8% clean transparent margin. Only one girl, no duplicates, no montage or sprite sheet. CHIBI full body 2.7 heads tall, sitting neatly with a small open book on lap and one hand placing a simple blue bookmark, absorbed gentle expression. Compact fully covered seated posture. Clothing: the reference white long-sleeved buttoned blouse with blue cuffs and small red neck ribbon, royal-blue gold-trimmed waistcoat/pleated skirt with white decorative trim; use an ordinary modest knee-length version, opaque charcoal tights, plain dark Mary Jane shoes. No tiara with this outfit.",
       "sha256": "d72c6ebc203aa35bcf5dea20fd0e5860b93172cd528e920ab3088953be11d2d1",
@@ -142,7 +142,7 @@
     },
     {
       "id": "sylvia_noon_garden",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_noon_garden.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_noon_garden.png",
       "reference": "sylvia_rest（本次同批采用的透明重绘）",
       "prompt": "Create one clean isolated anime character cutout of the SAME girl in the reference, with her exact golden hair, blue-green eyes, blue hair ribbons, little braided hair bun, clothing and crisp cel-shaded rendering. Chibi full compact body about 2.7 heads tall, sitting with an ivory flowerpot containing a single small blue flower held in both hands, curious delighted smile. Pink beret and cardigan. Square canvas, entire intended silhouette with ample empty transparent margins. Fully solid character colors on a completely empty transparent canvas, matching the clean cutout quality of the reference. Only character and named handheld props. No lighting effects. No text or border.",
       "sha256": "962d02aedc472227f85f9a5d921076594f26c985affb2400dadda9c7f8910fec",
@@ -155,7 +155,7 @@
     },
     {
       "id": "sylvia_evening_stars",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_evening_stars.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_evening_stars.png",
       "reference": "sylvia_noon_library（本次同批采用的透明重绘）",
       "prompt": "Create one clean isolated anime character cutout of the SAME girl in the reference, with her exact golden hair, blue-green eyes, blue hair ribbons, little braided hair bun, clothing and crisp cel-shaded rendering. Standard anime proportions (not chibi), head-to-waist portrait. Holding a closed book at waist, head gently tilted upward with quietly wondering open eyes. No actual stars or sky. Square canvas, entire intended silhouette with ample empty transparent margins. Fully solid character colors on a completely empty transparent canvas, matching the clean cutout quality of the reference. Only character and named handheld props. No lighting effects. No text or border.",
       "sha256": "c94d47796ae1c5bc5739e9f3d344d7e330723d45d9ff5a7d0f416e7dda7a057d",
@@ -168,7 +168,7 @@
     },
     {
       "id": "sylvia_evening_lamp",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_evening_lamp.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_evening_lamp.png",
       "reference": "sylvia_rest（本次同批采用的透明重绘）",
       "prompt": "Create one clean isolated anime character cutout of the SAME girl in the reference, with her exact golden hair, blue-green eyes, blue hair ribbons, little braided hair bun, clothing and crisp cel-shaded rendering. Standard anime proportions (not chibi), head-to-waist portrait. One hand holds the handle of a small UNLIT navy-and-gold lantern at waist, the other rests on her book. Calm gentle smile, no hat. Square canvas, entire intended silhouette with ample empty transparent margins. Fully solid character colors on a completely empty transparent canvas, matching the clean cutout quality of the reference. Only character and named handheld props. No lighting effects. No text or border.",
       "sha256": "5f0cc5487bcedc07e920e9450e5d79fad5f1a70a775f906da085991872836df3",
@@ -181,7 +181,7 @@
     },
     {
       "id": "sylvia_evening_read",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_evening_read.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_evening_read.png",
       "reference": "bs1_sy_dress1_2108.png",
       "prompt": "Use case: illustration-story. Create ONE original polished anime illustration for an Android timetable mascot theme, Silvia from 金色ラブリッチェ. Attached image is ONLY the character/clothing reference, not a target to copy pixel-for-pixel. Preserve her recognizable golden-blonde very long hair, straight bangs, little side braided bun, blue hair ribbon, tiny crossed pink/blue hair clips and large blue-to-green jewel-like eyes. Crisp delicate blue-gray linework, softly shaded bright opaque colors, refined cheerful expression; tasteful everyday fully clothed depiction, relaxed natural posture. True transparent background outside character silhouette including hair gaps. Absolutely NO glow, halo, haze, floor shadow, gradient backdrop, background panel, sparkles, text, logo, border or watermark. Entire intended silhouette centered with 8% clean transparent margin. Only one girl, no duplicates, no montage or sprite sheet. CHIBI full body 2.7 heads tall, sitting with an open small book on knees, one hand resting on the page, thoughtful gentle smile, compact covered posture. No props other than book. Clothing: the reference white long-sleeved buttoned blouse with blue cuffs and small red neck ribbon, royal-blue gold-trimmed waistcoat/pleated skirt with white decorative trim; use an ordinary modest knee-length version, opaque charcoal tights, plain dark Mary Jane shoes. No tiara with this outfit.",
       "sha256": "c754e779f7ebdaed5b363b9ff16515b913b3416e58309b26c40fc6ffc1d21e19",
@@ -194,7 +194,7 @@
     },
     {
       "id": "sylvia_evening_goodnight",
-      "file": "../app/src/main/assets/themes/sylvia/artwork/sylvia_evening_goodnight.png",
+      "file": "../theme-packs/sylvia/artwork/sylvia_evening_goodnight.png",
       "reference": "sylvia_rest（本次同批采用的透明重绘）",
       "prompt": "Create one clean isolated anime character cutout of the SAME girl in the reference, with her exact golden hair, blue-green eyes, blue hair ribbons, little braided hair bun, clothing and crisp cel-shaded rendering. Chibi full compact body about 2.7 heads tall, sitting with knees covered and holding a small blue star-shaped plush cushion, one hand making a tiny goodnight wave, sleepy gentle open eyes. No hat. Square canvas, entire intended silhouette with ample empty transparent margins. Fully solid character colors on a completely empty transparent canvas, matching the clean cutout quality of the reference. Only character and named handheld props. No lighting effects. No text or border.",
       "sha256": "ce4949a19cd5966f84eff965c54a951154828dc0c92a8b1f86e2e9158c8842b3",

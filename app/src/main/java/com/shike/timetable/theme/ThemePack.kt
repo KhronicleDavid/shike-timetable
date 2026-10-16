@@ -4,6 +4,7 @@ import org.json.JSONObject
 import java.time.LocalDateTime
 import java.time.LocalTime
 import kotlin.random.Random
+import java.io.File
 
 enum class DayPart(val key: String, val label: String) {
     Morning("morning", "早晨"), Noon("noon", "午间"), Evening("evening", "夜晚");
@@ -40,7 +41,9 @@ data class ThemeVoice(val file: String, val text: String, val language: String)
 data class ThemePack(
     val id: String, val version: Int, val name: String, val description: String,
     val light: ThemePalette, val dark: ThemePalette, val companion: ThemeCompanion?,
+    val directory: File? = null, val installedBytes: Long = 0,
 ) {
+    val sourceKey get() = directory?.path ?: "builtin/$id"
     fun palette(darkMode: Boolean) = if (darkMode) dark else light
     fun asset(artwork: ThemeArtwork, compact: Boolean = false) = "themes/$id/${if (compact) artwork.compactFile ?: artwork.file else artwork.file}"
 }
@@ -56,6 +59,7 @@ object ThemePackParser {
     private val identifier = Regex("[a-z][a-z0-9_-]{0,39}")
 
     fun parse(text: String): ThemePack {
+        require(text.length <= 1_048_576) { "主题配置过大" }
         val json = JSONObject(text)
         require(json.getInt("schemaVersion") == 1) { "不支持的主题配置版本" }
         val id = json.text("id")
@@ -98,7 +102,7 @@ object ThemePackParser {
             }
             require(voices.map { it.first }.distinct().size == voices.size) { "同一句语录不能重复配置语音" }
             ThemeCompanion(content.text("name"), content.text("shortName"), content.text("tagline"),
-                content.optString("attribution"), artworks, quotes, contexts,
+                content.optString("attribution").also { require(it.length <= 2000) { "角色署名文本过长" } }, artworks, quotes, contexts,
                 voices.filter { it.first in quotes.values.flatten() + contexts.values }.toMap())
         }
         return ThemePack(id, version, json.text("name"), json.text("description"),
@@ -122,6 +126,13 @@ object ThemePackParser {
     }
     private fun JSONObject.text(key: String): String = get(key).let {
         require(it is String && it.isNotBlank()) { "$key 必须是非空文本" }
+        val limit = when (key) {
+            "name", "shortName" -> 80
+            "description", "tagline" -> 400
+            "file", "compactFile" -> 180
+            else -> 2000
+        }
+        require(it.length <= limit) { "主题文本过长：$key" }
         it.trim()
     }
     private fun JSONObject.strings(key: String): List<String> {
@@ -130,6 +141,7 @@ object ThemePackParser {
         return (0 until array.length()).map { index ->
             val value = array.get(index)
             require(value is String && value.isNotBlank()) { "$key 不能包含空白或非文本项目" }
+            require(value.length <= 1000) { "主题语录或列表文本过长" }
             value.trim()
         }
     }

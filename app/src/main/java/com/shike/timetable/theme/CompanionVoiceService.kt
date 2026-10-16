@@ -58,7 +58,7 @@ class CompanionVoiceService : Service() {
             val media = MediaPlayer()
             player = media
             media.setAudioAttributes(attributes)
-            assets.openFd("themes/${theme.id}/${clip.file}").use { fd -> media.setDataSource(fd.fileDescriptor, fd.startOffset, fd.length) }
+            ThemeFiles.setDataSource(this, theme, clip, media)
             media.setOnCompletionListener { end(null) }
             media.setOnErrorListener { _, _, _ -> end("语音播放失败，请重试"); true }
             media.setOnPreparedListener {

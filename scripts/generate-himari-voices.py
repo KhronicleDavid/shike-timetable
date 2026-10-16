@@ -18,7 +18,7 @@ def main():
     root = args.tts_root.resolve()
     work = project / "work/himari-voice-release"
     work.mkdir(parents=True, exist_ok=True)
-    pack = project / "app/src/main/assets/themes/himari"
+    pack = project / "theme-packs/himari"
     output = pack / "voice"
     output.mkdir(exist_ok=True)
     script = json.loads((project / "docs/阳茉莉语音台本.json").read_text(encoding="utf-8"))
