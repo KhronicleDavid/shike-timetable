@@ -34,6 +34,7 @@ data class ThemeCompanion(
     fun scene(name: String) = artworks.firstOrNull { name in it.scenes } ?: artworks.first()
     fun artwork(id: String) = artworks.firstOrNull { it.id == id }
     val allLines get() = quotes.values.flatten() + contextLines.values
+    val hasDialogue get() = quotes.values.any { it.isNotEmpty() }
 }
 data class ThemeVoice(val file: String, val text: String, val language: String)
 data class ThemePack(
@@ -75,10 +76,11 @@ object ThemePackParser {
                 } == "crop", DayPart.entries.filter { it.key in periodKeys }.toSet(), art.strings("scenes").toSet(), compactFile)
             } }
             require(artworks.isNotEmpty() && artworks.map { it.id }.distinct().size == artworks.size) { "插画不能为空或有重复 id" }
-            val pools = content.getJSONObject("quotes")
+            require(!content.has("quotes") || content.opt("quotes") is JSONObject) { "quotes 必须是对象或省略" }
+            val pools = content.optJSONObject("quotes")
             val quotes = DayPart.entries.associateWith { part ->
-                val lines = pools.strings(part.key)
-                require(lines.isNotEmpty() && lines.size == lines.distinct().size) { "${part.label}语录池不能为空或重复" }
+                val lines = pools?.strings(part.key).orEmpty()
+                require(pools == null || (lines.isNotEmpty() && lines.size == lines.distinct().size)) { "${part.label}语录池不能为空或重复" }
                 require(artworks.any { part in it.periods }) { "${part.label}至少需要一幅插画（可一图用于多个时段）" }
                 lines
             }
@@ -143,7 +145,7 @@ object CompanionEngine {
         val pictures = content.pictures(part)
         val bucket = bucketAt(moment)
         return CompanionMoment(part, pictures[Math.floorMod(bucket, pictures.size.toLong()).toInt()].id,
-            lines[Math.floorMod(bucket, lines.size.toLong()).toInt()])
+            if (lines.isEmpty()) "" else lines[Math.floorMod(bucket, lines.size.toLong()).toInt()])
     }
 
     fun randomNext(theme: ThemePack, moment: LocalDateTime, current: CompanionMoment?,
@@ -161,7 +163,7 @@ object CompanionEngine {
         }
         val pictures = content.pictures(part)
         val art = pictures.filterNot { it.id == current?.artwork }.ifEmpty { pictures }.random(random)
-        return CompanionMoment(part, art.id, candidates.ifEmpty { alternatives }.random(random))
+        return CompanionMoment(part, art.id, candidates.ifEmpty { alternatives }.let { if (it.isEmpty()) "" else it.random(random) })
     }
 
     fun nextBoundary(moment: LocalDateTime): LocalDateTime = listOf(5, 11, 17)

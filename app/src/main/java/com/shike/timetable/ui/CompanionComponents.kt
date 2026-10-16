@@ -61,6 +61,8 @@ import kotlin.math.sin
     val companion = LocalCompanionMoment.current
     val shuffle = LocalCompanionShuffle.current
     val voicePhase = LocalVoicePhase.current
+    val hasDialogue = content?.hasDialogue == true
+    val shuffleLabel = if (hasDialogue) "换一句${content?.shortName}的话" else "换一幅${content?.shortName}的插画"
     val actual = if (scene != null) content?.scene(scene) else content?.artwork(companion?.artwork.orEmpty())
     Surface(modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp), color = Color.Transparent) {
         Row(Modifier.background(Brush.horizontalGradient(listOf(Color(palette.color("cardStart")), Color(palette.color("cardEnd"))))), verticalAlignment = Alignment.CenterVertically) {
@@ -69,9 +71,15 @@ import kotlin.math.sin
                     color = colors.primary, fontSize = 10.sp, fontWeight = FontWeight.SemiBold, letterSpacing = .6.sp)
                 Text(title, color = colors.onBackground, fontSize = 17.sp, fontWeight = FontWeight.SemiBold, lineHeight = 25.sp, modifier = Modifier.padding(top = 10.dp))
                 Text(detail, color = colors.onSurfaceVariant, fontSize = 11.sp, lineHeight = 17.sp, modifier = Modifier.padding(top = 6.dp))
-                if (visible && companion != null) {
+                if (visible && !hasDialogue && shuffle != null && LocalShuffleHint.current) {
+                    Text("点点我 · 换幅图", color = colors.onSurfaceVariant, fontSize = 11.sp,
+                        modifier = Modifier.padding(top = 8.dp).clickable(enabled = voicePhase == null,
+                            onClickLabel = shuffleLabel, role = Role.Button, onClick = shuffle)
+                            .padding(vertical = 8.dp).testTag("shuffle_hint"))
+                }
+                if (visible && companion != null && hasDialogue) {
                     Column(Modifier.padding(top = 8.dp).defaultMinSize(minHeight = 48.dp)
-                        .then(if (shuffle != null) Modifier.clickable(enabled = voicePhase == null, onClickLabel = "换一句${content?.shortName}的话", role = Role.Button, onClick = shuffle) else Modifier)
+                        .then(if (shuffle != null) Modifier.clickable(enabled = voicePhase == null, onClickLabel = shuffleLabel, role = Role.Button, onClick = shuffle) else Modifier)
                         .testTag("companion_quote")) {
                         Text(companion.line, color = colors.primary, fontSize = 11.sp, lineHeight = 18.sp,
                             maxLines = 3, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
@@ -83,7 +91,7 @@ import kotlin.math.sin
                 }
             }
             if (visible) Box(Modifier.width(138.dp).height(160.dp).clip(RoundedCornerShape(bottomEnd = 24.dp))
-                .then(if (shuffle != null) Modifier.clickable(enabled = voicePhase == null, onClickLabel = "换一句${content?.shortName}的话", role = Role.Button, onClick = shuffle) else Modifier)
+                .then(if (shuffle != null) Modifier.clickable(enabled = voicePhase == null, onClickLabel = shuffleLabel, role = Role.Button, onClick = shuffle) else Modifier)
                 .testTag("companion_portrait_shuffle"), contentAlignment = Alignment.BottomCenter) {
                 Box(Modifier.size(130.dp).align(Alignment.Center).background(colors.surface.copy(alpha = .45f), CircleShape))
                 ThemeFlower(Modifier.size(30.dp).align(Alignment.TopEnd).padding(3.dp))

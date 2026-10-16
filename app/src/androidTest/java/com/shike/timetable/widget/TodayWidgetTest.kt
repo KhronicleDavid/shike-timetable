@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.Gravity
 import android.view.ViewGroup
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ListView
 import android.widget.TextView
@@ -206,6 +207,35 @@ class TodayWidgetTest {
                 }
                 assertEquals("切换纱雾主题不能更改课程", darkData, ScheduleStore(context).read())
                 assertFalse("新增主题不能重现换句提示", CompanionInteractionStore(context).showShuffleHint())
+                AppearanceStore(context).themeId = "sylvia"
+                TodayWidgetUpdates.request(context)
+                val sylvia = ThemeRepository.get(context).find("sylvia")
+                waitFor("希尔维娅应隐藏语录并保留插画") {
+                    widget.findViewById<TextView>(R.id.widget_quote).visibility == View.GONE &&
+                        widget.findViewById<android.widget.ImageView>(R.id.widget_portrait).visibility == View.VISIBLE
+                }
+                listOf(8 to "早晨", 13 to "午间", 21 to "夜晚").forEach { (hour, label) ->
+                    val moment = date.atTime(hour, 0)
+                    val choice = CompanionInteractionStore(context).current(sylvia, moment)!!
+                    val art = sylvia.companion!!.artwork(choice.artwork)!!
+                    val expected = ThemeImages.load(context, sylvia, art, 256, compact = true)!!
+                    main { widget.updateAppWidget(TodayWidgetViews.build(context, id, darkData, moment)) }
+                    waitFor("希尔维娅小组件应展示对应时段Q版") {
+                        widget.findViewById<TextView>(R.id.widget_quote).text.isEmpty() &&
+                            (widget.findViewById<android.widget.ImageView>(R.id.widget_portrait).drawable as? android.graphics.drawable.BitmapDrawable)
+                                ?.bitmap?.sameAs(expected) == true
+                    }
+                    assertEquals(1, widget.findViewById<ListView>(R.id.widget_courses).count)
+                    snapshot("小组件-希尔维娅-$label")
+                }
+                val sylviaBefore = CompanionInteractionStore(context).current(sylvia)!!.artwork
+                onView(withId(R.id.widget_portrait)).perform(click())
+                waitFor("希尔维娅桌面点击仅切换插画") {
+                    CompanionInteractionStore(context).current(sylvia)!!.artwork != sylviaBefore &&
+                        widget.findViewById<TextView>(R.id.widget_quote).visibility == View.GONE
+                }
+                assertFalse("希尔维娅不能借用其他角色语音", CompanionVoicePlayback.isBusy)
+                assertEquals(darkData, ScheduleStore(context).read())
                 AppearanceStore(context).themeId = "minimal"
                 TodayWidgetUpdates.request(context)
                 waitFor("切换简约主题应隐藏角色与语录") {

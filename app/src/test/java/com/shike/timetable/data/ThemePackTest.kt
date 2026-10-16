@@ -121,4 +121,41 @@ class ThemePackTest {
         voices.put(voices.getJSONObject(0))
         assertThrows(IllegalArgumentException::class.java) { ThemePackParser.parse(config.toString()) }
     }
+
+    @Test fun artworkOnlyThemeMatchesHimariCountAndDoesNotInventDialogue() {
+        val sylvia = ThemePackParser.parse(File(assets, "themes/sylvia/theme.json").readText())
+        val content = sylvia.companion!!
+        assertEquals(ThemePackParser.parse(json().toString()).companion!!.artworks.size, content.artworks.size)
+        assertEquals(16, content.artworks.size)
+        assertFalse(content.hasDialogue)
+        assertTrue(content.allLines.isEmpty())
+        assertTrue(content.voices.isEmpty())
+        listOf(8, 13, 21, 2).forEach { hour ->
+            val time = LocalDateTime.of(2026, 10, 16, hour, 12)
+            val part = DayPart.at(time.toLocalTime())
+            assertEquals(4, content.pictures(part).size)
+            var current = CompanionEngine.at(sylvia, time)!!
+            repeat(40) { seed ->
+                val next = CompanionEngine.randomNext(sylvia, time, current, emptyList(), Random(seed))!!
+                assertEquals("", next.line)
+                assertEquals(part, next.part)
+                assertNotEquals(current.artwork, next.artwork)
+                assertTrue(next.artwork in content.pictures(part).map { it.id })
+                current = next
+            }
+        }
+    }
+
+    @Test fun omittedDialogueIsAllowedButMalformedOrPartiallyEmptyPoolsAreRejected() {
+        val config = json()
+        val content = config.getJSONObject("companion")
+        content.remove("quotes")
+        assertFalse(ThemePackParser.parse(config.toString()).companion!!.hasDialogue)
+        content.put("quotes", "not an object")
+        assertThrows(IllegalArgumentException::class.java) { ThemePackParser.parse(config.toString()) }
+        content.put("quotes", JSONObject.NULL)
+        assertThrows(IllegalArgumentException::class.java) { ThemePackParser.parse(config.toString()) }
+        content.put("quotes", JSONObject().put("morning", listOf("早晨")))
+        assertThrows(IllegalArgumentException::class.java) { ThemePackParser.parse(config.toString()) }
+    }
 }

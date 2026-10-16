@@ -48,7 +48,8 @@ class CompanionInteractionStore internal constructor(private val preferences: Sh
         val art = saved.optString("artwork")
         val compatiblePart = saved.optString("part") in setOf(fallback.part.key, fallback.part.name)
         val valid = saved.opt("bucket") is Number && saved.optLong("bucket", -1) == CompanionEngine.bucketAt(moment) &&
-            compatiblePart && line in content.quotes.getValue(fallback.part) && content.pictures(fallback.part).any { it.id == art }
+            compatiblePart && (line in content.quotes.getValue(fallback.part) || (!content.hasDialogue && line.isEmpty())) &&
+            content.pictures(fallback.part).any { it.id == art }
         val selected = if (valid) CompanionMoment(fallback.part, art, line) else fallback
         if (!valid || !preferences.contains("choice_${theme.id}")) save(theme, moment, selected, readRecent(theme) + selected.line)
         return selected
@@ -62,7 +63,7 @@ class CompanionInteractionStore internal constructor(private val preferences: Sh
     }.getOrDefault(emptyList())
 
     private fun save(theme: ThemePack, moment: LocalDateTime, selected: CompanionMoment, recent: List<String>) {
-        val history = recent.fold(emptyList<String>()) { result, line -> if (result.lastOrNull() == line) result else result + line }.takeLast(5)
+        val history = recent.filter { it.isNotBlank() }.fold(emptyList<String>()) { result, line -> if (result.lastOrNull() == line) result else result + line }.takeLast(5)
         val json = JSONObject().apply {
             put("bucket", CompanionEngine.bucketAt(moment)); put("part", selected.part.key)
             put("artwork", selected.artwork); put("line", selected.line); put("recent", JSONArray(history))

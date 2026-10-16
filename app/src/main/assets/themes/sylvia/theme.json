@@ -1,0 +1,256 @@
+{
+  "schemaVersion": 1,
+  "id": "sylvia",
+  "version": 1,
+  "name": "希尔维娅主题",
+  "description": "宝石蓝、香槟金与象牙白，希尔维娅的分时插画",
+  "palettes": {
+    "light": {
+      "primary": "#365E98",
+      "primaryContainer": "#DFEAFB",
+      "onPrimaryContainer": "#233E66",
+      "secondary": "#856220",
+      "secondaryContainer": "#F7EAC8",
+      "onSecondaryContainer": "#584111",
+      "tertiary": "#397166",
+      "tertiaryContainer": "#DFEFE7",
+      "onTertiaryContainer": "#254E45",
+      "background": "#FCFAF4",
+      "onBackground": "#26384E",
+      "surface": "#FFFEFA",
+      "onSurface": "#26384E",
+      "surfaceVariant": "#EEEFEF",
+      "onSurfaceVariant": "#5C6977",
+      "surfaceContainer": "#F2F1EA",
+      "surfaceContainerLow": "#F8F6EE",
+      "surfaceContainerHigh": "#ECEEEB",
+      "surfaceContainerHighest": "#E3E8E9",
+      "outline": "#A3B0BE",
+      "outlineVariant": "#DCE3E8",
+      "onPrimary": "#FFFFFF",
+      "onSecondary": "#FFFFFF",
+      "cardStart": "#E5EDFA",
+      "cardEnd": "#FBEDD0",
+      "courseAccents": [
+        "#365E98",
+        "#856220",
+        "#39766D",
+        "#776294",
+        "#9A6556",
+        "#576F8B"
+      ],
+      "onTertiary": "#FFFFFF"
+    },
+    "dark": {
+      "primary": "#ADC9F5",
+      "onPrimary": "#17365B",
+      "primaryContainer": "#30476A",
+      "onPrimaryContainer": "#DAE7FD",
+      "secondary": "#E8CB88",
+      "onSecondary": "#44340F",
+      "secondaryContainer": "#4D4024",
+      "onSecondaryContainer": "#F5E3B8",
+      "tertiary": "#A6D5C5",
+      "tertiaryContainer": "#2D5147",
+      "onTertiaryContainer": "#D1EDE2",
+      "background": "#181F2B",
+      "onBackground": "#E8EDF4",
+      "surface": "#242F41",
+      "onSurface": "#E8EDF4",
+      "surfaceVariant": "#344256",
+      "onSurfaceVariant": "#BAC7D6",
+      "surfaceContainer": "#29364A",
+      "surfaceContainerLow": "#1F2A3A",
+      "surfaceContainerHigh": "#304057",
+      "surfaceContainerHighest": "#374960",
+      "outline": "#72859D",
+      "outlineVariant": "#3D4D63",
+      "cardStart": "#293F61",
+      "cardEnd": "#49402B",
+      "courseAccents": [
+        "#365E98",
+        "#856220",
+        "#39766D",
+        "#776294",
+        "#9A6556",
+        "#576F8B"
+      ],
+      "onTertiary": "#1D4438"
+    }
+  },
+  "companion": {
+    "name": "希尔维娅",
+    "shortName": "希尔维娅",
+    "tagline": "金色日常，从容相伴",
+    "attribution": "希尔维娅 / 金色ラブリッチェ · 原作与角色权利归各自权利人 · 原立绘参考与 AI 适配重绘",
+    "artworks": [
+      {
+        "id": "sylvia_original",
+        "label": "原立绘",
+        "file": "artwork/sylvia_original.png",
+        "periods": [],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "sylvia_home",
+        "label": "迎接",
+        "file": "artwork/sylvia_home.png",
+        "periods": [],
+        "scenes": [
+          "greeting"
+        ],
+        "framing": "fit"
+      },
+      {
+        "id": "sylvia_study",
+        "label": "学习",
+        "file": "artwork/sylvia_study.png",
+        "periods": [],
+        "scenes": [
+          "study",
+          "empty",
+          "import"
+        ],
+        "framing": "fit"
+      },
+      {
+        "id": "sylvia_rest",
+        "label": "休息",
+        "file": "artwork/sylvia_rest.png",
+        "periods": [],
+        "scenes": [
+          "rest",
+          "settings"
+        ],
+        "framing": "fit"
+      },
+      {
+        "id": "sylvia_morning_wave",
+        "label": "早晨·挥手",
+        "file": "artwork/sylvia_morning_wave.png",
+        "periods": [
+          "morning"
+        ],
+        "scenes": [],
+        "framing": "crop",
+        "compactFile": "artwork/sylvia_morning_bag.png"
+      },
+      {
+        "id": "sylvia_morning_tea",
+        "label": "早晨·温茶",
+        "file": "artwork/sylvia_morning_tea.png",
+        "periods": [
+          "morning"
+        ],
+        "scenes": [],
+        "framing": "crop",
+        "compactFile": "artwork/sylvia_morning_stretch.png"
+      },
+      {
+        "id": "sylvia_morning_bag",
+        "label": "早晨·书包",
+        "file": "artwork/sylvia_morning_bag.png",
+        "periods": [
+          "morning"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "sylvia_morning_stretch",
+        "label": "早晨·伸展",
+        "file": "artwork/sylvia_morning_stretch.png",
+        "periods": [
+          "morning"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "sylvia_noon_book",
+        "label": "午间·翻书",
+        "file": "artwork/sylvia_noon_book.png",
+        "periods": [
+          "noon"
+        ],
+        "scenes": [],
+        "framing": "crop",
+        "compactFile": "artwork/sylvia_noon_library.png"
+      },
+      {
+        "id": "sylvia_noon_lunch",
+        "label": "午间·午餐",
+        "file": "artwork/sylvia_noon_lunch.png",
+        "periods": [
+          "noon"
+        ],
+        "scenes": [],
+        "framing": "crop",
+        "compactFile": "artwork/sylvia_noon_garden.png"
+      },
+      {
+        "id": "sylvia_noon_library",
+        "label": "午间·书签",
+        "file": "artwork/sylvia_noon_library.png",
+        "periods": [
+          "noon"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "sylvia_noon_garden",
+        "label": "午间·花香",
+        "file": "artwork/sylvia_noon_garden.png",
+        "periods": [
+          "noon"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "sylvia_evening_stars",
+        "label": "夜晚·望星",
+        "file": "artwork/sylvia_evening_stars.png",
+        "periods": [
+          "evening"
+        ],
+        "scenes": [],
+        "framing": "crop",
+        "compactFile": "artwork/sylvia_evening_read.png"
+      },
+      {
+        "id": "sylvia_evening_lamp",
+        "label": "夜晚·提灯",
+        "file": "artwork/sylvia_evening_lamp.png",
+        "periods": [
+          "evening"
+        ],
+        "scenes": [],
+        "framing": "crop",
+        "compactFile": "artwork/sylvia_evening_goodnight.png"
+      },
+      {
+        "id": "sylvia_evening_read",
+        "label": "夜晚·夜读",
+        "file": "artwork/sylvia_evening_read.png",
+        "periods": [
+          "evening"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      },
+      {
+        "id": "sylvia_evening_goodnight",
+        "label": "夜晚·晚安",
+        "file": "artwork/sylvia_evening_goodnight.png",
+        "periods": [
+          "evening"
+        ],
+        "scenes": [],
+        "framing": "fit"
+      }
+    ]
+  }
+}

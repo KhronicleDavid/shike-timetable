@@ -113,19 +113,23 @@ internal object TodayWidgetViews {
         val showMascot = appearance.showCompanion && theme.companion != null && companion != null
         val name = theme.companion?.shortName.orEmpty()
         val voice = CompanionVoicePlayback.sessions.value
+        val hasDialogue = theme.companion?.hasDialogue == true
+        val shuffleDescription = if (hasDialogue) "点击换一句陪伴语" else "点击切换插画"
         return RemoteViews(context.packageName, R.layout.widget_today).apply {
             setInt(R.id.widget_background, "setColorFilter", palette.color("cardStart").toInt())
             setTextViewText(R.id.widget_title, if (readError) "课表需要检查" else "今日课表")
             setTextViewText(R.id.widget_date, "${today.monthValue}月${today.dayOfMonth}日 · 星期${"一二三四五六日"[today.dayOfWeek.value - 1]}")
-            setTextViewText(R.id.widget_quote, if (showMascot) "$name：${companion?.line.orEmpty()}" else "")
+            setTextViewText(R.id.widget_quote, if (showMascot && hasDialogue) "$name：${companion?.line.orEmpty()}" else "")
+            setViewVisibility(R.id.widget_quote, if (showMascot && hasDialogue) View.VISIBLE else View.GONE)
             setImageViewBitmap(R.id.widget_portrait, theme.companion?.artwork(companion?.artwork.orEmpty())?.let { ThemeImages.load(context, theme, it, 256, compact = true) })
             setViewVisibility(R.id.widget_portrait, if (showMascot) View.VISIBLE else View.GONE)
             setViewVisibility(R.id.widget_portrait_companion, if (showMascot) View.VISIBLE else View.GONE)
-            setViewVisibility(R.id.widget_companion, if (showMascot) View.VISIBLE else View.GONE)
-            setTextViewText(R.id.widget_shuffle_hint, voice?.phase?.label ?: "点点我 · 换句话")
+            setViewVisibility(R.id.widget_companion, if (showMascot && hasDialogue) View.VISIBLE else View.GONE)
+            setTextViewText(R.id.widget_shuffle_hint, voice?.phase?.label ?: if (hasDialogue) "点点我 · 换句话" else "点点我 · 换幅图")
             setViewVisibility(R.id.widget_shuffle_hint, if (showMascot && (voice != null || interaction.showShuffleHint())) View.VISIBLE else View.GONE)
-            setContentDescription(R.id.widget_quote, "$name：${companion?.line.orEmpty()}。${voice?.phase?.label ?: "点击换一句陪伴语"}")
-            setContentDescription(R.id.widget_portrait, "${theme.companion?.name.orEmpty()}，点击换一句陪伴语")
+            setContentDescription(R.id.widget_quote, "$name：${companion?.line.orEmpty()}。${voice?.phase?.label ?: shuffleDescription}")
+            setContentDescription(R.id.widget_portrait, "${theme.companion?.name.orEmpty()}，$shuffleDescription")
+            setContentDescription(R.id.widget_shuffle_hint, shuffleDescription)
             setTextColor(R.id.widget_title, text)
             setTextColor(R.id.widget_date, secondary)
             setTextColor(R.id.widget_quote, primary)
