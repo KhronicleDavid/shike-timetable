@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import time
 import urllib.error
 import urllib.parse
@@ -24,7 +25,7 @@ def main():
     apk=args.apk.resolve(); assert apk.is_file()
     notes=args.notes_file.read_text(encoding='utf-8-sig').strip(); assert notes
     output=ROOT/'dist'
-    subprocess.run(['python',str(ROOT/'scripts/prepare-update.py'),'--apk',str(apk),'--output',str(output)],cwd=ROOT,check=True)
+    subprocess.run([sys.executable,str(ROOT/'scripts/prepare-update.py'),'--apk',str(apk),'--output',str(output)],cwd=ROOT,check=True)
     manifest=json.loads((output/'shike-update.json').read_text(encoding='utf-8'))
     tag=manifest['tag']; version=manifest['versionName']
     env=dict(os.environ,GCM_INTERACTIVE='Never',GIT_TERMINAL_PROMPT='0')

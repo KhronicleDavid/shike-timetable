@@ -17,8 +17,8 @@ class UpdateInstallerTest {
     }
     private val context get() = InstrumentationRegistry.getInstrumentation().targetContext
     private fun fixture(name: String) = File(context.cacheDir,"updates/$name")
-    private fun update(file: File) = AppUpdate("1.11.0",14,26,"测试",Artifact(
-        "https://github.com/${Distribution.REPOSITORY}/releases/download/v1.11.0/shike-1.11.0-compact.apk", file.length(),GitHubHttp.hash(file.readBytes())))
+    private fun update(file: File) = AppUpdate("1.11.1",15,26,"测试",Artifact(
+        "https://github.com/${Distribution.REPOSITORY}/releases/download/v1.11.1/shike-1.11.1-compact.apk", file.length(),GitHubHttp.hash(file.readBytes())))
     @Test fun actualSignedNewerApkPassesAndOnlyUpdateDirectoryIsShared() {
         val file=fixture("test-valid.apk"); assertTrue(file.isFile)
         UpdateInstaller.validate(context,file,update(file))
@@ -32,11 +32,45 @@ class UpdateInstallerTest {
     }
     @Test fun alteredDigestUnexpectedVersionOrWrongPackageNeverReachInstaller() {
         val file=fixture("test-valid.apk"); val valid=update(file)
-        listOf(valid.copy(versionCode=15), valid.copy(versionName="bad"), valid.copy(artifact=valid.artifact.copy(sha256="0".repeat(64)))).forEach { item ->
+        listOf(valid.copy(versionCode=16), valid.copy(versionName="bad"), valid.copy(artifact=valid.artifact.copy(sha256="0".repeat(64)))).forEach { item ->
             assertThrows(Exception::class.java) { UpdateInstaller.validate(context,file,item) }
         }
         val other = object : ContextWrapper(context) { override fun getPackageName() = "android" }
         assertThrows(Exception::class.java) { UpdateInstaller.validate(other,file,valid) }
+    }
+    @Test fun readyApkIsRevalidatedAcrossNewProcessModelAndTamperingIsRejected() {
+        val store=PendingUpdateStore(context)
+        val original=fixture("test-valid.apk"); val item=update(original); val cached=store.file(item)
+        original.copyTo(cached,overwrite=true)
+        val instrumentation=InstrumentationRegistry.getInstrumentation()
+        val models=androidx.lifecycle.ViewModelStore()
+        try {
+            store.save(item,true)
+            lateinit var recovered: OnlineContentModel
+            instrumentation.runOnMainSync {
+                recovered=OnlineContentModel(context.applicationContext as android.app.Application)
+                models.put("first",recovered)
+            }
+            fun await(model: OnlineContentModel) {
+                val end=android.os.SystemClock.elapsedRealtime()+10000
+                while (model.restoring && android.os.SystemClock.elapsedRealtime()<end) android.os.SystemClock.sleep(25)
+                assertFalse(model.restoring)
+            }
+            await(recovered)
+            assertEquals(cached,recovered.readyApk)
+            assertEquals(item.versionCode,recovered.readyVersionCode)
+            assertEquals(context.packageManager.canRequestPackageInstalls(),recovered.resumeInstall)
+            instrumentation.runOnMainSync { models.clear() }
+            // 缓存变动必须再次按摘要与签名拒绝，不能仅信任磁盘记录。
+            cached.appendBytes(byteArrayOf(1))
+            lateinit var rejected: OnlineContentModel
+            instrumentation.runOnMainSync {
+                rejected=OnlineContentModel(context.applicationContext as android.app.Application)
+                models.put("second",rejected)
+            }
+            await(rejected)
+            assertNull(rejected.readyApk); assertNull(store.load())
+        } finally { instrumentation.runOnMainSync { models.clear() }; store.clear(); cached.delete() }
     }
     @Test fun samePackageAndVersionWithForeignSignatureIsRejected() {
         val file=fixture("test-other-signature.apk"); assertTrue(file.isFile)

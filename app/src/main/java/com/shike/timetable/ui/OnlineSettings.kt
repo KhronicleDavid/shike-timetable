@@ -35,6 +35,9 @@ import com.shike.timetable.theme.ThemePack
         model.installApk({}, ::openInstaller, canPrompt = false)
     }
     fun install() { model.installApk({ permission.launch(it) }, ::openInstaller) }
+    LaunchedEffect(model.resumeInstall) {
+        if (model.resumeInstall) model.installApk({}, ::openInstaller, canPrompt = false)
+    }
     val visit = rememberSaveable { java.util.UUID.randomUUID().toString() }
     LaunchedEffect(visit) { model.enterSettings(visit) }
     LaunchedEffect(importer.pending) { if (importer.pending != null) showThemes = false }
@@ -55,6 +58,7 @@ import com.shike.timetable.theme.ThemePack
             val status = when {
                 model.checking -> "正在检查GitHub上的正式版本…"
                 model.appError != null -> model.appError!!
+                ready -> "版本 ${update!!.versionName}已下载，可以安装更新"
                 model.appChecked && hasUpdate -> "发现新版本 ${update!!.versionName}"
                 model.appChecked -> "已是最新版本"
                 else -> "进入设置时自动检查，也可手动检查"
@@ -65,7 +69,7 @@ import com.shike.timetable.theme.ThemePack
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                     OutlinedButton(onClick = { showUpdate = true }) { Text("更新内容") }
                     Button(onClick = { if (ready) install() else model.downloadUpdate() },
-                        enabled = transfer == null && !model.installing && update!!.minSdk <= Build.VERSION.SDK_INT) {
+                        enabled = transfer == null && !model.installing && !model.restoring && update!!.minSdk <= Build.VERSION.SDK_INT) {
                         Text(if (model.installing) "准备安装…" else if (ready) "安装更新" else "下载更新")
                     }
                 }
@@ -88,7 +92,7 @@ import com.shike.timetable.theme.ThemePack
             Text(update.notes.ifBlank { "此版本暂未填写更新说明。" }, style = MaterialTheme.typography.bodyMedium)
             if (transfer != null) DownloadProgress(transfer!!, model::cancelDownload)
         } }, confirmButton = { TextButton(onClick = { if (ready) install() else model.downloadUpdate() },
-            enabled = transfer == null && !model.installing && update.minSdk <= Build.VERSION.SDK_INT) { Text(if (ready) "安装更新" else "下载更新") } },
+            enabled = transfer == null && !model.installing && !model.restoring && update.minSdk <= Build.VERSION.SDK_INT) { Text(if (ready) "安装更新" else "下载更新") } },
         dismissButton = { TextButton(onClick = { showUpdate = false }) { Text("关闭") } })
     if (showThemes) AlertDialog(onDismissRequest = { showThemes = false }, title = { Text("在线主题资源") },
         text = { Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -140,4 +144,3 @@ import com.shike.timetable.theme.ThemePack
         text = { Text(text) }, confirmButton = { TextButton(onClick = model::dismissMessage) { Text("知道了") } }) }
     model.notice?.let { text -> LaunchedEffect(text) { android.widget.Toast.makeText(model.getApplication(), text, android.widget.Toast.LENGTH_LONG).show(); model.dismissMessage() } }
 }
-

@@ -15,6 +15,7 @@ import java.io.File
 class OnlineContentModel internal constructor(application: Application, private val http: GitHubHttp) : AndroidViewModel(application) {
     constructor(application: Application) : this(application, GitHubHttp())
     private val app = application
+    private val pendingUpdate = PendingUpdateStore(application)
     private var appControl: GitHubHttp.Control? = null
     private var themesControl: GitHubHttp.Control? = null
     private var downloadControl: GitHubHttp.Control? = null
@@ -36,6 +37,32 @@ class OnlineContentModel internal constructor(application: Application, private 
     private var readyUpdate: AppUpdate? = null
     val readyVersionCode: Int? get() = readyUpdate?.versionCode
 
+    var restoring by mutableStateOf(true); private set
+    var resumeInstall by mutableStateOf(false); private set
+    init {
+        viewModelScope.launch {
+            try {
+                val saved = withContext(Dispatchers.IO) {
+                    val candidate = pendingUpdate.load()
+                    if (candidate != null) {
+                        if (candidate.update.versionCode <= BuildConfig.VERSION_CODE) {
+                            pendingUpdate.file(candidate.update).delete(); pendingUpdate.clear(); null
+                        } else {
+                            UpdateInstaller.validate(app, pendingUpdate.file(candidate.update), candidate.update)
+                            candidate
+                        }
+                    } else null
+                }
+                if (saved != null) {
+                    readyUpdate = saved.update; readyApk = pendingUpdate.file(saved.update)
+                    if (update == null) update = saved.update
+                    resumeInstall = saved.awaitingPermission && app.packageManager.canRequestPackageInstalls()
+                }
+            } catch (e: CancellationException) { throw e }
+            catch (_: Exception) { withContext(Dispatchers.IO) { pendingUpdate.clear() } }
+            finally { restoring = false }
+        }
+    }
     private var settingsVisit: String? = null
     fun enterSettings(visit: String) {
         if (settingsVisit == visit) return
@@ -75,10 +102,11 @@ class OnlineContentModel internal constructor(application: Application, private 
     }
     fun downloadUpdate() {
         val item = update ?: return
+        if (restoring) return
         if (item.versionCode <= BuildConfig.VERSION_CODE) return
         if (item.minSdk > Build.VERSION.SDK_INT) { error = "此版本需要Android API ${item.minSdk}或以上系统"; return }
-        startDownload("拾课 ${item.versionName}", item.artifact, File(app.cacheDir, "updates/shike-${item.versionCode}.apk")) { file ->
-            withContext(Dispatchers.IO) { UpdateInstaller.validate(app, file, item) }
+        startDownload("拾课 ${item.versionName}", item.artifact, pendingUpdate.file(item)) { file ->
+            withContext(Dispatchers.IO) { UpdateInstaller.validate(app, file, item); pendingUpdate.save(item, false) }
             readyApk?.takeIf { it != file }?.delete(); readyApk = file; readyUpdate = item
             notice = "更新已下载，点击安装更新即可继续"
         }
@@ -105,14 +133,18 @@ class OnlineContentModel internal constructor(application: Application, private 
     fun installApk(openPermission: (Intent) -> Unit, openInstaller: (Intent) -> Unit, canPrompt: Boolean = true) {
         val file = readyApk ?: return; val item = readyUpdate ?: return
         if (installing || progress.value != null) return
-        installing = true; error = null
+        installing = true; error = null; resumeInstall = false
         viewModelScope.launch {
             try {
                 withContext(Dispatchers.IO) { UpdateInstaller.validate(app, file, item) }
                 if (!app.packageManager.canRequestPackageInstalls()) {
+                    withContext(Dispatchers.IO) { pendingUpdate.save(item, canPrompt) }
                     if (canPrompt) openPermission(UpdateInstaller.permissionIntent(app))
                     else error = "尚未允许安装更新，可再次点击安装更新并在系统中允许"
-                } else openInstaller(UpdateInstaller.installIntent(app, file))
+                } else {
+                    withContext(Dispatchers.IO) { pendingUpdate.save(item, false) }
+                    openInstaller(UpdateInstaller.installIntent(app, file))
+                }
             } catch (e: CancellationException) { throw e }
             catch (e: Exception) { error = friendly(e, "无法打开安装界面，请重新下载或稍后重试") }
             finally { installing = false }

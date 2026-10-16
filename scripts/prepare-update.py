@@ -15,7 +15,8 @@ code = int(re.search(r'versionCode\s*=\s*(\d+)', source)[1])
 name = re.search(r'versionName\s*=\s*"([^"]+)"', source)[1]
 assert a.apk.is_file()
 a.output.mkdir(parents=True, exist_ok=True)
-manifest = dict(schemaVersion=1, tag='v'+name, versionCode=code, versionName=name, minSdk=26,
+minimum = int(re.search(r'minSdk\s*=\s*(\d+)', source)[1])
+manifest = dict(schemaVersion=1, tag='v'+name, versionCode=code, versionName=name, minSdk=minimum,
                 assetName=f'shike-{name}-compact.apk')
 (a.output/'shike-update.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+'\n',encoding='utf-8')
 (a.output/f'shike-{name}-SHA256.txt').write_text(hashlib.sha256(a.apk.read_bytes()).hexdigest()+'  '+manifest['assetName']+'\n',encoding='utf-8')
