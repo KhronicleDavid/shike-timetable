@@ -18,6 +18,10 @@
 
 发布清单、在线主题增量维护及下载行为见 [在线更新与资源发布](docs/在线更新与资源发布.md)。
 
+![应用更新说明](screenshots/在线更新-说明.png)
+
+![在线主题资源列表](screenshots/在线主题-资源列表.png)
+
 ## 继续开发
 
 仓库：[KhronicleDavid/shike-timetable](https://github.com/KhronicleDavid/shike-timetable)。
