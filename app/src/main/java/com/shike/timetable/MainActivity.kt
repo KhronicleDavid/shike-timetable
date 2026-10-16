@@ -158,6 +158,8 @@ class BackupViewModel : ViewModel() {
     val themeRevision by ExternalThemeStore.changes.collectAsState()
     val themes = remember(themeRevision) { ThemeRepository.get(context) }
     val themeImport = remember(context) { ViewModelProvider(context as ComponentActivity)[ThemeImportModel::class.java] }
+    val online = remember(context) { ViewModelProvider(context as ComponentActivity)[com.shike.timetable.online.OnlineContentModel::class.java] }
+    val onlineTransfer by online.transfer.collectAsState()
     var themeId by remember { mutableStateOf(appearance.themeId) }
     val theme = themes.find(themeId)
     var showMascot by remember { mutableStateOf(appearance.showCompanion) }
@@ -314,7 +316,8 @@ class BackupViewModel : ViewModel() {
                                 clockTime = LocalDateTime.now(); companion = companionStore.current(selected, clockTime)
                                 showShuffleHint = companionStore.showShuffleHint(); TodayWidgetUpdates.request(context)
                             },
-                            themeBusy = themeImport.busy, onImportTheme = { importTheme.launch(arrayOf("*/*")) },
+                            online = online, themeImporter = themeImport,
+                            themeBusy = themeImport.busy || onlineTransfer != null, onImportTheme = { importTheme.launch(arrayOf("*/*")) },
                             onRemoveTheme = { selected ->
                                 if (theme.id == selected.id) {
                                     CompanionVoicePlayback.cancel(context)
@@ -337,6 +340,7 @@ class BackupViewModel : ViewModel() {
             if (picker) WeekPicker(selectedWeek, data.settings.totalWeeks, currentWeek,
                 onSelect = { selectedWeek = it; picker = false }, onDismiss = { picker = false })
             ThemeImportDialogs(themeImport, themes.themes)
+            OnlineMessages(online)
             backup.pendingImport?.let { imported ->
                 AlertDialog(onDismissRequest = { backup.dismissImport() }, title = { Text("导入课表备份") },
                     text = { Text("将导入 ${imported.courses.size} 门课程及学期设置，并替换当前课表。建议先导出一份备份。") },

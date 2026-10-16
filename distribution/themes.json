@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "themes": [
+    {
+      "id": "himari",
+      "version": 2,
+      "name": "阳茉莉主题",
+      "description": "奶油白与薄荷青绿，皆原阳茉莉的课间陪伴",
+      "notes": "16幅插画，早、中、晚各38句配音陪伴语，另含情境语录。",
+      "minVersionCode": 13,
+      "url": "https://github.com/KhronicleDavid/shike-timetable/releases/download/v1.10.0/shike-theme-himari-v2.zip",
+      "bytes": 34546032,
+      "sha256": "0d02641a0da6fa5407387a03173c32fd60c672b0c04dc5fc9cf9c518d105a5c5"
+    },
+    {
+      "id": "sagiri",
+      "version": 2,
+      "name": "纱雾主题",
+      "description": "雾白、樱粉与冰蓝，和泉纱雾的安静画室",
+      "notes": "12幅常规与Q版插画，126条分时陪伴语，雾白樱粉配色；暂无配音。",
+      "minVersionCode": 13,
+      "url": "https://github.com/KhronicleDavid/shike-timetable/releases/download/v1.10.0/shike-theme-sagiri-v2.zip",
+      "bytes": 21582600,
+      "sha256": "4fa06d70bd48a0e377deb5785622b9d2ac834e0002f21be6a07acb0a1f97222f"
+    },
+    {
+      "id": "sylvia",
+      "version": 2,
+      "name": "希尔维娅主题",
+      "description": "宝石蓝、香槟金与象牙白，希尔维娅的分时插画、语录与离线日语语音",
+      "notes": "16幅插画，早、中、晚各38句配音陪伴语，蓝金配色。",
+      "minVersionCode": 13,
+      "url": "https://github.com/KhronicleDavid/shike-timetable/releases/download/v1.10.0/shike-theme-sylvia-v2.zip",
+      "bytes": 33373641,
+      "sha256": "ec5977b7c31385ada6b618570fe84c558d86c154e10682b921ad6a2f4b202d31"
+    }
+  ]
+}

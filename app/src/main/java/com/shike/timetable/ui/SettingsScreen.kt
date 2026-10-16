@@ -25,6 +25,7 @@ import java.time.LocalDate
 @Composable fun SettingsScreen(data: ScheduleData, onSettings: (TermSettings) -> Unit, onExport: () -> Unit,
     onImport: () -> Unit, onSchoolImport: () -> Unit, onClear: () -> Unit,
     themes: List<ThemePack>, onTheme: (ThemePack) -> Unit,
+    online: com.shike.timetable.online.OnlineContentModel, themeImporter: ThemeImportModel,
     modifier: Modifier = Modifier, showMascot: Boolean = true, onMascot: (Boolean) -> Unit = {},
     onImportTheme: () -> Unit = {}, onRemoveTheme: (ThemePack) -> Unit = {}, themeBusy: Boolean = false,
     voiceEnabled: Boolean = true, onVoice: (Boolean) -> Unit = {}) {
@@ -36,6 +37,7 @@ import java.time.LocalDate
         Text("设置", style = MaterialTheme.typography.headlineLarge, modifier = Modifier.padding(top = 19.dp))
         Text("让课表更适合你", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, modifier = Modifier.padding(top = 3.dp, bottom = 18.dp))
         if (LocalCompanionVisible.current) CompanionCard("温柔陪伴，从容上课", "${companion?.name}\n${companion?.tagline}", label = "拾课 × ${companion?.shortName}", modifier = Modifier.padding(bottom = 15.dp))
+        OnlineSettings(online, themes, themeImporter)
         SectionLabel("学期与作息")
         SettingsCard {
             SettingRow("当前学期", "${data.settings.name}\n${data.settings.startDate} 开学 · ${data.settings.totalWeeks} 周", { dialog = "term" })

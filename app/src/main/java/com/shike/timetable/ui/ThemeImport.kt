@@ -34,6 +34,23 @@ class ThemeImportModel(application: Application) : AndroidViewModel(application)
             finally { if (pending !== prepared) prepared?.let(store::discard); busy = false }
         }
     }
+    /** 在线下载仍通过完整ZIP校验和同一套预览，条目身份必须与包内一致。 */
+    fun prepareOnline(file: java.io.File, item: com.shike.timetable.online.OnlineTheme) {
+        if (busy || pending != null) { file.delete(); return }
+        busy = true; error = null
+        viewModelScope.launch {
+            var prepared: PreparedTheme? = null
+            try {
+                withContext(Dispatchers.IO) {
+                    prepared = store.prepare(file)
+                    require(prepared!!.theme.id == item.id && prepared!!.theme.version == item.version) { "主题内容与在线目录不一致，请刷新后重试" }
+                }
+                pending = prepared
+            } catch (e: CancellationException) { throw e }
+            catch (e: Exception) { error = friendly(e, "主题包无法读取或配置不完整，请重新下载") }
+            finally { file.delete(); if (pending !== prepared) prepared?.let(store::discard); busy = false }
+        }
+    }
     fun install() {
         val prepared = pending ?: return
         if (busy) return
