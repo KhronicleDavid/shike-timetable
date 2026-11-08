@@ -20,7 +20,10 @@ class ThemeTestRunner : AndroidJUnitRunner() {
 
 object ThemeTestContent {
     fun installAll(target: Context, tests: Context) {
+        val catalog = org.json.JSONObject(tests.assets.open("catalog.json").bufferedReader().use { it.readText() }).getJSONArray("themes")
+        val registered = (0 until catalog.length()).map { catalog.getString(it) }.toSet()
         tests.assets.list("").orEmpty().filter { id ->
+            id in registered &&
             tests.assets.list(id).orEmpty().contains("theme.json")
         }.forEach { id ->
             val archive = archive(target, tests, id)

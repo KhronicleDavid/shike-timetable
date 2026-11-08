@@ -178,6 +178,7 @@ class BackupViewModel : ViewModel() {
         companion = companionStore.current(theme, LocalDateTime.now())
         showShuffleHint = companionStore.showShuffleHint()
     }
+    LaunchedEffect(context) { com.shike.timetable.quotes.DailyQuoteScheduler.schedule(context) }
     val today = clockTime.toLocalDate()
     val currentWeek = ScheduleRules.currentWeek(data.settings, today)
     var selectedWeek by rememberSaveable { mutableIntStateOf(currentWeek.coerceIn(1, data.settings.totalWeeks)) }
@@ -421,7 +422,7 @@ class BackupViewModel : ViewModel() {
                 Text(title, style = MaterialTheme.typography.headlineLarge)
                 if (title == "拾课" && LocalCompanionVisible.current) ThemeFlower(Modifier.padding(start = 9.dp).size(22.dp))
             }
-            Text(subtitle, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, modifier = Modifier.padding(top = 3.dp))
+            if (subtitle.isNotBlank()) Text(subtitle, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, modifier = Modifier.padding(top = 3.dp))
         }
         if (title == "我的课程" && LocalCompanionVisible.current) CompanionPortrait(Modifier.padding(end = 8.dp).size(56.dp, 70.dp), scene = "study")
         if (onAdd != null) FilledIconButton(onClick = onAdd, modifier = Modifier.size(42.dp).semantics { contentDescription = "添加课程" }, shape = RoundedCornerShape(15.dp)) {
@@ -433,17 +434,24 @@ class BackupViewModel : ViewModel() {
 @Composable private fun WeekScreen(data: ScheduleData, today: LocalDate, now: LocalTime, currentWeek: Int, week: Int,
     onWeek: (Int) -> Unit, onPicker: () -> Unit, onAdd: () -> Unit, onEdit: (Course) -> Unit,
     onWeekend: () -> Unit, modifier: Modifier = Modifier) {
+    val dailyRevision by com.shike.timetable.quotes.DailyQuoteStore.changes.collectAsState()
+    val quoteContext = LocalContext.current
+    val dailyStore = remember(quoteContext) { com.shike.timetable.quotes.DailyQuoteStore(quoteContext) }
+    val dailyEnabled = remember(dailyRevision) { dailyStore.enabled }
     val active = ScheduleRules.coursesForWeek(data.courses, week)
     val todayCourses = ScheduleRules.coursesForWeek(data.courses, currentWeek).filter { it.day == today.dayOfWeek.value }.sortedBy { it.startPeriod }
     val next = todayCourses.firstOrNull { runCatching { LocalTime.parse(data.settings.periods[it.endPeriod - 1].end) > now }.getOrDefault(false) }
     Column(modifier.fillMaxSize().padding(horizontal = 20.dp)) {
-        PageTitle("拾课", if (LocalCompanionVisible.current) "${LocalAppTheme.current.companion?.shortName}陪你，${LocalAppTheme.current.companion?.tagline}" else "把时间留给热爱", onAdd)
-        CompanionCard(
-            title = when { currentWeek < 1 -> "新学期，准备出发"; currentWeek > data.settings.totalWeeks -> "学期已结束，好好休息"; todayCourses.isEmpty() -> "今天没有课\n自由安排时间"; next == null -> "今日课程已结束"; else -> "今天 · ${todayCourses.size} 门课" },
+        PageTitle("拾课", "", onAdd)
+        if (dailyEnabled) DailyQuoteCard(LocalDateTime.of(today, now))
+        else CompanionCard(
+            title = when { currentWeek < 1 -> "学期尚未开始"; currentWeek > data.settings.totalWeeks -> "学期已结束"; todayCourses.isEmpty() -> "今天没有课"; next == null -> "今日课程已结束"; else -> "今天 · ${todayCourses.size} 门课" },
             detail = next?.let { "${data.settings.periods[it.startPeriod - 1].start}  ${it.name}${if (it.room.isBlank()) "" else " · ${it.room}"}" }
-                ?: "${today.monthValue}月${today.dayOfMonth}日  ·  ${listOf("周一","周二","周三","周四","周五","周六","周日")[today.dayOfWeek.value - 1]}\n留一点时间，做喜欢的事。",
+                ?: "${today.monthValue}月${today.dayOfMonth}日  ·  ${listOf("周一","周二","周三","周四","周五","周六","周日")[today.dayOfWeek.value - 1]}",
             label = null
         )
+        if (dailyEnabled && next != null) Text("${data.settings.periods[next.startPeriod - 1].start}  ${next.name}${if (next.room.isBlank()) "" else " · ${next.room}"}",
+            color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp, modifier = Modifier.padding(top = 8.dp))
         Row(Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f).heightIn(min = 48.dp).clip(RoundedCornerShape(8.dp)).clickable(onClick = onPicker), verticalArrangement = Arrangement.Center) {
                 Row(verticalAlignment = Alignment.CenterVertically) { Text("第 $week 周", style = MaterialTheme.typography.titleMedium); Text("  ▾", color = MaterialTheme.colorScheme.onSurfaceVariant) }
@@ -468,7 +476,7 @@ class BackupViewModel : ViewModel() {
             BoxWithConstraints(Modifier.weight(1f).fillMaxWidth()) {
                 val illustrationSize = (maxHeight - 140.dp * LocalDensity.current.fontScale).coerceIn(48.dp, 180.dp)
                 Box(Modifier.fillMaxSize().verticalScroll(rememberScrollState()), contentAlignment = Alignment.Center) {
-                    CompanionEmptyState("这一周，留白也很美", if (LocalCompanionVisible.current) LocalAppTheme.current.companion?.contextLines?.get(if (todayCourses.isEmpty()) "free_day" else "empty_week") ?: "添加课程，开始规划你的学期" else "添加课程，开始规划你的学期", illustrationSize = illustrationSize) {
+                    CompanionEmptyState("本周没有课程", "", illustrationSize = illustrationSize) {
                         TextButton(onClick = onAdd) { Text("添加第一门课") }
                     }
                 }
@@ -544,7 +552,7 @@ private fun placeCourses(courses: List<Course>): Pair<List<Placement>, Int> {
     val filtered = (if (onlyThisWeek) ScheduleRules.coursesForWeek(data.courses, week) else data.courses)
         .filter { query.isBlank() || listOf(it.name, it.room, it.teacher).any { s -> s.contains(query, ignoreCase = true) } }.sortedWith(compareBy<Course> { it.day }.thenBy { it.startPeriod })
     Column(modifier.fillMaxSize().padding(horizontal = 20.dp)) {
-        PageTitle("我的课程", if (LocalCompanionVisible.current) "${LocalAppTheme.current.companion?.shortName}的课程手记" else "每一份热爱，都值得安排", onAdd)
+        PageTitle("我的课程", "", onAdd)
         OutlinedTextField(query, { query = it }, placeholder = { Text("搜索课程、教师或教室", fontSize = 13.sp) }, singleLine = true,
             shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth(), colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant, unfocusedContainerColor = MaterialTheme.colorScheme.surface))
         Row(Modifier.fillMaxWidth().padding(vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -554,8 +562,7 @@ private fun placeCourses(courses: List<Course>): Pair<List<Placement>, Int> {
         }
         if (filtered.isEmpty()) Box(Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()), contentAlignment = Alignment.Center) {
             CompanionEmptyState(if (query.isNotBlank()) "没有找到相关课程" else "还没有课程，点击右上角添加",
-                if (LocalCompanionVisible.current) LocalAppTheme.current.companion?.contextLines?.get(if (query.isNotBlank()) "search_empty" else "empty_week") ?: "添加课程，开始规划你的学期"
-                    else if (query.isNotBlank()) "试试课程名、教师或教室的其他关键词" else "从一门课开始，慢慢填满这个学期")
+                if (query.isNotBlank()) "试试课程名、教师或教室的其他关键词" else "")
         }
         else LazyColumn(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp), contentPadding = PaddingValues(bottom = 20.dp)) {
             filtered.groupBy { it.day }.forEach { (day, dayCourses) ->

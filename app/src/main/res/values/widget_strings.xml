@@ -7,7 +7,9 @@
     <string name="widget_preview_date">10月15日 · 星期四</string>
     <string name="widget_preview_quote">早、早上好……今天的课表，我陪你一起看看吧。</string>
     <string name="widget_preview_summary">课程多时可上下滑动</string>
-    <string name="widget_empty">今天没有课，自由安排时间。</string>
+    <string name="widget_empty">今天没有课</string>
     <string name="widget_refresh">刷新</string>
     <string name="widget_refresh_description">刷新今日课表</string>
+    <string name="daily_quote_copy">复制一言</string>
+    <string name="daily_quote_copy_description">复制每日一言正文</string>
 </resources>

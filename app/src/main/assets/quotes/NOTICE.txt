@@ -1,0 +1,16 @@
+每日一言数据说明
+
+本目录 daily.json 是独立的离线短句数据，包含111条，正文每条不超过50个Unicode字符。
+
+其中一言开源社区句库选编88条，遵循上游AGPL-3.0授权。完整许可证见同目录AGPL-3.0.txt。
+上游：https://github.com/hitokoto-osc/sentences-bundle
+固定修订：8b30ce7566877bf2a1c5e07ee5199afcedd5b3ad
+本次选编：筛选视觉小说相关作品、去除重复译文与不适合日常展示的条目、统一部分作品名称；保留上游正文及原分类/id。
+其中Key原作共通名句的部分上游收录分类为动画，已在每条upstreamCategory中保留，不伪称为官方汉化台词。
+
+另有23条人工核对的公开短摘，保留sourceUrl和note。部分来自日文摘录的短句由本项目翻译，note保留所据日文，中文不作为官方译文；其余仅合并换行、截取独立句或独立分句。
+各原作台词、译文和作品名称的权利归各自原作者及相关权利人；一言社区也明确说明并不完全持有库中全部句子的著作权。
+
+完整选编源代码与逐条出处随项目公开：
+https://github.com/KhronicleDavid/shike-timetable
+生成脚本：scripts/build-daily-quotes.py

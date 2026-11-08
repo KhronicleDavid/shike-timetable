@@ -148,7 +148,7 @@ class HimariAppearanceTest {
         compose.onNodeWithText("清空课表").performScrollTo().performClick()
         compose.onNodeWithText("确认清空").performClick()
         compose.onNodeWithText("课表").performClick()
-        compose.onNodeWithText("这一周，留白也很美").assertIsDisplayed()
+        compose.onNodeWithText("本周没有课程").assertIsDisplayed()
         compose.onNodeWithText("添加第一门课").assertIsDisplayed()
         snapshot("阳茉莉-空课表")
     }

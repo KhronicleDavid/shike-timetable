@@ -43,8 +43,8 @@ def main():
         if file is not None:
             content=file.read_bytes();h['Content-Type']=mime;h['Content-Length']=str(len(content))
             body=(memoryview(content)[i:i+256*1024] for i in range(0,len(content),256*1024))
-        proxies={'https':args.upload_proxy} if file is not None and args.upload_proxy else {}
-        opener=urllib.request.build_opener(urllib.request.ProxyHandler(proxies))
+        proxy_handler=urllib.request.ProxyHandler({'https':args.upload_proxy}) if file is not None and args.upload_proxy else urllib.request.ProxyHandler()
+        opener=urllib.request.build_opener(proxy_handler)
         for attempt in range(3 if method=='GET' else 1):
             try:
                 with opener.open(urllib.request.Request(url,headers=h,method=method,data=body),timeout=900 if file else 60) as response:
@@ -64,7 +64,9 @@ def main():
 
     head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT).decode().strip()
     if args.publish:
-        assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT).strip(),'Commit workspace changes before publishing'
+        assert not subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=ROOT).strip(),'Commit tracked workspace changes before publishing'
+        untracked=subprocess.check_output(['git','ls-files','--others','--exclude-standard','-z'],cwd=ROOT).decode('utf-8').split('\0')
+        assert not any(path.startswith('app/src/main/') for path in untracked),'Commit new application sources before publishing'
         assert api('/commits/'+head)['sha']==head,'Push HEAD before publishing'
     release=next((r for r in api('/releases?per_page=100') if r['tag_name']==tag),None)
     if release is None:
@@ -79,7 +81,7 @@ def main():
     ref=api('/git/ref/tags/'+tag)['object']
     if ref['type']=='tag':ref=api('/git/tags/'+ref['sha'])['object']
     assert ref['sha']==head,'Release tag does not match HEAD'
-    public=urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    public=urllib.request.build_opener(urllib.request.ProxyHandler())
     with public.open(urllib.request.Request(API+'/releases/latest',headers={'User-Agent':'Shike-public-check'}),timeout=60) as response:
         latest=json.load(response)
     assert latest['tag_name']==tag and not latest['draft']

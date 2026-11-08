@@ -35,8 +35,8 @@ import java.time.LocalDate
     val companion = theme.companion
     Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 20.dp)) {
         Text("设置", style = MaterialTheme.typography.headlineLarge, modifier = Modifier.padding(top = 19.dp))
-        Text("让课表更适合你", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, modifier = Modifier.padding(top = 3.dp, bottom = 18.dp))
-        if (LocalCompanionVisible.current) CompanionCard("温柔陪伴，从容上课", "${companion?.name}\n${companion?.tagline}", label = "拾课 × ${companion?.shortName}", modifier = Modifier.padding(bottom = 15.dp))
+        Spacer(Modifier.height(14.dp))
+        if (LocalCompanionVisible.current) CompanionCard("", "", label = "拾课 × ${companion?.shortName}", modifier = Modifier.padding(bottom = 15.dp))
         OnlineSettings(online, themes, themeImporter)
         SectionLabel("学期与作息")
         SettingsCard {
@@ -44,6 +44,8 @@ import java.time.LocalDate
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             SettingRow("上课时间", "${data.settings.periods.size} 节课 · 自定义每日作息", { dialog = "periods" })
         }
+        SectionLabel("每日一言")
+        DailyQuoteSettings()
         SectionLabel("外观")
         SettingsCard {
             SettingRow("整体主题", "${theme.name}\n${theme.description}", { dialog = "theme" })
@@ -111,7 +113,7 @@ import java.time.LocalDate
                 if (companion != null) ThemeFlower(Modifier.size(18.dp))
                 Text("拾课  ${com.shike.timetable.BuildConfig.VERSION_NAME}", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(start = 7.dp))
             }
-            Text("本机保存 · 无广告", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = .8f), fontSize = 10.sp, modifier = Modifier.padding(top = 5.dp))
+
         }
     }
     when (dialog) {

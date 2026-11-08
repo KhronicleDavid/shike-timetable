@@ -69,8 +69,8 @@ import kotlin.math.sin
             Column(Modifier.weight(1f).padding(start = 18.dp, top = 17.dp, bottom = 17.dp, end = if (visible) 3.dp else 18.dp)) {
                 Text(if (visible) label ?: "${content?.shortName} · ${companion?.part?.label.orEmpty()}陪伴" else "今日安排",
                     color = colors.primary, fontSize = 10.sp, fontWeight = FontWeight.SemiBold, letterSpacing = .6.sp)
-                Text(title, color = colors.onBackground, fontSize = 17.sp, fontWeight = FontWeight.SemiBold, lineHeight = 25.sp, modifier = Modifier.padding(top = 10.dp))
-                Text(detail, color = colors.onSurfaceVariant, fontSize = 11.sp, lineHeight = 17.sp, modifier = Modifier.padding(top = 6.dp))
+                if (title.isNotBlank()) Text(title, color = colors.onBackground, fontSize = 17.sp, fontWeight = FontWeight.SemiBold, lineHeight = 25.sp, modifier = Modifier.padding(top = 10.dp))
+                if (detail.isNotBlank()) Text(detail, color = colors.onSurfaceVariant, fontSize = 11.sp, lineHeight = 17.sp, modifier = Modifier.padding(top = 6.dp))
                 if (visible && !hasDialogue && shuffle != null && LocalShuffleHint.current) {
                     Text("点点我 · 换幅图", color = colors.onSurfaceVariant, fontSize = 11.sp,
                         modifier = Modifier.padding(top = 8.dp).clickable(enabled = voicePhase == null,
@@ -115,7 +115,7 @@ import kotlin.math.sin
             Spacer(Modifier.height(18.dp))
         }
         Text(title, style = MaterialTheme.typography.titleMedium)
-        Text(detail, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp,
+        if (detail.isNotBlank()) Text(detail, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp,
             modifier = Modifier.padding(top = 7.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
         action()
     }

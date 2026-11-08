@@ -18,6 +18,7 @@ import com.shike.timetable.MainActivity
 import com.shike.timetable.R
 import com.shike.timetable.data.*
 import com.shike.timetable.theme.*
+import com.shike.timetable.quotes.*
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.UUID
@@ -52,6 +53,7 @@ object TodayWidgetUpdates {
             }
         }
         scheduleBoundary(context, moment)
+        DailyQuoteScheduler.schedule(context, moment.atZone(ZoneId.systemDefault()))
     }
     private fun boundaryIntent(context: Context) = PendingIntent.getBroadcast(context, 701,
         Intent(context, TodayWidgetProvider::class.java).setAction(REFRESH_ACTION), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
@@ -78,7 +80,7 @@ class TodayWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) = refresh(context)
     override fun onEnabled(context: Context) = refresh(context)
     override fun onAppWidgetOptionsChanged(context: Context, manager: AppWidgetManager, id: Int, options: Bundle) = refresh(context)
-    override fun onDisabled(context: Context) = TodayWidgetUpdates.cancelBoundary(context)
+    override fun onDisabled(context: Context) { TodayWidgetUpdates.cancelBoundary(context); DailyQuoteScheduler.cancel(context) }
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action in setOf(REFRESH_ACTION, Intent.ACTION_DATE_CHANGED, Intent.ACTION_TIME_CHANGED,
                 Intent.ACTION_TIMEZONE_CHANGED, Intent.ACTION_BOOT_COMPLETED, Intent.ACTION_MY_PACKAGE_REPLACED)) {
@@ -113,6 +115,7 @@ internal object TodayWidgetViews {
         val showMascot = appearance.showCompanion && theme.companion != null && companion != null
         val name = theme.companion?.shortName.orEmpty()
         val voice = CompanionVoicePlayback.sessions.value
+        val daily = DailyQuoteStore(context).current(moment.atZone(ZoneId.systemDefault()))
         val hasDialogue = theme.companion?.hasDialogue == true
         val shuffleDescription = if (hasDialogue) "点击换一句陪伴语" else "点击切换插画"
         return RemoteViews(context.packageName, R.layout.widget_today).apply {
@@ -120,11 +123,11 @@ internal object TodayWidgetViews {
             setTextViewText(R.id.widget_title, if (readError) "课表需要检查" else "今日课表")
             setTextViewText(R.id.widget_date, "${today.monthValue}月${today.dayOfMonth}日 · 星期${"一二三四五六日"[today.dayOfWeek.value - 1]}")
             setTextViewText(R.id.widget_quote, if (showMascot && hasDialogue) "$name：${companion?.line.orEmpty()}" else "")
-            setViewVisibility(R.id.widget_quote, if (showMascot && hasDialogue) View.VISIBLE else View.GONE)
+            setViewVisibility(R.id.widget_quote, if (daily == null && showMascot && hasDialogue) View.VISIBLE else View.GONE)
             setImageViewBitmap(R.id.widget_portrait, theme.companion?.artwork(companion?.artwork.orEmpty())?.let { ThemeImages.load(context, theme, it, 256, compact = true) })
             setViewVisibility(R.id.widget_portrait, if (showMascot) View.VISIBLE else View.GONE)
             setViewVisibility(R.id.widget_portrait_companion, if (showMascot) View.VISIBLE else View.GONE)
-            setViewVisibility(R.id.widget_companion, if (showMascot && hasDialogue) View.VISIBLE else View.GONE)
+            setViewVisibility(R.id.widget_companion, if (daily == null && showMascot && hasDialogue) View.VISIBLE else View.GONE)
             setTextViewText(R.id.widget_shuffle_hint, voice?.displayLabel ?: if (hasDialogue) "点点我 · 换句话" else "点点我 · 换幅图")
             setViewVisibility(R.id.widget_shuffle_hint, if (showMascot && (voice?.displayLabel != null || (voice == null && interaction.showShuffleHint()))) View.VISIBLE else View.GONE)
             setContentDescription(R.id.widget_quote, "$name：${companion?.line.orEmpty()}。${voice?.displayLabel ?: if (voice != null) "正在播放语音" else shuffleDescription}")
@@ -132,13 +135,38 @@ internal object TodayWidgetViews {
             setContentDescription(R.id.widget_shuffle_hint, shuffleDescription)
             setTextColor(R.id.widget_title, text)
             setTextColor(R.id.widget_date, secondary)
+            setViewVisibility(R.id.widget_daily_box, if (daily != null) View.VISIBLE else View.GONE)
+            setViewVisibility(R.id.widget_daily_copy, if (daily != null) View.VISIBLE else View.GONE)
+            setTextViewText(R.id.widget_daily_text, daily?.text.orEmpty())
+            setTextViewText(R.id.widget_daily_credit, daily?.let { "— ${it.credit}" }.orEmpty())
+            setTextColor(R.id.widget_daily_text, text)
+            setTextColor(R.id.widget_daily_credit, secondary)
+            setTextColor(R.id.widget_daily_copy, primary)
+            val height = AppWidgetManager.getInstance(context).getAppWidgetOptions(id).getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 240).takeIf { it > 0 } ?: 240
+            setInt(R.id.widget_daily_text, "setMaxLines", if (height in 1..300) 2 else 3)
+            setTextViewTextSize(R.id.widget_title, android.util.TypedValue.COMPLEX_UNIT_SP, if (daily != null) 16f else 18f)
+            val inset = ((if (daily != null) 10 else 12) * context.resources.displayMetrics.density).toInt()
+            val verticalInset = ((if (daily != null) 4 else 12) * context.resources.displayMetrics.density).toInt()
+            setViewPadding(R.id.widget_content, inset, verticalInset, inset, verticalInset)
+            setContentDescription(R.id.widget_daily_text, "每日一言：${daily?.text.orEmpty()}。点击切换")
+            if (daily != null) {
+                val nextQuote = Intent(context, DailyQuoteReceiver::class.java).setAction(DailyQuoteScheduler.NEXT_ACTION)
+                    .setData(Uri.parse("shike://widget/$id/daily/next"))
+                val nextPending = PendingIntent.getBroadcast(context, id, nextQuote, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+                setOnClickPendingIntent(R.id.widget_daily_text, nextPending)
+                setOnClickPendingIntent(R.id.widget_daily_credit, nextPending)
+                val copyQuote = Intent(context, QuoteCopyActivity::class.java).putExtra("quote_id", daily.id)
+                    .setData(Uri.parse("shike://widget/$id/daily/${daily.id}/copy"))
+                setOnClickPendingIntent(R.id.widget_daily_copy, PendingIntent.getActivity(context, id, copyQuote,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE))
+            }
             setTextColor(R.id.widget_quote, primary)
             setTextColor(R.id.widget_shuffle_hint, secondary)
             setTextColor(R.id.widget_refresh, primary)
             setTextColor(R.id.widget_summary, secondary)
             setTextColor(R.id.widget_empty, secondary)
-            setTextViewText(R.id.widget_empty, if (readError) "课表读取异常，请打开拾课检查。" else "今天没有课，自由安排时间。")
-            setTextViewText(R.id.widget_summary, if (readError) "点击标题打开应用" else "${courses.size} 门课程 · 上下滑动查看")
+            setTextViewText(R.id.widget_empty, if (readError) "课表读取异常，请打开拾课检查。" else "今天没有课")
+            setTextViewText(R.id.widget_summary, if (readError) "点击标题打开应用" else "${courses.size} 门课程")
             setEmptyView(R.id.widget_courses, R.id.widget_empty)
             val launch = Intent(context, MainActivity::class.java).setAction(WIDGET_OPEN_ACTION)
                 .setData(Uri.parse("shike://widget/$id/today")).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
