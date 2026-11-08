@@ -15,7 +15,9 @@ class DailyQuoteTest {
     @Test fun oneHundredPlusShortUniqueOfflineQuotesHaveCreditsAndTraceableSources() {
         val file=File("src/main/assets/quotes/daily.json")
         val data=DailyQuoteRepository.parse(file.readText())
-        assertTrue(data.size >= 100);assertTrue(data.all { it.text.codePointCount(0,it.text.length)<=50 })
+        assertTrue(data.size >= 211);assertTrue(data.all { it.text.codePointCount(0,it.text.length)<=50 })
+        assertTrue(data.groupingBy { it.work }.eachCount().values.all { it <= 5 })
+        assertEquals(5,data.count { it.work == "CLANNAD" })
         assertEquals(data.size,data.map { it.id }.toSet().size)
         assertEquals(data.size,data.map { it.text }.toSet().size)
         assertTrue(data.all { it.credit.contains(it.work) && it.sourceUrl.startsWith("https://") })
@@ -30,29 +32,55 @@ class DailyQuoteTest {
         assertEquals(DailyQuoteEngine.cycleAt(time("2026-11-08T00:00:00")),DailyQuoteEngine.cycleAt(before))
         assertEquals(LocalDate.of(2026,11,8).toEpochDay(),DailyQuoteEngine.cycleAt(time("2026-11-08T08:00:00")))
     }
-    @Test fun manualClicksNeverPostponeTheFixedEightOClockAdvance() {
+    @Test fun manualRandomChoicesNeverPostponeTheFixedEightOClockBoundary() {
         val now=time("2026-11-08T07:59:00")
-        var choice=DailyQuoteEngine.choose(quotes,null,now)
-        repeat(13) { choice=DailyQuoteEngine.choose(quotes,choice,now,true) }
-        assertEquals("q13",choice.id)
-        choice=DailyQuoteEngine.choose(quotes,choice,time("2026-11-08T08:00:00"))
-        assertEquals("q14",choice.id)
-        repeat(4) { choice=DailyQuoteEngine.choose(quotes,choice,time("2026-11-08T08:00:01")) }
-        assertEquals("q14",choice.id)
-        choice=DailyQuoteEngine.choose(quotes,choice,time("2026-11-08T23:59:59"),true)
-        assertEquals("q15",choice.id)
-        choice=DailyQuoteEngine.choose(quotes,choice,time("2026-11-09T07:59:59"))
-        assertEquals("q15",choice.id)
-        choice=DailyQuoteEngine.choose(quotes,choice,time("2026-11-09T08:00:00"))
-        assertEquals("q16",choice.id)
+        val random=kotlin.random.Random(47)
+        var choice=DailyQuoteEngine.choose(quotes,null,now,random=random)
+        repeat(13) {
+            val old=choice
+            choice=DailyQuoteEngine.choose(quotes,choice,now,true,random)
+            assertNotEquals(old.id,choice.id)
+            assertEquals(old.cycle,choice.cycle)
+        }
+        val manual=choice
+        choice=DailyQuoteEngine.choose(quotes,choice,time("2026-11-08T08:00:00"),random=random)
+        assertNotEquals(manual.id,choice.id)
+        val atEight=choice
+        repeat(4) { choice=DailyQuoteEngine.choose(quotes,choice,time("2026-11-08T08:00:01"),random=random) }
+        assertEquals(atEight,choice)
+        assertEquals(choice,DailyQuoteEngine.choose(quotes,choice,time("2026-11-09T07:59:59"),random=random))
+        assertNotEquals(choice.id,DailyQuoteEngine.choose(quotes,choice,time("2026-11-09T08:00:00"),random=random).id)
     }
-    @Test fun missedDaysAdvanceWithoutTapsAndPoolWrapsWithoutRepeatingAdjacentQuotes() {
-        val start=time("2026-11-08T12:00:00")
-        var choice=QuoteChoice(DailyQuoteEngine.cycleAt(start),"q110")
-        choice=DailyQuoteEngine.choose(quotes,choice,start,true);assertEquals("q0",choice.id)
-        choice=DailyQuoteEngine.choose(quotes,choice,start.plusDays(3));assertEquals("q3",choice.id)
-        assertEquals(choice,DailyQuoteEngine.choose(quotes,choice,start.plusDays(3)))
-        choice=DailyQuoteEngine.choose(quotes,choice,start.plusDays(114));assertEquals("q3",choice.id)
+    @Test fun randomPoolIncludesEveryOtherQuoteAndMissedDaysSwitchOnlyOnceOnReturn() {
+        val now=time("2026-11-08T12:00:00")
+        val saved=QuoteChoice(DailyQuoteEngine.cycleAt(now),"q54")
+        val random=kotlin.random.Random(91)
+        val results=(1..10000).map { DailyQuoteEngine.choose(quotes,saved,now,true,random).id }.toSet()
+        assertEquals(quotes.map { it.id }.toSet()-saved.id,results)
+        val missed=DailyQuoteEngine.choose(quotes,saved,now.plusDays(111),random=random)
+        assertNotEquals(saved.id,missed.id)
+        assertEquals(missed,DailyQuoteEngine.choose(quotes,missed,now.plusDays(111),random=random))
+        assertEquals("q0",DailyQuoteEngine.choose(quotes.take(1),null,now).id)
+        assertEquals("q0",DailyQuoteEngine.choose(quotes.take(1),QuoteChoice(saved.cycle,"q0"),now,true).id)
+    }
+    @Test fun gamesHaveEqualRandomOpportunityRegardlessOfTheirQuoteCounts() {
+        val now=time("2026-11-09T12:00:00")
+        val pool=(0..30).map { quotes[it].copy(work=if (it == 0) "一条的作品" else if (it <= 5) "五条的作品" else "二十五条的作品") }
+        val random=kotlin.random.Random(22)
+        val counts=mutableMapOf<String,Int>()
+        repeat(30000) {
+            val choice=DailyQuoteEngine.choose(pool,null,now,random=random)
+            val work=pool.first { it.id == choice.id }.work
+            counts[work]=(counts[work] ?: 0)+1
+        }
+        assertEquals(3,counts.size)
+        assertTrue(counts.values.all { it in 9500..10500 })
+        var current=DailyQuoteEngine.choose(pool,null,now,random=random)
+        repeat(1000) {
+            val next=DailyQuoteEngine.choose(pool,current,now,true,random)
+            assertNotEquals(pool.first { it.id == current.id }.work,pool.first { it.id == next.id }.work)
+            current=next
+        }
     }
     @Test fun nextAlarmUsesLocalEightIncludingDstAndTimezoneChanges() {
         val shanghai=time("2026-11-08T08:00:00")
@@ -67,7 +95,7 @@ class DailyQuoteTest {
     @Test fun clockBackwardsMissingIdsAndNewCatalogNeverCrashOrUndoAChoice() {
         val start=time("2026-11-08T12:00:00");val saved=QuoteChoice(DailyQuoteEngine.cycleAt(start),"q10")
         assertEquals("q10",DailyQuoteEngine.choose(quotes,saved,start.minusDays(2)).id)
-        assertEquals("q0",DailyQuoteEngine.choose(quotes,QuoteChoice(saved.cycle,"removed"),start).id)
+        assertTrue(DailyQuoteEngine.choose(quotes,QuoteChoice(saved.cycle,"removed"),start).id in quotes.map { it.id })
         val changed=quotes.filterNot { it.id=="q10" }
         assertNotNull(DailyQuoteEngine.choose(changed,saved,start))
     }

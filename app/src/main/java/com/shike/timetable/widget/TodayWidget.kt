@@ -129,7 +129,7 @@ internal object TodayWidgetViews {
             setViewVisibility(R.id.widget_portrait_companion, if (showMascot) View.VISIBLE else View.GONE)
             setViewVisibility(R.id.widget_companion, if (daily == null && showMascot && hasDialogue) View.VISIBLE else View.GONE)
             setTextViewText(R.id.widget_shuffle_hint, voice?.displayLabel ?: if (hasDialogue) "点点我 · 换句话" else "点点我 · 换幅图")
-            setViewVisibility(R.id.widget_shuffle_hint, if (showMascot && (voice?.displayLabel != null || (voice == null && interaction.showShuffleHint()))) View.VISIBLE else View.GONE)
+            setViewVisibility(R.id.widget_shuffle_hint, if (daily == null && showMascot && (voice?.displayLabel != null || (voice == null && interaction.showShuffleHint()))) View.VISIBLE else View.GONE)
             setContentDescription(R.id.widget_quote, "$name：${companion?.line.orEmpty()}。${voice?.displayLabel ?: if (voice != null) "正在播放语音" else shuffleDescription}")
             setContentDescription(R.id.widget_portrait, "${theme.companion?.name.orEmpty()}，$shuffleDescription")
             setContentDescription(R.id.widget_shuffle_hint, shuffleDescription)
@@ -142,8 +142,8 @@ internal object TodayWidgetViews {
             setTextColor(R.id.widget_daily_text, text)
             setTextColor(R.id.widget_daily_credit, secondary)
             setTextColor(R.id.widget_daily_copy, primary)
-            val height = AppWidgetManager.getInstance(context).getAppWidgetOptions(id).getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 240).takeIf { it > 0 } ?: 240
-            setInt(R.id.widget_daily_text, "setMaxLines", if (height in 1..300) 2 else 3)
+            // 一言独占整行，正文与出处不限制行数；立绘收紧到标题高度，留出课程空间。
+            setInt(R.id.widget_portrait, "setMaxHeight", ((if (daily != null) 36 else 70) * context.resources.displayMetrics.density).toInt())
             setTextViewTextSize(R.id.widget_title, android.util.TypedValue.COMPLEX_UNIT_SP, if (daily != null) 16f else 18f)
             val inset = ((if (daily != null) 10 else 12) * context.resources.displayMetrics.density).toInt()
             val verticalInset = ((if (daily != null) 4 else 12) * context.resources.displayMetrics.density).toInt()

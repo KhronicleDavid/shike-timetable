@@ -7,11 +7,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import org.json.JSONObject
 import java.time.ZonedDateTime
 
-class DailyQuoteStore internal constructor(private val preferences: SharedPreferences, private val quotes: List<DailyQuote>) {
-    constructor(context: Context) : this(context.applicationContext.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE), DailyQuoteRepository.get(context))
+class DailyQuoteStore internal constructor(private val preferences: SharedPreferences, private val quotes: List<DailyQuote>,
+    private val appContext: Context? = null) {
+    constructor(context: Context) : this(context.applicationContext.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE),
+        DailyQuoteRepository.get(context), context.applicationContext)
     var enabled: Boolean
         get() = preferences.all["enabled"] == true
-        set(value) { synchronized(lock) { preferences.edit().putBoolean("enabled", value).apply(); updates.value += 1 } }
+        set(value) {
+            synchronized(lock) { preferences.edit().putBoolean("enabled", value).apply(); updates.value += 1 }
+            if (value) appContext?.let { com.shike.timetable.theme.CompanionVoicePlayback.cancel(it) }
+        }
     fun current(now: ZonedDateTime = ZonedDateTime.now()): DailyQuote? = synchronized(lock) {
         if (!enabled) return@synchronized null
         select(now, false)

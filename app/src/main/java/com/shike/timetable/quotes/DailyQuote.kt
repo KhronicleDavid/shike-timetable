@@ -2,9 +2,9 @@ package com.shike.timetable.quotes
 
 import android.content.Context
 import org.json.JSONObject
-import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZonedDateTime
+import kotlin.random.Random
 
 data class DailyQuote(val id: String, val text: String, val work: String, val speaker: String, val sourceUrl: String) {
     val credit: String get() = if (speaker.isBlank()) "《$work》" else "$speaker ·《$work》"
@@ -17,15 +17,19 @@ object DailyQuoteEngine {
         val today = now.toLocalDate().atTime(8, 0).atZone(now.zone)
         return if (now < today) today else now.toLocalDate().plusDays(1).atTime(8, 0).atZone(now.zone)
     }
-    /** 每天08:00从当前句前进一步，手动操作不修改周期，不把定时切换改成24小时倒计时。 */
-    fun choose(quotes: List<DailyQuote>, saved: QuoteChoice?, now: ZonedDateTime, advance: Boolean = false): QuoteChoice {
+    /** 首次、手动及跨08:00周期时随机选句；刷新保持选择，且不连续重复。 */
+    fun choose(quotes: List<DailyQuote>, saved: QuoteChoice?, now: ZonedDateTime, advance: Boolean = false,
+        random: Random = Random.Default): QuoteChoice {
         require(quotes.isNotEmpty())
         val cycle = cycleAt(now)
         val index = saved?.let { s -> quotes.indexOfFirst { it.id == s.id } } ?: -1
-        val start = index.takeIf { it >= 0 } ?: 0
-        val days = if (saved != null && index >= 0 && cycle > saved.cycle) (cycle - saved.cycle) % quotes.size else 0
-        val next = ((start.toLong() + days + if (advance) 1 else 0) % quotes.size).toInt()
-        return QuoteChoice(cycle, quotes[next].id)
+        if (index >= 0 && !advance && cycle <= saved!!.cycle) return QuoteChoice(cycle, saved.id)
+        val groups = quotes.groupBy { it.work }
+        val previous = quotes.getOrNull(index)
+        // 先按作品等概率选，再在该作中选句；多部作品时连续两次也不选同一作品。
+        val works = groups.keys.filter { groups.size == 1 || it != previous?.work }
+        val pool = groups.getValue(works[random.nextInt(works.size)]).filter { quotes.size == 1 || it.id != previous?.id }
+        return QuoteChoice(cycle, pool[random.nextInt(pool.size)].id)
     }
 }
 

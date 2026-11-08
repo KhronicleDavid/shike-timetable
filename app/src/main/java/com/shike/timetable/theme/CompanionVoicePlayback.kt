@@ -30,12 +30,14 @@ object CompanionVoicePlayback {
     fun shuffle(context: Context) {
         val app = context.applicationContext
         if (Looper.myLooper() != Looper.getMainLooper()) { main.post { shuffle(app) }; return }
+        val dailyEnabled = com.shike.timetable.quotes.DailyQuoteStore(app).enabled
+        if (dailyEnabled && isBusy) cancel(app)
         if (isBusy) return
         val appearance = AppearanceStore(app)
         if (!appearance.showCompanion) return
         val theme = ThemeRepository.get(app).find(appearance.themeId)
         val next = CompanionInteractionStore(app).shuffle(theme, LocalDateTime.now()) ?: return
-        if (!appearance.voiceEnabled || theme.companion?.voices?.get(next.line) == null) {
+        if (dailyEnabled || !appearance.voiceEnabled || theme.companion?.voices?.get(next.line) == null) {
             TodayWidgetUpdates.request(app)
             return
         }

@@ -37,28 +37,42 @@ class DailyQuoteUiTest {
         compose.runOnIdle { value=context.getSystemService(ClipboardManager::class.java).primaryClip?.getItemAt(0)?.text.toString() }
         return value
     }
-    @Test fun dailyCardKeepsMascotAndChangingDailyQuoteNeverInterruptsRoleVoice() {
+    @Test fun dailyModeStopsCurrentSpeechAndMutesAppSettingsAndWidgetUntilDisabled() {
         val themeStore=com.shike.timetable.theme.ExternalThemeStore(context)
         if (themeStore.installed().none { it.id=="himari" }) {
             val archive=ThemeTestContent.archive(context,InstrumentationRegistry.getInstrumentation().context,"himari")
             try { themeStore.install(themeStore.prepare(archive)) } finally { archive.delete() }
         }
         AppearanceStore(context).apply { themeId="himari";voiceEnabled=true;showCompanion=true }
-        DailyQuoteStore(context).enabled=true
         compose.activityRule.scenario.recreate()
+        compose.onNodeWithTag("companion_portrait_shuffle").performClick()
+        compose.waitUntil(15000) { com.shike.timetable.theme.CompanionVoicePlayback.sessions.value?.phase==com.shike.timetable.theme.VoicePhase.Playing }
+        compose.runOnIdle { DailyQuoteStore(context).enabled=true }
+        compose.waitUntil(5000) { com.shike.timetable.theme.CompanionVoicePlayback.sessions.value==null }
         compose.waitUntil(10000) { compose.onAllNodesWithTag("daily_quote_text",useUnmergedTree=true).fetchSemanticsNodes().isNotEmpty() }
         compose.onNodeWithContentDescription("吉祥物：皆原阳茉莉").assertIsDisplayed()
         val first=line()
-        compose.onNodeWithTag("companion_portrait_shuffle").performClick()
-        compose.waitUntil(15000) { com.shike.timetable.theme.CompanionVoicePlayback.sessions.value?.phase==com.shike.timetable.theme.VoicePhase.Playing }
-        val token=com.shike.timetable.theme.CompanionVoicePlayback.sessions.value!!.token
-        compose.onNodeWithTag("companion_portrait_shuffle").assertIsNotEnabled()
+        compose.onNodeWithTag("companion_portrait_shuffle").performClick().assertIsEnabled()
+        assertNull(com.shike.timetable.theme.CompanionVoicePlayback.sessions.value)
         compose.onNodeWithTag("daily_quote_text",useUnmergedTree=true).performClick()
         assertNotEquals(first,line())
-        assertEquals(token,com.shike.timetable.theme.CompanionVoicePlayback.sessions.value!!.token)
         compose.onNodeWithTag("daily_quote_copy").performClick();assertEquals(line(),clipboard())
-        compose.waitUntil(30000) { com.shike.timetable.theme.CompanionVoicePlayback.sessions.value==null }
-        compose.onNodeWithTag("companion_portrait_shuffle").assertIsEnabled()
+        val interaction=com.shike.timetable.theme.CompanionInteractionStore(context)
+        val theme=com.shike.timetable.theme.ThemeRepository.get(context).find("himari")
+        val old=interaction.current(theme)
+        compose.runOnIdle {
+            com.shike.timetable.widget.CompanionWidgetReceiver().onReceive(context,android.content.Intent().setAction("com.shike.timetable.widget.SHUFFLE_COMPANION"))
+            assertNull(com.shike.timetable.theme.CompanionVoicePlayback.sessions.value)
+            assertNotEquals(old?.line,interaction.current(theme)?.line)
+        }
+        compose.onNodeWithText("设置").performClick()
+        compose.onNodeWithContentDescription("角色语音").performScrollTo().assertIsOff().assertIsNotEnabled()
+        assertTrue(AppearanceStore(context).voiceEnabled) // 暂停期间保留用户原偏好。
+        compose.onNodeWithTag("daily_quote_enabled").performScrollTo().performClick().assertIsOff()
+        compose.onNodeWithContentDescription("角色语音").performScrollTo().assertIsOn().assertIsEnabled()
+        compose.onNodeWithText("课表").performClick()
+        compose.onNodeWithTag("companion_portrait_shuffle").performClick()
+        compose.waitUntil(15000) { com.shike.timetable.theme.CompanionVoicePlayback.sessions.value?.phase==com.shike.timetable.theme.VoicePhase.Playing }
     }
     @Test fun optionalCardSwitchTapLongPressCopyAndRecreationPreserveSchedule() {
         val before=ScheduleStore(context).read()

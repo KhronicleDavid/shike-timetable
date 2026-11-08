@@ -33,6 +33,9 @@ import java.time.LocalDate
     var removing by remember { mutableStateOf<ThemePack?>(null) }
     val theme = LocalAppTheme.current
     val companion = theme.companion
+    val dailyRevision by com.shike.timetable.quotes.DailyQuoteStore.changes.collectAsState()
+    val context = LocalContext.current
+    val dailyEnabled = remember(dailyRevision, context) { com.shike.timetable.quotes.DailyQuoteStore(context).enabled }
     Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 20.dp)) {
         Text("设置", style = MaterialTheme.typography.headlineLarge, modifier = Modifier.padding(top = 19.dp))
         Spacer(Modifier.height(14.dp))
@@ -92,10 +95,11 @@ import java.time.LocalDate
             Row(Modifier.fillMaxWidth().padding(17.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text("${companion?.shortName}语音", fontWeight = FontWeight.Medium)
-                    Text("点击换句时播放日语 · 播完才能切换\n应用与小组件共用 · 离线播放", color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    Text(if (dailyEnabled) "每日一言已开启，角色语音暂停使用" else "点击换句时播放日语 · 播完才能切换\n应用与小组件共用 · 离线播放", color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 11.sp, modifier = Modifier.padding(top = 4.dp))
                 }
-                Switch(voiceEnabled, onVoice, modifier = Modifier.semantics { contentDescription = "角色语音" })
+                Switch(voiceEnabled && !dailyEnabled, onVoice, enabled = !dailyEnabled,
+                    modifier = Modifier.semantics { contentDescription = "角色语音" })
             }
         }
         SectionLabel("课表数据")

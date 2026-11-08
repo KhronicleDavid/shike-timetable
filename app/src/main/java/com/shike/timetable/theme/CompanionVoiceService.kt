@@ -44,6 +44,7 @@ class CompanionVoiceService : Service() {
         }
         if (token != null) return START_NOT_STICKY
         token = session.token
+        if (com.shike.timetable.quotes.DailyQuoteStore(this).enabled) { end(null); return START_NOT_STICKY }
         val theme = ThemeRepository.get(this).find(session.themeId)
         val clip = theme.companion?.voices?.get(session.moment.line)
         val notification = Notification.Builder(this, "companion_voice")
@@ -90,6 +91,7 @@ class CompanionVoiceService : Service() {
         }
     }
     private fun resume() {
+        if (com.shike.timetable.quotes.DailyQuoteStore(this).enabled) { end(null); return }
         if (!prepared || !hasFocus || player == null) return
         try {
             player!!.start()

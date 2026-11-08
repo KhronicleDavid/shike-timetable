@@ -96,7 +96,7 @@ import java.time.LocalDateTime
             Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text("每日一言", fontWeight = FontWeight.Medium)
-                    Text("GalGame短句 · 应用与桌面同步\n每天08:00换句 · 单击换句，长按或按钮复制正文", fontSize = 11.sp,
+                    Text("GalGame短句 · 应用与桌面同步\n每天08:00随机换句 · 单击随机切换，长按或按钮复制正文\n开启期间停用角色语音", fontSize = 11.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp))
                 }
                 Switch(enabled, { value ->

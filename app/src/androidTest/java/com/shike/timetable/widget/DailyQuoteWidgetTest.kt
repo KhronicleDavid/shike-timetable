@@ -33,6 +33,24 @@ import java.time.temporal.TemporalAdjusters
 import java.time.DayOfWeek
 
 class DailyQuoteWidgetTest {
+    @Test fun longCourseAndRoomNamesWrapWithoutEllipsis() {
+        val instrumentation=InstrumentationRegistry.getInstrumentation();val context=instrumentation.targetContext
+        instrumentation.runOnMainSync {
+            val course=Course(name="用于检查长课程名称自然换行与完整展示的课程".repeat(3),room="第一教学楼一百零一号多媒体综合实验教室".repeat(3),
+                day=1,startPeriod=1,endPeriod=2,startWeek=1,endWeek=20)
+            val entry=TodayCourse(course,"08:00–09:35",course.room)
+            val view=TodayWidgetViews.row(context,entry,false).apply(context,FrameLayout(context))
+            val width=(200*context.resources.displayMetrics.density).toInt()
+            view.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED))
+            view.layout(0,0,view.measuredWidth,view.measuredHeight)
+            for (id in listOf(R.id.widget_course_name,R.id.widget_course_room)) {
+                val text=view.findViewById<TextView>(id);val layout=text.layout
+                assertTrue(layout.lineCount>2)
+                assertEquals(text.text.length,layout.getLineEnd(layout.lineCount-1))
+                for(line in 0 until layout.lineCount) assertEquals(0,layout.getEllipsisCount(line))
+            }
+        }
+    }
     @Test fun twoRealWidgetsShareTapAutomaticAdvanceCopyAndKeepMascotAndCourseRows() {
         val instrumentation=InstrumentationRegistry.getInstrumentation();val context=instrumentation.targetContext
         fun main(action: ()->Unit)=instrumentation.runOnMainSync(action)
@@ -85,13 +103,45 @@ class DailyQuoteWidgetTest {
                 main {
                     assertEquals(View.VISIBLE,widget.findViewById<View>(R.id.widget_portrait).visibility)
                     assertEquals(View.GONE,widget.findViewById<View>(R.id.widget_companion).visibility)
+                    fun assertComplete(id: Int) {
+                        val view=widget.findViewById<TextView>(id)
+                        val layout=view.layout
+                        assertNotNull(layout)
+                        assertEquals(view.text.length,layout.getLineEnd(layout.lineCount-1))
+                        for (line in 0 until layout.lineCount) assertEquals("正文或出处不能省略",0,layout.getEllipsisCount(line))
+                        assertTrue("文字应完整放入TextView",view.height>=layout.height)
+                    }
+                    assertComplete(R.id.widget_daily_text);assertComplete(R.id.widget_daily_credit)
                     val list=widget.findViewById<ListView>(R.id.widget_courses)
                     android.util.Log.d("DailyWidgetLayout", "header=${widget.findViewById<View>(R.id.widget_heading).height}, quoteLines=${widget.findViewById<TextView>(R.id.widget_daily_text).lineCount}, maxLines=${widget.findViewById<TextView>(R.id.widget_daily_text).maxLines}, list=${list.height}, row=${list.getChildAt(0).height}")
                     assertTrue("240dp下至少有一门课程的教室可见：列表${list.height}px，课程${list.getChildAt(0).height}px，组件${widget.height}px",list.height-list.paddingTop-list.paddingBottom>=list.getChildAt(0).height)
                 }
                 val directory=File(context.filesDir,"visual-check").apply { mkdirs() }
-                SystemClock.sleep(350)
+                SystemClock.sleep(6500) // 等待上个复制用例的系统剪贴板浮层消失。
                 instrumentation.uiAutomation.takeScreenshot()?.let { bitmap->File(directory,"小组件-每日一言.png").outputStream().use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it) } }
+                // 逐条验证完整句库，含窄至200dp的小组件：正文和出处均不得截断或省略。
+                for (width in listOf(200,280)) {
+                    for (entry in rows) {
+                        main {
+                            val density=context.resources.displayMetrics.density
+                            widget.layoutParams=widget.layoutParams.apply { this.width=(width*density).toInt();height=(320*density).toInt() }
+                            preferences.edit().putString("selection",JSONObject().put("cycle",DailyQuoteEngine.cycleAt(ZonedDateTime.now())).put("id",entry.id).toString()).commit()
+                            widget.updateAppWidget(TodayWidgetViews.build(context,widget.appWidgetId,data))
+                            val w=android.view.View.MeasureSpec.makeMeasureSpec((width*density).toInt(),android.view.View.MeasureSpec.EXACTLY)
+                            val h=android.view.View.MeasureSpec.makeMeasureSpec((320*density).toInt(),android.view.View.MeasureSpec.EXACTLY)
+                            widget.measure(w,h);widget.layout(0,0,widget.measuredWidth,widget.measuredHeight)
+                            for (id in listOf(R.id.widget_daily_text,R.id.widget_daily_credit)) {
+                                val text=widget.findViewById<TextView>(id);val layout=text.layout
+                                assertEquals("${entry.id}:完整显示正文与出处",text.text.length,layout.getLineEnd(layout.lineCount-1))
+                                for (line in 0 until layout.lineCount) assertEquals("${entry.id}:不应出现省略号",0,layout.getEllipsisCount(line))
+                                assertTrue(text.height>=layout.height)
+                            }
+                            assertTrue(widget.findViewById<ListView>(R.id.widget_courses).height>0)
+                        }
+                    }
+                }
+                preferences.edit().putString("selection",JSONObject().put("cycle",DailyQuoteEngine.cycleAt(ZonedDateTime.now())).put("id",longest.id).toString()).commit()
+                main { widget.updateAppWidget(TodayWidgetViews.build(context,widget.appWidgetId,data)) }
                 main { widget.findViewById<TextView>(R.id.widget_daily_text).performClick() }
                 waitFor("点击未同步两个小组件") {
                     val a=widget.findViewById<TextView>(R.id.widget_daily_text).text.toString()

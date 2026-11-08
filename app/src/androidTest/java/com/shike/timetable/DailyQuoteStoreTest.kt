@@ -37,12 +37,14 @@ class DailyQuoteStoreTest {
         val prefs=context.getSharedPreferences("test_daily_quote_concurrent",Context.MODE_PRIVATE);prefs.edit().clear().commit()
         val rows=DailyQuoteRepository.get(context);val now=ZonedDateTime.now()
         val stores=(1..4).map { DailyQuoteStore(prefs,rows) }
-        stores.first().enabled=true;assertEquals(rows.first(),stores.first().current(now))
+        stores.first().enabled=true;assertNotNull(stores.first().current(now))
+        val revision=DailyQuoteStore.changes.value
         val workers=Executors.newFixedThreadPool(4)
         try {
             val jobs=(0 until 80).map { i -> workers.submit { stores[i%4].next(now) } }
             jobs.forEach { it.get(10,TimeUnit.SECONDS) }
-            assertEquals(rows[80],stores.first().current(now))
+            assertEquals(revision+80,DailyQuoteStore.changes.value)
+            assertTrue(stores.first().current(now) in rows)
         } finally { workers.shutdownNow();prefs.edit().clear().commit() }
     }
 }

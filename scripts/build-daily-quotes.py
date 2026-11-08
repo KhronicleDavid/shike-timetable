@@ -1,5 +1,6 @@
 """从固定版本的一言开放句库和人工核对的网页短摘生成离线每日一言。"""
 import argparse
+from collections import Counter
 import hashlib
 import json
 from pathlib import Path
@@ -9,13 +10,19 @@ import urllib.parse
 ROOT=Path(__file__).resolve().parents[1]
 COMMIT='8b30ce7566877bf2a1c5e07ee5199afcedd5b3ad'
 BASE=f'https://raw.githubusercontent.com/hitokoto-osc/sentences-bundle/{COMMIT}/'
-C_IDS=[287,294,298,300,661,662,663,934,3662,4154,4155,4261,4448,4449,4472,4473,4474,4500,5415,6903,7017,7018,7019,7099,7535,7765,7819,8071,8135,8136,8140,8337,8340,8523,8532,8605,8878,8879,9314,9584,9586,9687,9808,9851,9873,9874,9887,9888,9931,10431,10437,10495,10854,10855,10856,10857,10858,10859,10861,10863,10866,11334,11335,11337,11348,11385]
-A_IDS=[37,84,107,118,187,194,197,209,212,226,238,242,260,261,867,888,3670,6250,6754,6755,8886,8907]
+C_IDS=[287,294,298,300,661,662,663,934,3662,4154,4155,4261,4448,4449,4472,4473,4474,4500,5415,6903,7017,7018,7019,7535,7765,7819,8071,8135,8136,8140,8337,8523,8532,8605,8878,8879,9314,9584,9586,9687,9808,9851,9873,9874,9887,9888,9931,10431,10437,10495,10854,10855,10856,10857,10858,10859,10863,11334,11335,11337,11348,11385]
+A_IDS=[37,84,107,118,187,194,197,209,212]
+# 1.12.1增量：保持已审核条目的固定ID，增量扩展到其他作品。
+C_IDS += [307,3970,6304,9172,9583,9585,9762,10122,10123,10124,10141,10142,10545,10547,10548,10557,10637,10119]
+A_IDS += [29,111,274,202,990,1225,7876,7877]
+MAX_PER_WORK = 5
 # Key原作的常见共通名句在上游归入动画类；保留原分类记录，不把它们伪称为官方汉化文本。
 NAMES={'Eden':'eden*','SummerPocket':'Summer Pockets','Clover Day\'s':'幸运草的约定','樱花，萌放。':'樱花，萌放。','樱花、萌放':'樱花，萌放。',
        '亚托莉～我挚爱的时光':'ATRI -My Dear Moments-','亚托莉——我挚爱的时光':'ATRI -My Dear Moments-','ヨスガノソラ':'缘之空',
        '爱上火车Lastrun':'爱上火车 Last Run!!','CLANNAD':'CLANNAD','Clannad':'CLANNAD','clannad':'CLANNAD','Fate/Stay night':'Fate/stay night','narcissu':'水仙 narcissu'}
-PLAYED={'樱之诗','樱之刻','金色Loveriche','美好的每一天','魔法使之夜','秽翼的尤斯蒂娅','樱花，萌放。','幸运草的约定','永不枯萎的世界与终焉之花'}
+NAMES.update({'Little busters':'Little Busters!', '千恋＊万花':'千恋万花', 'WHITE ALBUM2':'白色相簿2',
+    '理与迷宫的少女':'美少女万华镜·理与迷宫的少女', '永不枯萎的世界与终结之花':'永不枯萎的世界与终焉之花'})
+PLAYED={'樱之诗','樱之刻','金色Loveriche','美好的每一天','魔法使之夜','秽翼的尤斯蒂娅','樱花，萌放。','幸运草的约定','永不枯萎的世界与终焉之花','天津罪','星之终途','景之海的艾佩莉亚','樱色之云＊绯色之恋','纸上的魔法使','魔女恋爱日记'}
 WP='https://galgamewords.wordpress.com/'
 # (中文短摘, 作品, 摘录页面, 说明)。仅截取完整短句或独立分句，不补写游戏台词。
 MANUAL=[
@@ -62,16 +69,64 @@ def main():
             line=next(i+1 for i,value in enumerate(source_lines) if item['uuid'] in value)
             rows.append(dict(id='h-'+item['uuid'],text=text,work=work,speaker='',sourceUrl=f'https://github.com/hitokoto-osc/sentences-bundle/blob/{COMMIT}/sentences/{kind}.json#L{line}',
                 upstreamId=id,upstreamCategory=kind,preferred=work in PLAYED,license='AGPL-3.0',note='社区收录译句；保留上游文字，不标注未经证实的说话人。'))
-    for text,work,url,note in MANUAL:
+    additions=json.loads((ROOT/'scripts/daily-quote-additions.json').read_text(encoding='utf-8'))
+    for text,work,url,note in MANUAL+[(r['text'],r['work'],r['url'],r['note']) for r in additions]:
         url=urllib.parse.quote(url,safe=':/%?=&')
         rows.append(dict(id='web-'+hashlib.sha256((work+'\n'+text).encode()).hexdigest()[:16],text=text,work=work,speaker='',sourceUrl=url,
             preferred=work in PLAYED,license='原作权利人保留权利（短摘）',note=note))
-    assert len(rows)>=100
+    # 在开发源清单中就控制数量，过量直接报错，避免新增条目被静默丢弃。
+    for row in rows: row['work']=NAMES.get(row['work'],row['work'])
+    counts=Counter(row['work'] for row in rows)
+    over={work:count for work,count in counts.items() if count>MAX_PER_WORK}
+    assert not over,f'原始收录超过每作{MAX_PER_WORK}条，请精选替换已有条目：{over}'
+    assert len(rows)>=211
     assert len({x['text'] for x in rows})==len(rows)
     assert all(0<len(x['text'])<=50 and '\n' not in x['text'] for x in rows)
     rows.sort(key=lambda x:not x['preferred'])
-    data=dict(schemaVersion=1,version=1,reviewedAt='2026-11-08',upstreamCommit=COMMIT,quotes=rows)
+    data=dict(schemaVersion=1,version=2,reviewedAt='2026-11-09',maxPerWork=MAX_PER_WORK,upstreamCommit=COMMIT,quotes=rows)
     (output/'daily.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    preferred=sum(x['preferred'] for x in rows)
+    upstream=sum('upstreamId' in x for x in rows)
+    notice=f"""每日一言数据说明
+
+本目录 daily.json 为独立离线短句，共{len(rows)}条、{len(counts)}部作品，每条不超过50个Unicode字符。
+原始数据按统一后的作品名称，每部最多{MAX_PER_WORK}条；不以同义译句或拆碎同一段落凑数。
+
+其中{upstream}条选编自一言开源社区句库，遵循AGPL-3.0，完整许可证见AGPL-3.0.txt。
+上游：https://github.com/hitokoto-osc/sentences-bundle
+固定修订：{COMMIT}
+保留上游正文、分类、id和固定修订行链接，统一部分作品别名；Key的部分共通名句在上游归为动画，分类原样保留，不冒充原作汉化逐字校勘。
+
+另{len(rows)-upstream}条为公开网页短摘或短摘自译，逐条保留sourceUrl和note。
+日文/英文自译不作为官方中文译文。3条纸上的魔法使短句来自官网角色Q&A，非游戏正文，备注明确标注。
+Wikiquote相关条目有社区译文或跨媒体共通句，不将其当作游戏官方中文版。
+各原作台词、译文和作品名称权利归原作者及相关权利人；一言社区并不完全持有全部台词著作权。
+
+完整选编源代码、分作数量与逐条出处：
+https://github.com/KhronicleDavid/shike-timetable
+生成脚本：scripts/build-daily-quotes.py
+增量人工短摘：scripts/daily-quote-additions.json
+"""
+    (output/'NOTICE.txt').write_text(notice,encoding='utf-8')
+    document=f"""# 每日一言：句库与来源
+
+当前 **{len(rows)}条、{len(counts)}部作品**，正文不超过50个Unicode字符（含标点）。1.12.1以原始收录数量平衡为准，统一作品别名后**每部最多{MAX_PER_WORK}条**；CLANNAD从15条减为5条，Summer Pockets从9条减为5条，AIR从8条减为5条。旧版111条调整后净增{len(rows)-111}条。
+
+优先匹配用户已玩作品；不为了凑齐数量伪造原作台词，也不把同一句的不同译法算作新增。不同作品可核实的短摘数量不同，当前各作1至5条。随机先选作品再选句，多作品时不连续选同作。
+
+其中{upstream}条来自一言固定修订`{COMMIT}`，遵循AGPL-3.0，保留上游分类/id。其余{len(rows)-upstream}条为公开网页短摘与部分日文/英文自译。来源属于社区收录，非官方汉化逐字校勘；纸上的魔法使的3条官网角色Q&A、跨媒体共通语录在备注中注明。原作及译文权利归相关权利人，详见assets/quotes/NOTICE.txt及AGPL-3.0.txt。
+
+## 各作品原始收录数量
+
+|作品|条数|
+|---|---:|
+"""
+    for work,count in sorted(counts.items(),key=lambda x:(-x[1],x[0])):document+=f"|{work}|{count}|\n"
+    document+="\n## 逐条清单\n\n|序号|正文|作品|来源与处理|\n|---|---|---|---|\n"
+    for i,row in enumerate(rows,1):
+        text=row['text'].replace('|','\\|');work=row['work']+('（优先）' if row['preferred'] else '')
+        document+=f"|{i}|{text}|{work}|[来源]({row['sourceUrl']}) {row['note'].replace('|','/')}|\n"
+    (ROOT/'docs/每日一言来源.md').write_text(document,encoding='utf-8')
     license_path=a.cache/'LICENSE'
     if not license_path.exists():
         with urllib.request.urlopen(BASE+'LICENSE',timeout=45) as r:license_path.write_bytes(r.read())
